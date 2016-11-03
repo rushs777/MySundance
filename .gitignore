@@ -1,3 +1,10 @@
 results/
 *.exe
 *.jpg
+
+#Folders I don't want added
+Chandani/
+epetraTutorial/
+KISS/
+OrthogonalIteration
+Viento/
