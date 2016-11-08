@@ -6,9 +6,7 @@
  *
 */
 
-#include "PlayaVectorType.hpp" // For VectorType, VectorSpace
-#include <sys/stat.h> // Needed for creating directories
-#include <string>
+//#include "PlayaVectorType.hpp" // For VectorType, VectorSpace
 #include "Sundance.hpp"
 
 // Things necessary for mathematica generated fs to be understood
