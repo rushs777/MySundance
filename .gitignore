@@ -3,6 +3,9 @@ results/
 *.jpg
 
 #Folders I don't want added
+latex/
+html/
+BUILDS/
 Chandani/
 epetraTutorial/
 KISS/
