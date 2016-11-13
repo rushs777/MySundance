@@ -54,7 +54,7 @@
 #include "PlayaLinearOperatorImpl.hpp"
 #endif
 
-
+/*! \cond */
 extern "C"
 {
 void dgemm_(  char* TRANSA,
@@ -71,12 +71,11 @@ double* 	B,
 double* 	C,
 	      int* 	LDC);
 }
-
+/*! \endcond */
 
 namespace Playa
 {
 using namespace Teuchos;
-
 
 // This function performs the multiplication dA, where A matrix, and d is a diagonal matrix stored
 // as a Playa::Vector. Since we are multiplying on the left, each element in d scales

@@ -48,17 +48,28 @@
 namespace Playa
 {
 
-/** \relates LinearOperator */
+/*!	\brief Performs A*B
+
+	The method can handle transposed operators and performs error checking on the dimensions. The actual multiplication is carried out via dgemm 
+*/
 LinearOperator<double> denseMatrixMatrixProduct(
   const LinearOperator<double>& A,
   const LinearOperator<double>& B);
 
-/** \relates LinearOperator */
+/*!
+	\brief Performs D*A, where D is a diagonal matrix
+
+	The method can handle transposed operators and performs error checking on the dimensions
+*/
 LinearOperator<double> denseLeftScale(
   const Vector<double>& d,
   const LinearOperator<double>& A);
 
-/** \relates LinearOperator */
+/*!
+	\brief Performs A*D, where D is a diagonal matrix
+
+	The method can handle transposed operators and performs error checking on the dimensions
+*/
 LinearOperator<double> denseRightScale(
   const LinearOperator<double>& A,
   const Vector<double>& d);
