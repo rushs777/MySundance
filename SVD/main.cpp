@@ -23,7 +23,17 @@
 // Is this how I want to do this?
 const double PI = 4.0*atan(1.0);
 
-
+// Temporary addition until I can get Viento to work right
+/*
+#include <fstream>
+#include <iomanip>
+using std::ifstream;
+using std::to_string;
+using std::setw;
+using std::setprecision;
+Expr readSnap(const string& filename, int tag, const Mesh& mesh);
+LinearOperator<double> snapshotToMatrix(const string& filename, int maxTagNum, const Mesh& mesh);
+*/
 int main (int argc, char *argv[])
 {      
 	int nx = 1;
@@ -117,15 +127,31 @@ int main (int argc, char *argv[])
 // End of the code to get S/mesh, which is no longer necessary
 
 	std::cout << "Reading mesh.........." << std::endl;
-	Sundance::MeshSource meshReader = new Sundance::ExodusMeshReader("testmesh", meshType, verbosity);
+	Sundance::MeshSource meshReader = new Sundance::ExodusMeshReader("cyl-0", meshType, verbosity);
 	Sundance::Mesh mesh = meshReader.getMesh();
 
+/*	int dim = 0;
+	std::cout << "Here is the number of cells along the x-axis: " << mesh.numCells(dim) << std::endl
+		  << "Here is the number of cells along the y-axis: " << mesh.numCells(1) << std::endl;
+
+*/
+	// Set up W for cyl-0.exo
+	Playa::LinearOperator<double> W = snapshotToMatrix("results/st-p", 3, mesh);
+
+	// Get the POD
+	Playa::LinearOperator<double> Alpha;
+	Playa::LinearOperator<double> Phi;
+	Playa::Vector<double> lambda;
+
+	// W and mesh need to be defined
+	POD(W,lambda,Alpha,Phi,mesh);
+	std::cout << "POD finished" << std::endl;
 
 
 	//Start looking at svd.cpp
 
 	// Set up the snapshot matrix W
-	int gridPts = 9; // rows
+/*	int gridPts = 9; // rows
 	int timeSteps = 10; // cols
 	Playa::VectorSpace<double> domain = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(),timeSteps);
 	Playa::VectorSpace<double> range = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(),gridPts);
@@ -136,7 +162,7 @@ int main (int argc, char *argv[])
 	for(int row = 0; row<PtrW->numRows(); row++)
 		for(int col = 0; col<PtrW->numCols(); col++)
 			PtrW->dataPtr()[row+PtrW->numRows()*col] = col+PtrW->numCols()*row;
-
+*/
 	/* Checking behavior of W*e_j
 	Playa::Vector<double> ej = domain.createMember();
 	ej.zero();
@@ -148,12 +174,12 @@ int main (int argc, char *argv[])
 
 
 	// Create lambda, Alpha, and Phi
-	Playa::LinearOperator<double> Alpha;
-	Playa::LinearOperator<double> Phi;
-	Playa::Vector<double> lambda;
+	//Playa::LinearOperator<double> Alpha;
+	//Playa::LinearOperator<double> Phi;
+	//Playa::Vector<double> lambda;
 
 	// W and mesh need to be defined
-	POD(W,lambda,Alpha,Phi,mesh);
+	//POD(W,lambda,Alpha,Phi,mesh);
 
 	//std::cout << "Here is S: " << std::endl << S << std::endl;
 	//std::cout << "Here is W: " << std::endl << W << std::endl;
@@ -162,41 +188,52 @@ int main (int argc, char *argv[])
 	//std::cout << "Here is Phi " << std::endl << Phi << std::endl;
 	
 	// Test the values returned from POD
-	std::cout << "Here is lambda " << std::endl << lambda << std::endl;
-	std::cout << "Here is Alpha " << std::endl << Alpha << std::endl;
+	//std::cout << "Here is lambda " << std::endl << lambda << std::endl;
+	//std::cout << "Here is Alpha " << std::endl << Alpha << std::endl;
 	//std::cout << "Here is Phi " << std::endl << Phi << std::endl;
-	Teuchos::RCP<Playa::DenseSerialMatrix> PhiPtr = 						
+	//Teuchos::RCP<Playa::DenseSerialMatrix> PhiPtr = 						
 		Teuchos::rcp_dynamic_cast<Playa::DenseSerialMatrix>(Phi.ptr());
 
-	std::cout << "Here is Phi[[All," << PhiCol << "]]" << std::endl;
-	for(int row = 0; row < PhiPtr->numRows(); row++)
-		std::cout << PhiPtr->dataPtr()[row+PhiPtr->numRows()*PhiCol] << std::endl;
-		
+	//std::cout << "Here is Phi[[All," << PhiCol << "]]" << std::endl;
+	//for(int row = 0; row < PhiPtr->numRows(); row++)
+		//std::cout << PhiPtr->dataPtr()[row+PhiPtr->numRows()*PhiCol] << std::endl;
+
+/*
+test code for snapshotToMatrix
+
+string filename = "results/st-v";
+MeshSource mesher = new ExodusMeshReader("cyl-0", meshType);
+int tagSize = 5;
+
+	Playa::LinearOperator<double> B = snapshotToMatrix(filename, tagSize, mesher.getMesh() );
+
+	std::cout << "Here's B: " << std::endl << B << std::endl;
+*/
 
 
+/*
+	Vector<double> error = getDiscreteFunctionVector(ptest);
+	Playa::Vector<double> ej = d.createMember();
+	ej.zero();
+	ej[0]=1.0;
+	Playa::Vector<double> result;
+	A.apply(ej,result);
+	std::cout << "Size of ptest: " << error.dim() << std::endl
+                  << "Size of result: " << result.dim() << std::endl;
 
+	std::cout << "Attempting subtract the two vectors " << std::endl;
+	error -= result;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	Playa::Vector<double> ej = d.createMember();
+	ej.zero();
+	ej[0]=1.0;
+	Playa::Vector<double> result;
+	A.apply(ej,result);
+	error -= result;
+	std::cout << "Double checking that this puts " << filename + to_string(tag) + ".vec into the matrix column: " << error.max() << std::endl;
+*/
+	
 	return 0;
 }
+
+

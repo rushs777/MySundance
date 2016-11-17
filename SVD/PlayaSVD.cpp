@@ -65,6 +65,8 @@ void POD(const LinearOperator<double> &W, Vector<double> &lambda, LinearOperator
 	Sundance::LinearProblem prob(mesh,eqn,bc,vlist,ulist,vecType);
 	// Get the mass matrix
 	Playa::LinearOperator<double> S = prob.getOperator();
+	std::cout << "S is " << S.range().dim() << " by " << S.domain().dim() << std::endl;
+	std::cout << "W is " << W.range().dim() << " by " << W.domain().dim() << std::endl;
 	/* Check to make sure I was getting the right mass matrix
 	Playa::Vector<double> x = S2.domain().createMember();
 	x.randomize();

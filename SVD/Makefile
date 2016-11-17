@@ -93,12 +93,14 @@ EXTRA_OBJS = PlayaSVD.o
 # Kevin's system
 #TRILINOS_INSTALL_DIR = ${HOME}/Code/BUILDS/OPT
 # Simon's system
-TRILINOS_INSTALL_DIR = /usr/local/Trilinos/BUILDS/SERIAL-OPT
+#TRILINOS_INSTALL_DIR = /usr/local/Trilinos/BUILDS/SERIAL-OPT
+VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
+
 
 #--------------------------------------------------------------------------
 # If needed, set extra include and lib macros
 #--------------------------------------------------------------------------
-CLIENT_EXTRA_INCLUDES = /home/sirush/PhDResearch/Viento/src
+CLIENT_EXTRA_INCLUDES = 
 
 CLIENT_EXTRA_LIBS = 
 
@@ -124,31 +126,32 @@ CLIENT_EXTRA_LIBS =
 #--------------------------------------------------------------------------
 
 # Include the Trilinos export makefile from package=Sundance.
-include $(TRILINOS_INSTALL_DIR)/include/Makefile.export.Sundance
+#include $(TRILINOS_INSTALL_DIR)/include/Makefile.export.Sundance
+include $(VIENTO_INSTALL_DIR)/include/Makefile.export.Viento
 
 # Add the Trilinos installation directory to the search paths
 # for libraries and headers
-LIB_PATH = $(TRILINOS_INSTALL_DIR)/lib
+LIB_PATH = $(TRILINOS_INSTALL_DIR)/lib $(Viento_LIBRARY_DIRS)
 
-INCLUDE_PATH = $(TRILINOS_INSTALL_DIR)/include $(CLIENT_EXTRA_INCLUDES)
+INCLUDE_PATH = $(TRILINOS_INSTALL_DIR)/include $(Viento_INCLUDE_DIRS) $(CLIENT_EXTRA_INCLUDES)
 
 # Set the C++ compiler and flags to those specified in the export makefile
-CXX = $(Sundance_CXX_COMPILER)
+CXX = $(Viento_CXX_COMPILER)
 
-CXXFLAGS = $(Sundance_CXX_FLAGS)
+CXXFLAGS = $(Viento_CXX_FLAGS)
 
 # Add the Trilinos libraries, search path, and rpath to the 
 # linker command line arguments 
-LIBS = $(CLIENT_EXTRA_LIBS) $(Sundance_SHARED_LIB_RPATH_COMMAND) \
-  $(Sundance_LIBRARIES) \
-  $(Sundance_TPL_LIBRARIES) $(Sundance_EXTRA_LD_FLAGS) 
+LIBS = $(CLIENT_EXTRA_LIBS) $(Viento_SHARED_LIB_RPATH_COMMAND) \
+  $(Viento_LIBRARIES) \
+  $(Viento_TPL_LIBRARIES) $(Viento_EXTRA_LD_FLAGS) 
 
 # Rules for building executables and objects. 
 %.exe : %.o $(EXTRA_OBJS)
 	$(CXX) -o $@ $(LDFLAGS) $(CXXFLAGS) $< $(EXTRA_OBJS) -L$(LIB_PATH) $(LIBS)
 
 %.o : %.cpp
-	$(CXX) -c -o $@ $(CXXFLAGS) -I$(INCLUDE_PATH) $(Sundance_TPL_INCLUDES) $<
+	$(CXX) -c -o $@ $(CXXFLAGS) -I$(INCLUDE_PATH) $(Viento_TPL_INCLUDES) $<
 
 all:
 
