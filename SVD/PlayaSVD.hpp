@@ -8,6 +8,6 @@
 namespace Playa
 {
 
-void POD(const LinearOperator<double> &W, Vector<double> &lambda, LinearOperator<double> &Alpha, LinearOperator<double> &Phi, Sundance::Mesh &mesh);
+void POD(const LinearOperator<double> &W, Vector<double> &lambda, LinearOperator<double> &Alpha, LinearOperator<double> &Phi, Sundance::Mesh &mesh, int debug = 1);
 }
 #endif
