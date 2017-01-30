@@ -38,7 +38,7 @@ LinearOperator<double> makeA(Teuchos::Array<Expr> phi, Mesh mesh, QuadratureFami
 
 	// Create an RxR matrix
 	Playa::VectorSpace<double> domain = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), phi.length());
-	Playa::VectorSpace<double> range = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), phi.length());
+	Playa::VectorSpace<double> range = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), phi.size());
 	Teuchos::RCP<Playa::MatrixFactory<double> > mf = vecType.createMatrixFactory(domain, range);
 	Playa::LinearOperator<double> A = mf->createMatrix();
 
@@ -61,38 +61,77 @@ LinearOperator<double> makeA(Teuchos::Array<Expr> phi, Mesh mesh, QuadratureFami
 }
 
 
+/********************************************************************************
+*
+* This is a deep copy of the matrix B's value into the matrix A
+* Currently assumes the underlying matrix is a DenseSerialMatrix
+*
+********************************************************************************/
+//template <class Scalar> inline
+//LinearOperator<Scalar>& LinearOperator<Scalar>::operator=(const LinearOperator<Scalar>& other)
+void deepCopy(Playa::LinearOperator<double>& A, Playa::LinearOperator<double> other)
+{
+	// Access the matrix as a DenseSerialMatrix
+	Teuchos::RCP<Playa::DenseSerialMatrix> APtr 
+		        = Teuchos::rcp_dynamic_cast<Playa::DenseSerialMatrix>(A.ptr());
+	Teuchos::RCP<Playa::DenseSerialMatrix> otherPtr 
+		        = Teuchos::rcp_dynamic_cast<Playa::DenseSerialMatrix>(other.ptr());	
+
+	double temp;
+	for(int i=0; i<otherPtr->numRows(); i++)
+		for(int j=0; j<otherPtr->numCols(); j++)
+		{
+			temp = otherPtr->dataPtr()[i+otherPtr->numRows()*j];
+			APtr->dataPtr()[i + otherPtr->numRows()*j] = temp;
+		}
+}
 
 /********************************************************************************
 *
 *
 ********************************************************************************/
-LinearOperator<double> makeT(Teuchos::Array<Expr> phi, Mesh mesh, QuadratureFamily quad, VectorType<double> vecType)
+Teuchos::Array<Playa::LinearOperator<double> > makeT(Teuchos::Array<Expr> phi, Mesh mesh, QuadratureFamily quad, VectorType<double> vecType)
 {
 // Cause I don’t know how to get the type from a vector object
 //	Playa::VectorType<double> vecType = phi[0].getVector().space().createMember();
 
 	// Create an RxR matrix
-	Playa::VectorSpace<double> domain = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), phi.length());
-	Playa::VectorSpace<double> range = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), phi.length());
+	Playa::VectorSpace<double> domain = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), phi.size());
+	Playa::VectorSpace<double> range = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), phi.size());
 	Teuchos::RCP<Playa::MatrixFactory<double> > mf = vecType.createMatrixFactory(domain, range);
-	Playa::LinearOperator<double> A = mf->createMatrix();
+	Playa::LinearOperator<double> B = mf->createMatrix();
+
+	// Create the 3rd order tensor T
+	Teuchos::Array<Playa::LinearOperator<double> > T = Teuchos::Array<Playa::LinearOperator<double> >(phi.size(), B);
 
 	// Access the matrix as a DenseSerialMatrix
-	Teuchos::RCP<Playa::DenseSerialMatrix> APtr 
-		        = Teuchos::rcp_dynamic_cast<Playa::DenseSerialMatrix>(A.ptr());
+	Teuchos::RCP<Playa::DenseSerialMatrix> BPtr 
+		        = Teuchos::rcp_dynamic_cast<Playa::DenseSerialMatrix>(B.ptr());
 	/* Access the matrix as an EpetraMatrix
 	Teuchos::RCP<Playa::EpetraMatrix> APtr 
 		        = Teuchos::rcp_dynamic_cast<Playa::EpetraMatrix>(A.ptr());*/
-	double* data = APtr->dataPtr();
+	double* data = BPtr->dataPtr();
 
-	// a_{ij} = data[i + R*j]
-	for(int i = 0; i<APtr->numRows(); i++)
+	// b_{ij} = data[i + R*j]
+	for(int s = 0; s<phi.size(); s++)
 	{
-		for(int r = 0; r<APtr->numCols(); r++)
-			data[i + APtr->numRows()*r] = gradIP(phi[i], phi[r],mesh,quad);
+	std::cout << std::endl;
+	for(int i = 0; i<BPtr->numRows(); i++)
+	{
+		for(int r = 0; r<BPtr->numCols(); r++)
+		{
+			data[i + BPtr->numRows()*r] = tensorIP(phi[i], phi[s], phi[r],mesh,quad);
+			std::cout << "For T[" << s << "]: B[" << i << "," << r << "] = " << data[i+BPtr->numRows()*r] << std::endl;
+		}
 	}
+	//T[s] = B;
+	deepCopy(T[s],B);
+	std::cout << "Here is T[" <<s << "] outside of the matrix loop" << std::endl << T[s] << std::endl;
+	}	
 
-	return A;
+	for(int count = 0; count<phi.size(); count++)
+		std::cout << "Here is T[" << count << "] before return " << std::endl << T[count] << std::endl << std::endl;
+	return T;
 }
 
 
@@ -206,9 +245,23 @@ Trying to figure out how Sundance handles the dot product; i.e. if i give it u*v
 	Playa::LinearOperator<double> A = makeA(array, mesh, quad4, vecType);
 	std::cout << "Here is A: " << std::endl <<	 A << std::endl;
 
-	Teuchos::Array<Playa::LinearOperator<double> > tensorArray;
 
+	/*Playa::VectorSpace<double> domain = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), 3);
+	Playa::VectorSpace<double> range = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), 3);
+	Teuchos::RCP<Playa::MatrixFactory<double> > mf = vecType.createMatrixFactory(domain, range);
+	Playa::LinearOperator<double> jacobian = mf->createMatrix();
 
+	Teuchos::Array<Playa::LinearOperator<double> > tensorArray = Teuchos::Array<Playa::LinearOperator<double> >(3, jacobian);*/
+
+	Teuchos::Array<Sundance::Expr> h_array = Teuchos::tuple(h1,h2,h3);
+	Teuchos::Array<Playa::LinearOperator<double> > tensorArray = makeT(h_array, mesh, quad4, vecType);
+
+	for(int count = 0; count<h_array.size(); count++)
+		std::cout << "Here is T[" << count << "]: " << std::endl << tensorArray[count] << std::endl << std::endl;
+
+//	Teuchos::Array<double> array2 = Teuchos::Array<double>(3,1.0);
+//	std::cout << "Here is array2 " << array2 << std::endl;
+//	array2.resize(3);
 
 
 
