@@ -5,6 +5,14 @@
 //Viento
 #include "VientoSnapshotIO.hpp"
 
+
+/********************************************************************************
+*
+* gradIP peforms the IP (grad*f, grad*g)
+* Mesh mesh - Considered the domain for the integral of the IP
+* QuadratureFamily quad - quadrature rule to use for the integral of the IP
+*
+********************************************************************************/
 double gradIP(Expr f, Expr g, Mesh mesh, QuadratureFamily quad)
 {
 	CellFilter interior = new MaximalCellFilter();
@@ -18,6 +26,13 @@ double gradIP(Expr f, Expr g, Mesh mesh, QuadratureFamily quad)
 	return (IP.evaluate());
 }
 
+/********************************************************************************
+*
+* tensorIP peforms the IP (f, (h*grad)*g)
+* Mesh mesh - Considered the domain for the integral of the IP
+* QuadratureFamily quad - quadrature rule to use for the integral of the IP
+*
+********************************************************************************/
 double tensorIP(Expr f, Expr g, Expr h, Mesh mesh, QuadratureFamily quad)
 {
 	CellFilter interior = new MaximalCellFilter();
@@ -31,6 +46,19 @@ double tensorIP(Expr f, Expr g, Expr h, Mesh mesh, QuadratureFamily quad)
 	return (IP.evaluate());
 }
 
+
+/********************************************************************************
+*
+* makeA creates the matrix A = [(grad*phi_i, grad*phi_j)]
+* Teuchos::Array<Expr> phi - Array of basis function obtained from a POD;
+*                            Each Expr has an underlying DiscreteFunction
+* Mesh mesh - Considered the domain for the integral of the IP
+* QuadratureFamily quad - quadrature rule to use for the integral of the IP
+* VectorType<double> vecType - the vector type used in creating the matrices
+*                              that compose the tensor
+* Currently, this code is only implemented for DenseSerialMatrix
+*
+********************************************************************************/
 LinearOperator<double> makeA(Teuchos::Array<Expr> phi, Mesh mesh, QuadratureFamily quad, VectorType<double> vecType)
 {
 // Cause I don’t know how to get the type from a vector object
@@ -88,6 +116,14 @@ void deepCopy(Playa::LinearOperator<double>& A, Playa::LinearOperator<double> ot
 
 /********************************************************************************
 *
+* makeT creates a 3rd order tensor; cube of matrices stacked together
+* Teuchos::Array<Expr> phi - Array of basis function obtained from a POD;
+*                            Each Expr has an underlying DiscreteFunction
+* Mesh mesh - Considered the domain for the integral of the IP
+* QuadratureFamily quad - quadrature rule to use for the integral of the IP
+* VectorType<double> vecType - the vector type used in creating the matrices
+*                              that compose the tensor
+* Currently, this code is only implemented for DenseSerialMatrix
 *
 ********************************************************************************/
 Teuchos::Array<Playa::LinearOperator<double> > makeT(Teuchos::Array<Expr> phi, Mesh mesh, QuadratureFamily quad, VectorType<double> vecType)
@@ -99,38 +135,41 @@ Teuchos::Array<Playa::LinearOperator<double> > makeT(Teuchos::Array<Expr> phi, M
 	Playa::VectorSpace<double> domain = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), phi.size());
 	Playa::VectorSpace<double> range = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), phi.size());
 	Teuchos::RCP<Playa::MatrixFactory<double> > mf = vecType.createMatrixFactory(domain, range);
-	Playa::LinearOperator<double> B = mf->createMatrix();
+
 
 	// Create the 3rd order tensor T
-	Teuchos::Array<Playa::LinearOperator<double> > T = Teuchos::Array<Playa::LinearOperator<double> >(phi.size(), B);
+	Teuchos::Array<Playa::LinearOperator<double> > T; // = Teuchos::Array<Playa::LinearOperator<double> >(phi.size(), mf->createMatrix());
 
-	// Access the matrix as a DenseSerialMatrix
-	Teuchos::RCP<Playa::DenseSerialMatrix> BPtr 
-		        = Teuchos::rcp_dynamic_cast<Playa::DenseSerialMatrix>(B.ptr());
+
 	/* Access the matrix as an EpetraMatrix
 	Teuchos::RCP<Playa::EpetraMatrix> APtr 
 		        = Teuchos::rcp_dynamic_cast<Playa::EpetraMatrix>(A.ptr());*/
-	double* data = BPtr->dataPtr();
 
 	// b_{ij} = data[i + R*j]
 	for(int s = 0; s<phi.size(); s++)
 	{
-	std::cout << std::endl;
-	for(int i = 0; i<BPtr->numRows(); i++)
-	{
-		for(int r = 0; r<BPtr->numCols(); r++)
-		{
-			data[i + BPtr->numRows()*r] = tensorIP(phi[i], phi[s], phi[r],mesh,quad);
-			std::cout << "For T[" << s << "]: B[" << i << "," << r << "] = " << data[i+BPtr->numRows()*r] << std::endl;
-		}
-	}
-	//T[s] = B;
-	deepCopy(T[s],B);
-	std::cout << "Here is T[" <<s << "] outside of the matrix loop" << std::endl << T[s] << std::endl;
-	}	
+		// Create the s-loop's matrix
+		Playa::LinearOperator<double> B = mf->createMatrix();
+		// Access the matrix as a DenseSerialMatrix
+		Teuchos::RCP<Playa::DenseSerialMatrix> BPtr = Teuchos::rcp_dynamic_cast<Playa::DenseSerialMatrix>(B.ptr());
+		double* data = BPtr->dataPtr();
 
-	for(int count = 0; count<phi.size(); count++)
-		std::cout << "Here is T[" << count << "] before return " << std::endl << T[count] << std::endl << std::endl;
+		for(int i = 0; i<BPtr->numRows(); i++)
+		{
+			for(int r = 0; r<BPtr->numCols(); r++)
+			{
+				data[i + BPtr->numRows()*r] = tensorIP(phi[i], phi[s], phi[r],mesh,quad);
+		//		std::cout << "For T[" << s << "]: B[" << i << "," << r << "] = " << data[i+BPtr->numRows()*r] << std::endl;
+			}
+		}
+		//T[s] = B;
+		//deepCopy(T[s],B);
+		T.push_back(B);
+		//std::cout << "Here is T[" <<s << "] outside of the matrix loop" << std::endl << T[s] << std::endl;
+	}	
+	
+	//for(int count = 0; count<phi.size(); count++)
+	//	std::cout << "Here is T[" << count << "] before return " << std::endl << T[count] << std::endl << std::endl;
 	return T;
 }
 
@@ -259,10 +298,18 @@ Trying to figure out how Sundance handles the dot product; i.e. if i give it u*v
 	for(int count = 0; count<h_array.size(); count++)
 		std::cout << "Here is T[" << count << "]: " << std::endl << tensorArray[count] << std::endl << std::endl;
 
-//	Teuchos::Array<double> array2 = Teuchos::Array<double>(3,1.0);
-//	std::cout << "Here is array2 " << array2 << std::endl;
-//	array2.resize(3);
+/*
+	Teuchos::Array<int> array3;
+	array3.push_back(1);
+	array3.push_back(2);
+	std::cout << "Here is array3 " << array3 << std::endl;
 
+	Teuchos::Array<double> array2 = Teuchos::Array<double>(3,1.0);
+	std::cout << "Here is array2 " << array2 << std::endl;
+//	array2.resize(3);
+	array2[2] = 13;
+	std::cout << "Here is array2 after the update " << array2 << std::endl;
+*/
 
 
 
