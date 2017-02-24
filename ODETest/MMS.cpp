@@ -14,6 +14,7 @@
 #include "QuadraticODERHSBase.hpp"
 
 //For using newton-armijo
+#include "PlayaDenseLUSolver.hpp"
 #include "Teuchos_ParameterList.hpp"
 #include "Teuchos_ParameterXMLFileReader.hpp"
 #include "PlayaNewtonArmijoSolverImpl.hpp"
@@ -234,7 +235,7 @@ Vector<double> getInitialGuess() const
 //return uPrev_.copy();
 
 //return serialToEpetra(uPrev_).copy();
-return serialToEpetra(uPrev_);
+return uPrev_.copy();
 }
 
 void set_tPrev(const double t)
@@ -256,13 +257,13 @@ LinearOperator<double> computeJacobianAndFunction(Vector<double>& functionValue)
 	Vector<double> fPrev = f_.eval1(tPrev_, uPrev_, Jf);
 //	std::cout << "The value of fPrev " << std::endl << fPrev << std::endl << std::endl;
 	// Calculate f(t_{n+1}, x^n)
-//	Vector<double> fNext = f_.eval1(tNext_, currentEvalPt(), Jf); 
-	Vector<double> fNext = f_.eval1(tNext_, epetraToSerial(currentEvalPt()), Jf); 
+	Vector<double> fNext = f_.eval1(tNext_, currentEvalPt(), Jf); 
+//	Vector<double> fNext = f_.eval1(tNext_, epetraToSerial(currentEvalPt()), Jf); 
 //	std::cout << "The value of fNext " << std::endl << fNext << std::endl << std::endl;
 	// Calculate F(x^n)
-//	functionValue = currentEvalPt() - uPrev_ - (h_/2.0)*(fPrev + fNext);
-	functionValue = epetraToSerial(currentEvalPt()) - uPrev_ - (h_/2.0)*(fPrev + fNext);
-	functionValue = serialToEpetra(functionValue);
+	functionValue = currentEvalPt() - uPrev_ - (h_/2.0)*(fPrev + fNext);
+//	functionValue = epetraToSerial(currentEvalPt()) - uPrev_ - (h_/2.0)*(fPrev + fNext);
+//	functionValue = serialToEpetra(functionValue);
 	// Calculate JF(x^n) = I - (h/2)Jf(x^n)
 	LinearOperator<double> JF(rcp(new DenseSerialMatrix(f_.space(), f_.space())));
 	RCP<DenseSerialMatrix> JFptr = DenseSerialMatrix::getConcretePtr(JF);
@@ -401,7 +402,7 @@ int main(int argc, char *argv[])
 		ej[r] = 1.0;
 		Phi.apply(ej,phiCoeff);
 		phi[r] = new DiscreteFunction(ds, serialToEpetra(phiCoeff));
-		phi[r] = List(phi[r][0], phi[r][1]);	
+	//	phi[r] = List(phi[r][0], phi[r][1]);	
 	}
 
 /*
@@ -423,12 +424,43 @@ int main(int argc, char *argv[])
     	NonlinearOperator<double> F = prob;
 	F.setVerb(verbosity);
 
-//	Vector<double> temp = prob->getInitialGuess().copy();
-//typedef typename Teuchos::ScalarTraits<double> ST;
-//double temp = ST::one();
-
-
 	// create the Newton-Armijo solver
+	string NLParamFile = "playa-newton-armijo.xml";
+	ParameterXMLFileReader reader(NLParamFile);
+	ParameterList solverParams = reader.getParameters();
+	//Next line possible since DenseLUSolver and LinearSolver both inherit from LinearSolverBase
+	LinearSolver<double> linearSolver(rcp(new DenseLUSolver())); 
+	NewtonArmijoSolver<double> nonlinearSolver(solverParams, linearSolver);
+
+    	Vector<double> soln;
+    	SolverState<double> state = nonlinearSolver.solve(F, soln);
+    	TEUCHOS_TEST_FOR_EXCEPTION(state.finalState() != SolveConverged,
+     	 runtime_error, "solve failed");
+
+    	Out::root() << "numerical solution = " << std::endl;
+   	Out::os() << soln << std::endl;
+
+	cout << "Compare numerical solution to exact solution " << endl;
+	
+	Array<Vector<double> > alpha(phi.size(), Phi.domain().createMember());
+	Vector<double> error = Phi.domain().createMember();
+	//Needed for the integral
+	CellFilter interior = new MaximalCellFilter();
+	QuadratureFamily quad4 = new GaussianQuadrature(4);
+	for(int tIndex=0; tIndex <= 0; tIndex++)
+{
+	for(int r=0; r<phi.size(); r++)
+	{
+		FunctionalEvaluator ExactEvaluator = FunctionalEvaluator(mesh, Integral(interior, uExact*phi[r], quad4));
+		alpha[tIndex][r] = ExactEvaluator.evaluate();
+	}
+	error[tIndex] = (alpha[tIndex]-soln).norm2();
+	t.setParameterValue(t.getParameterValue()+deltat);
+}
+	cout << "alpha(t=0): " << alpha[0] << endl;	
+	cout << "Error for alpha(t=0): " << error[0] << endl;
+
+/*
 	NonlinearSolver<double> solver = NonlinearSolverBuilder::createSolver("playa-newton-armijo.xml");
 
     Vector<double> soln;
@@ -438,7 +470,7 @@ int main(int argc, char *argv[])
 
     Out::root() << "numerical solution = " << std::endl;
     Out::os() << soln << std::endl;
-//*/
+*/
 
 /*
     Vector<double> exact = prob->exactSoln();
