@@ -246,7 +246,7 @@ void set_tPrev(const double t)
 
 void set_uPrev(const Vector<double> u)
 {
-	uPrev_ = u;
+	uPrev_ = u.copy();
 }
 
 protected:
@@ -382,6 +382,26 @@ int main(int argc, char *argv[])
 	POD(W,lambda,Omega,Phi,mesh,verbosity);
 	SUNDANCE_ROOT_MSG2(verbosity, "POD finished");
 
+	double lambdaTotal = lambda.norm1();
+	double lambdaSum = 0.0;
+	int R = 0;
+	for(int i = 0; i<lambda.dim(); i++)
+	{
+		lambdaSum += lambda[i];
+		if(lambdaSum/lambdaTotal >= .999)
+			{
+				// R is the number of lambdas to keep
+				R = i + 1;
+				SUNDANCE_ROOT_MSG2(verbosity, "Number of lambda[i] kept: " + Teuchos::toString(R));
+			        break;
+	      		}
+	}
+
+	// Based off the value for R, create an appropriate VectorSpace<double>
+	VectorType<double> R_vecType = new SerialVectorType();
+	VectorSpace<double> R_vecSpace = R_vecType.createEvenlyPartitionedSpace(MPIComm::self(), R);
+
+
 	// Create a BasisFamily to express our solution
 	Array<Sundance::BasisFamily> basis = List(new Sundance::Lagrange(2), new Sundance::Lagrange(2)); // 2nd order Piece-Wise Quad Lagrange in 2D
 	// Define our vector type
@@ -391,12 +411,12 @@ int main(int argc, char *argv[])
 	// Looking at PlayaSVD.cpp, Phi is a DenseSerialMatrix
 	Playa::Vector<double> ej = Phi.domain().createMember();
 	Playa::Vector<double> phiCoeff;
-	Array<Expr> phi(Phi.domain().dim());
-	cout << "Size of phi: " << phi.size() << endl;
+	Array<Expr> phi(R);
+	SUNDANCE_ROOT_MSG2(verbosity, "Size of phi: " + Teuchos::toString(phi.size()));
 
 
 	// Get the Expr phi_r(x)
-	for(int r = 0; r<nSteps+1.0; r++)
+	for(int r = 0; r<R; r++)
 	{
 		ej.zero();
 		ej[r] = 1.0;
@@ -405,24 +425,15 @@ int main(int argc, char *argv[])
 	//	phi[r] = List(phi[r][0], phi[r][1]);	
 	}
 
-/*
-	WatchFlag flag("myflag");
-	flag.setParam("assembly loop", 5);
-	flag.activate();
-
-	FunctionalEvaluator IP = FunctionalEvaluator(mesh, Integral(interior, phi[0]*phi[0], new GaussianQuadrature(4), flag));
-
-	cout << "IP is " << IP.evaluate() << endl;*/
-
 	// Create the nonlinear operator for solving our nonlinear ODE
 	MMSQuadODE f(phi, mesh, AreMatrixAndTensorInFile, verbosity);
 	f.initialize();
 	double deltat = tFinal/nSteps;
-//	MyNLO F(f,deltat);
 
 	MyNLO* prob = new MyNLO(f, deltat);
     	NonlinearOperator<double> F = prob;
 	F.setVerb(verbosity);
+
 
 	// create the Newton-Armijo solver
 	string NLParamFile = "playa-newton-armijo.xml";
@@ -432,33 +443,64 @@ int main(int argc, char *argv[])
 	LinearSolver<double> linearSolver(rcp(new DenseLUSolver())); 
 	NewtonArmijoSolver<double> nonlinearSolver(solverParams, linearSolver);
 
-    	Vector<double> soln;
-    	SolverState<double> state = nonlinearSolver.solve(F, soln);
-    	TEUCHOS_TEST_FOR_EXCEPTION(state.finalState() != SolveConverged,
-     	 runtime_error, "solve failed");
+    	Array<Vector<double> > soln(nSteps+1);
+	for(int time = 0; time < soln.length(); time++)
+	{
+		SUNDANCE_ROOT_MSG1(verbosity, "Nonlinear Solve at time step " + Teuchos::toString(time) + " of " + Teuchos::toString(nSteps));
+		prob->set_tPrev( time*deltat );
+    		SolverState<double> state = nonlinearSolver.solve(F, soln[time]);
+	    	TEUCHOS_TEST_FOR_EXCEPTION(state.finalState() != SolveConverged,
+	 	runtime_error, "solve failed");
+		prob->set_uPrev(soln[time]);
+	}
 
-    	Out::root() << "numerical solution = " << std::endl;
-   	Out::os() << soln << std::endl;
+    	SUNDANCE_ROOT_MSG2(verbosity, "numerical solution finished");
+   	//Out::os() << soln[0] << std::endl;
 
 	cout << "Compare numerical solution to exact solution " << endl;
+
 	
-	Array<Vector<double> > alpha(phi.size(), Phi.domain().createMember());
-	Vector<double> error = Phi.domain().createMember();
+	Array<Vector<double> > alpha(nSteps+1);
+	for(int count = 0; count<alpha.length(); count++)
+		alpha[count] = R_vecSpace.createMember();
+/*
+	alpha[0][0] = 100;
+	for(int count = 0; count<alpha.length(); count++)
+		cout << "alpha[" << count << "]: " << endl << alpha[count] << endl;
+*/
+	Vector<double> error = R_vecSpace.createMember();
+	
+
 	//Needed for the integral
 	CellFilter interior = new MaximalCellFilter();
 	QuadratureFamily quad4 = new GaussianQuadrature(4);
-	for(int tIndex=0; tIndex <= 0; tIndex++)
+
+	for(int tIndex=0; tIndex < alpha.length(); tIndex++)
 {
-	for(int r=0; r<phi.size(); r++)
+	for(int r=0; r<R; r++)
 	{
-		FunctionalEvaluator ExactEvaluator = FunctionalEvaluator(mesh, Integral(interior, uExact*phi[r], quad4));
+		FunctionalEvaluator ExactEvaluator(mesh, Integral(interior, uExact*phi[r], quad4));
 		alpha[tIndex][r] = ExactEvaluator.evaluate();
 	}
-	error[tIndex] = (alpha[tIndex]-soln).norm2();
+	error[tIndex] = (alpha[tIndex]-soln[tIndex]).norm2();
 	t.setParameterValue(t.getParameterValue()+deltat);
 }
-	cout << "alpha(t=0): " << alpha[0] << endl;	
-	cout << "Error for alpha(t=0): " << error[0] << endl;
+
+
+	for(int i=0; i < alpha.length(); i++)
+	{
+		cout << "Exact alpha(t=" << i << "): " << alpha[i] << endl;	
+		cout << "Approximate alpha(t=" << i << "): " << soln[i] << endl;	
+	}
+
+	for(int i=0; i < alpha.length(); i++)
+	{	
+		cout << "Error for alpha(t=" << i << "): " << error[i] << endl << endl;
+	}
+	cout << "Max error: " << error.normInf() << endl;
+	//cout << "lambda " << endl << lambda << endl;
+
+
 
 /*
 	NonlinearSolver<double> solver = NonlinearSolverBuilder::createSolver("playa-newton-armijo.xml");
