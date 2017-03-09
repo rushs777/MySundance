@@ -65,9 +65,14 @@ namespace Playa
     Array<Sundance::BasisFamily> basis; 
     if(mesh.spatialDim()==2)
       basis = List(new Sundance::Lagrange(2), new Sundance::Lagrange(2)); // 2nd order PWQL (Piece-Wise Quadratic Lagrange)
-    else 
+    else if(mesh.spatialDim()==3)
       {
 	basis = List(new Sundance::Lagrange(2), new Sundance::Lagrange(2), new Sundance::Lagrange(2)); // 2nd order PWQL (Piece-Wise Quadratic Lagrange)
+      }
+    else
+      {
+	//basis = List(new Sundance::Lagrange(1), new Sundance::Lagrange(1));
+	basis.push_back(new Sundance::Lagrange(1));
       }
 
     // Test Functions
@@ -192,7 +197,7 @@ namespace Playa
       {
 	ei.zero();
 	ei[i] = 1.0;
-	phi_i.zero(); // Cause of previous error; apply addes out to that matrix multiply
+	phi_i.zero(); // Cause of previous error; apply adds out to that matrix multiply
 	Phi.apply(ei,phi_i);
 
 	for(int j = 0; j<PhiPtr->numCols(); j++)
@@ -216,26 +221,29 @@ namespace Playa
 
 	if(i>-1)
 	  {
-	    cout << "Are my coefficient vectors solving equation 8? " << endl
-		 << "Testing for r = " << i << endl;
 	    Vector<double> Sphi_r = S.range().createMember();
 	    S.apply(serialToEpetra(phi_i), Sphi_r);
 	    Vector<double> Wt_Sphi_r = W.domain().createMember();
 	    Vector<double> result = W.range().createMember();
 	    W.applyTranspose(epetraToSerial(Sphi_r), Wt_Sphi_r);
 	    W.apply(Wt_Sphi_r, result);
+
+	    if( (result-lambda[i]*phi_i).norm2() > 1.0e-4)
+	      {
+		cout << "Are my coefficient vectors solving equation 8? " << endl
+		     << "Testing for r = " << i << endl;
 			
-	    cout << "||lhs - rhs||_2 = " << (result-lambda[i]*phi_i).norm2() << endl;
+		cout << "Coefficient vector for r = " << i << " does not satisfy equation 8 "
+		     << endl << "||lhs - rhs||_2 = " << (result-lambda[i]*phi_i).norm2() << endl;
+	      }
 	  }
       }
 
     std::cout << "Is everything orthnormal? " << orthonormal << std::endl;
-    std::cout << "Phi is " << PhiPtr->numRows() << "x" << PhiPtr->numCols() << std::endl;
+    /*std::cout << "Phi is " << PhiPtr->numRows() << "x" << PhiPtr->numCols() << std::endl;
     std::cout << "Alpha is " << Alpha.range().dim() << "x" << Alpha.domain().dim() << std::endl;
     std::cout << "W is " << W.range().dim() << "x" << W.domain().dim() << std::endl;
-    std::cout << "lambda is " << lambda.dim() << "x1" << std::endl;
-    //PhiData[9+10*8] = 1.0;
-
+    std::cout << "lambda is " << lambda.dim() << "x1" << std::endl;*/
 
 
 
