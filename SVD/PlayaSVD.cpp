@@ -46,50 +46,43 @@ namespace Playa
    *
    * S: mass matrix; n x n
    * W: snapshot matrix; n x m
-   * lambda: an array to hold the eigenvalues
+   * sigma: an array to hold the eigenvalues
    * Alpha: a matrix that holds time coefficient vectors of the 
    *        eigenmodes of the POD as columns
    * Phi: a matrix that holds the eigenmodes (eigenvectors) of the POD as columns
    *
    *
    */
-  void POD(const LinearOperator<double> &W, Vector<double> &lambda, LinearOperator<double> &Alpha, LinearOperator<double> &Phi, Sundance::Mesh &mesh, int debug)
+  void POD(const LinearOperator<double> &W, Vector<double> &sigma, LinearOperator<double> &Alpha, LinearOperator<double> &Phi, Sundance::DiscreteSpace &ds, int debug)
   {
     SUNDANCE_ROOT_MSG1(debug, "Creating the mass matrix S.........");
-    // Create the mass matrix S
-    Playa::VectorType<double> vecTypeEpetra = new Playa::EpetraVectorType();
+    // Create the mass matrix S from the DiscreteSpace ds
+    Playa::VectorType<double> vecTypeEpetra = ds.vecType();
+    BasisArray basis = ds.basis();
+    Mesh mesh = ds.mesh();
     // Filter subtype MaximalCellFilter selects all cells having dimension equal to the spatial dimension of the mesh. 
     Sundance::CellFilter interior = new Sundance::MaximalCellFilter();
     // BasisFamily used to express our solutions
     //	Sundance::BasisFamily basis = new Sundance::Lagrange(2); // 2nd order PWQL (Piece-Wise Quadratic Lagrange)
-    Array<Sundance::BasisFamily> basis; 
-    if(mesh.spatialDim()==2)
-      basis = List(new Sundance::Lagrange(2), new Sundance::Lagrange(2)); // 2nd order PWQL (Piece-Wise Quadratic Lagrange)
-    else if(mesh.spatialDim()==3)
-      {
-	basis = List(new Sundance::Lagrange(2), new Sundance::Lagrange(2), new Sundance::Lagrange(2)); // 2nd order PWQL (Piece-Wise Quadratic Lagrange)
-      }
-    else
-      {
-	//basis = List(new Sundance::Lagrange(1), new Sundance::Lagrange(1));
-	basis.push_back(new Sundance::Lagrange(1));
-      }
+
+    //    Array<Sundance::BasisFamily> basis; 
+    // Had to use 	basis.push_back(new Sundance::Lagrange(1)); to get a single basis
 
     // Test Functions
-    int numTest = mesh.spatialDim();
-    Teuchos::Array<Expr> v(numTest);
-    for(int i=0; i<v.size(); i++)
-      v[i] = new TestFunction(basis[i], "v[" + Teuchos::toString(i) + "]");
-
+    Teuchos::Array<Expr> v;
+    for(int i = 0; i < basis.size(); i++)
+      {
+	v.push_back(new TestFunction(basis[i], "v[" + Teuchos::toString(i) + "]"));
+      }
 	
     Sundance::Expr vlist = new Sundance::ListExpr(v);
 
     // Unknown Functions
-    int numUnknown = mesh.spatialDim();
-    Teuchos::Array<Expr> u(numUnknown);
-    for(int i=0; i<u.size(); i++)
-      u[i] = new UnknownFunction(basis[i], "u[" + Teuchos::toString(i) + "]");
-
+    Teuchos::Array<Expr> u;
+    for(int i = 0; i < basis.size(); i++)
+      {
+	u.push_back(new UnknownFunction(basis[i], "u[" + Teuchos::toString(i) + "]"));
+      }
 	
     Sundance::Expr ulist = new Sundance::ListExpr(u);
       
@@ -126,14 +119,13 @@ namespace Playa
     //int m = W.domain().dim();
     //int n = W.range().dim();
 
-    //Teuchos::ParameterXMLFileReader xmlReader("anasazi-ml.xml");
-    //Teuchos::ParameterList solverParams = xmlReader.getParameters().sublist("Eigensolver");
-
     Playa::LinearOperator<double> Alphat;
     SUNDANCE_ROOT_MSG2(debug, "Calculating A = W^t*S*W");
     Playa::LinearOperator<double> A = denseMatrixMatrixProduct(W.transpose(), epetraDenseProduct(S,W) ); //denseMatrixMatrixProduct checks the dimensions
     SUNDANCE_ROOT_MSG1(debug, "Getting the dense SVD"); 
-    denseSVD(A, Alpha, lambda, Alphat);
+    denseSVD(A, Alpha, sigma, Alphat);
+    if(debug >= 2)
+      cout << "Here is Alpha.Alpha^t " << endl << denseMatrixMatrixProduct(Alpha,Alphat) << endl;
 
     // Find phi_r for r = 1:R
     // Start by getting alpha_r from Alpha
@@ -172,7 +164,7 @@ namespace Playa
 	// Now use (10) from "A numerical investigation of velocity-pressure ROM ..."
 	W.apply(alpha_r,phi_r);
 	//std::cout << "Here is W*alpha_" << count << std::endl << phi_r << std::endl;
-	//		phi_r*=(1.0/ ( sqrt(lambda[count])*sqrt(alpha_r*alpha_r) ));
+	//		phi_r*=(1.0/ ( sqrt(sigma[count])*sqrt(alpha_r*alpha_r) ));
 	phi_r*=(1.0/ Snorm(S, serialToEpetra(phi_r) ) );
 	//std::cout << "Here is phi_" << count << std::endl << phi_r << std::endl;
 	
@@ -228,13 +220,13 @@ namespace Playa
 	    W.applyTranspose(epetraToSerial(Sphi_r), Wt_Sphi_r);
 	    W.apply(Wt_Sphi_r, result);
 
-	    if( (result-lambda[i]*phi_i).norm2() > 1.0e-4)
+	    if( (result-sigma[i]*phi_i).norm2() > 1.0e-4)
 	      {
 		cout << "Are my coefficient vectors solving equation 8? " << endl
 		     << "Testing for r = " << i << endl;
 			
 		cout << "Coefficient vector for r = " << i << " does not satisfy equation 8 "
-		     << endl << "||lhs - rhs||_2 = " << (result-lambda[i]*phi_i).norm2() << endl;
+		     << endl << "||lhs - rhs||_2 = " << (result-sigma[i]*phi_i).norm2() << endl;
 	      }
 	  }
       }
@@ -243,7 +235,7 @@ namespace Playa
     /*std::cout << "Phi is " << PhiPtr->numRows() << "x" << PhiPtr->numCols() << std::endl;
     std::cout << "Alpha is " << Alpha.range().dim() << "x" << Alpha.domain().dim() << std::endl;
     std::cout << "W is " << W.range().dim() << "x" << W.domain().dim() << std::endl;
-    std::cout << "lambda is " << lambda.dim() << "x1" << std::endl;*/
+    std::cout << "sigma is " << sigma.dim() << "x1" << std::endl;*/
 
 
 
