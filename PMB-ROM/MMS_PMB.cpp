@@ -154,7 +154,6 @@ int main(int argc, char *argv[])
 	  phiCoeff.zero();
 	  Phi.apply(ej,phiCoeff);
 	  phi[r] = new DiscreteFunction(ds, serialToEpetra(phiCoeff)); //DiscreteFunction requires Epetra vectors
-	  cout << "phi[" << r << "]" << endl << phi[r] << endl;
 	  TEUCHOS_TEST_FOR_EXCEPTION( fabs(L2Norm(mesh, interior, phi[r], quad4) - 1.0) >= 1.0e-6,
 				     runtime_error, "||phi["+Teuchos::toString(r)+"]|| = " + Teuchos::toString(L2Norm(mesh, interior, phi[r], quad4)) + " != 1");
 	}
@@ -177,7 +176,7 @@ int main(int argc, char *argv[])
 	}
       
 
-      cout << "Staring to build reduced-order u from alphaExact " << endl;
+      SUNDANCE_ROOT_MSG1(verbosity, "Staring to build reduced-order u from alphaExact ");
       Array<Expr> uRO(nSteps+1);
       for(int n=0; n<alpha.length(); n++)
 	{	
@@ -188,13 +187,13 @@ int main(int argc, char *argv[])
 	    }
 	}
 
-      cout << "Comparing uExact(t_n) to uRO(t_n)" << endl;
+      SUNDANCE_ROOT_MSG1(verbosity, "Comparing uExact(t_n) to uRO(t_n)");
       Vector<double> l2norm = Phi.domain().createMember();
       for(int time = 0; time < uRO.length(); time++)
 	{
 	  t.setParameterValue(time*deltat);
 	  l2norm[time] = L2Norm(mesh, interior, uExact - uRO[time], quad4);
-	  cout << "Error at time " << time*deltat << "= " << l2norm[time] << endl;
+	  cout << "Error for uROExact at time " << time*deltat << "= " << l2norm[time] << endl;
 	}
 
       double nu = 1.0;
@@ -256,7 +255,7 @@ Power(Sin(x),2) + 9*Power(Cos(3*t),2)*Power(Sin(2*x),2))*Power(Sin(y),3))/18.);
 	{
 	  t.setParameterValue(time*deltat);
 	  pressure_l2norm[time] = L2Norm(mesh, interior, pExact - pRO[time], quad4);
-	  cout << "Error at time " << time*deltat << "= " << pressure_l2norm[time] << endl;
+	  cout << "Error for pROPMB at time " << time*deltat << "= " << pressure_l2norm[time] << endl;
 	}
  
       
@@ -290,8 +289,8 @@ Power(Sin(x),2) + 9*Power(Cos(3*t),2)*Power(Sin(2*x),2))*Power(Sin(y),3))/18.);
 	  writer.write();
 	}
 
-      cout << "The 2-norm for the velocity error over all timesteps: " << l2norm.norm2() << endl;
-      cout << "The 2-norm for the pressure error over all timestpes: " << pressure_l2norm.norm2() << endl;
+      cout << "The 2-norm for the velocity error for nx = " << nx << ", nt = " << nSteps << ": "  << l2norm.norm2() << endl;
+      cout << "The 2-norm for the pROPMB error for nx = " << nx << ", nt = " << nSteps << ": "  << pressure_l2norm.norm2() << endl;
 
 	
     }

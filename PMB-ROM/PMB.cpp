@@ -31,9 +31,7 @@ void PMB::initialize()
   ones.setToConstant(1.0);
   Qprime_.apply(ones, pbarVec);
   pbarVec *= (1.0/M_);
-  std::cout << "pbarVec " << std::endl << pbarVec << std::endl;
   pbar_ = new DiscreteFunction(ds_, serialToEpetra(pbarVec));
-  std::cout << "pbar_ " << std::endl << pbar_ << std::endl;
 
   // Make Q be Q'
   RCP<DenseSerialMatrix> QPtr = DenseSerialMatrix::getConcretePtr(Qprime_);
@@ -97,8 +95,6 @@ void PMB::initialize()
 				     runtime_error, "||psi["+Teuchos::toString(r)+"]|| = " + Teuchos::toString(L2Norm(ds_.mesh(), interior, psi_[r], quad4)) + " != 1");
 	}
 
-      std::cout << "Here is ||pbar|| " << L2Norm(ds_.mesh(), interior, pbar_, quad4) << std::endl;
-
 }
 
 
@@ -111,8 +107,6 @@ void PMB::generate_beta()
   VectorSpace<double> R_vecSpace = R_vecType.createEvenlyPartitionedSpace(MPIComm::self(), R_);
   for(int count = 0; count < M_; count++)
     beta_[count] = R_vecSpace.createMember();
-
-  std::cout << "Resized beta and filled it with zeros" << std::endl;
   
   // c will hold c(t_m)
   Vector<double> c = R_vecSpace.createMember();
@@ -128,8 +122,6 @@ void PMB::generate_beta()
 	  APtr->setElement(i,j,gradIP(psi_[i],psi_[j]));
 	}
     }
-
-  std::cout << "Created A" << std::endl;
 
   DenseLUSolver solver;
   for(int time = 0; time < M_; time++)

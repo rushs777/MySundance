@@ -24,7 +24,6 @@
 
 //Local files
 #include "PlayaSVD.hpp"
-#include "MathematicaConverter.hpp" // converts Mathematica ouput to c++
 
 #include "Sundance.hpp"
 
@@ -34,6 +33,17 @@ using std::cout;
 using namespace Teuchos;
 using namespace Playa;
 using namespace PlayaExprTemplates;
+
+// Things necessary for mathematica generated fs to be understood
+const double Pi = 4.0*atan(1.0);
+Expr Cos(const Expr& x) {return cos(x);}
+Expr Sin(const Expr& x) {return sin(x);}
+Expr Power(const Expr& x, const double& p) {return pow(x,p);}
+Expr Power(const double& x, const Expr& p) {return exp(p*log(x));}
+const double E = exp(1.0);
+Expr Sqrt(const Expr& x) {return sqrt(x);}
+double Sqrt(const double& x) {return sqrt(x);}
+
 
 class MMSQuadODE : public QuadraticODERHSBase
 {
@@ -279,8 +289,7 @@ private:
 
 
 
-// Needed for the peg value; this isolates (0,0)
-CELL_PREDICATE(CornerPointTest, {return fabs(x[1]) < 1.0e-10 && fabs(x[0])<1.0e-10;})
+
 
 
 
@@ -418,9 +427,63 @@ int main(int argc, char *argv[])
 	    }
 	  t.setParameterValue(t.getParameterValue()+deltat);
 	}
+
       
 
-      SUNDANCE_ROOT_MSG1(verbosity, "Staring to build reduced-order u from alphaExact ");
+      // Create the nonlinear operator for solving our nonlinear ODE
+      MMSQuadODE f(phi, mesh, AreMatrixAndTensorInFile, verbosity);
+      f.initialize();
+
+
+      MyNLO* prob = new MyNLO(f, deltat);
+      NonlinearOperator<double> F = prob;
+      //F.setVerb(verbosity);
+
+
+      // create the Newton-Armijo solver
+      string NLParamFile = "playa-newton-armijo.xml";
+      ParameterXMLFileReader reader(NLParamFile);
+      ParameterList solverParams = reader.getParameters();
+      //Next line possible since DenseLUSolver and LinearSolver both inherit from LinearSolverBase
+      LinearSolver<double> linearSolver(rcp(new DenseLUSolver())); 
+      NewtonArmijoSolver<double> nonlinearSolver(solverParams, linearSolver);
+      
+      Array<Vector<double> > soln(nSteps+1);
+      // Establish alpha(t_init)
+      soln[0] = R_vecSpace.createMember();
+      soln[0] = alpha[0].copy();
+      prob->set_uPrev(soln[0]);
+      
+      for(int time = 1; time < soln.length(); time++)
+	{
+	  SUNDANCE_ROOT_MSG1(verbosity, "Nonlinear Solve at time step " + Teuchos::toString(time) + " of " + Teuchos::toString(nSteps));
+	  prob->set_tPrev( (time-1.0)*deltat );
+	  SolverState<double> state = nonlinearSolver.solve(F, soln[time]);
+	  TEUCHOS_TEST_FOR_EXCEPTION(state.finalState() != SolveConverged,
+				     runtime_error, "solve failed");
+	  prob->set_uPrev(soln[time]);
+	}
+
+      SUNDANCE_ROOT_MSG2(verbosity, "numerical solution finished");
+      //Out::os() << soln[0] << std::endl;
+
+      cout << "Compare numerical solution to exact solution " << endl;
+
+
+      Vector<double> alphaError = Phi.domain().createMember();
+      for(int i=0; i < alpha.length(); i++)
+	{
+	  cout << "Exact alpha(t=" << i << "): " << endl << alpha[i] << endl;	
+	  cout << "Approximate alpha(t=" << i << "): " << endl << soln[i] << endl;
+	  alphaError[i] = (alpha[i] - soln[i]).norm2();
+	  cout << "Error for alpha(t=" << i << "): " << alphaError[i] << endl << endl;
+	}
+      cout << "Max error: " << alphaError.normInf() << endl;
+      //cout << "lambda " << endl << lambda << endl;
+
+
+      /*
+      cout << "Staring to build reduced-order u from alphaExact " << endl;
       Array<Expr> uRO(nSteps+1);
       for(int n=0; n<alpha.length(); n++)
 	{	
@@ -431,173 +494,42 @@ int main(int argc, char *argv[])
 	    }
 	}
 
-      SUNDANCE_ROOT_MSG1(verbosity, "Comparing uExact(t_n) to uRO(t_n)");
+      cout << "Comparing uExact(t_n) to uRO(t_n)" << endl;
       Vector<double> l2norm = Phi.domain().createMember();
+      cout << "size of l2norm: " << l2norm.dim() << endl;
       for(int time = 0; time < uRO.length(); time++)
 	{
 	  t.setParameterValue(time*deltat);
 	  l2norm[time] = L2Norm(mesh, interior, uExact - uRO[time], quad4);
-	  cout << "Error in uROExact at time " << time*deltat << "= " << l2norm[time] << endl;
+	  cout << "Error at time " << time*deltat << "= " << l2norm[time] << endl;
 	}
+      */
 
-      double nu = 1.0;
-      Expr q = List((-36*Cos(y)*Sin(t)*Sin(x) + (((44 + 30*Cos(t) + 8*Cos(4*t) + 30*Cos(5*t))*
-						   Cos(x) + 9*((3 + 2*Cos(t) + 2*Cos(5*t))*Cos(3*x) + Cos(5*x)))*Power(Sin(x),3) + 9*Cos(6*t)*Cos(2*x)*Power(Sin(2*x),3))*Power(Sin(y),2) - 3*(8*nu*Cos(2*t)*(-1 + 2*Cos(2*x)) + 6*nu*Cos(3*t)*(-1 + 5*Cos(4*x)) + 8*Sin(2*t)*Power(Sin(x),2) + 9*Sin(3*t)*Power(Sin(2*x),2))*Sin(2*y))/36., (6*nu*(2*Cos(2*t)*(-1 + 2*Cos(2*y))*Sin(2*x) + 3*Cos(3*t)*(-4 + 5*Cos(2*y))*Sin(4*x)) - 18*Cos(x)*Sin(t)*Sin(y) + 3*(4*Sin(2*t)*Sin(2*x) + 9*Sin(3*t)*Sin(4*x))*Power(Sin(y),2) + 2*Cos(y)*(Cos(2*t)*(4*Cos(2*t) - 3*Cos(3*t)*(-3 - 6*Cos(2*x) + Cos(4*x)))*
-Power(Sin(x),2) + 9*Power(Cos(3*t),2)*Power(Sin(2*x),2))*Power(Sin(y),3))/18.);
       
-      // BasisFamily for p
-      //BasisArray pbasis;
-      //pbasis.push_back(new Sundance::Lagrange(1));
-      BasisFamily pbasis = new Sundance::Lagrange(1);
-      
-      // Test Function for p
-      //Sundance::Expr v = new Sundance::TestFunction(pbasis, "v");
-
-      // Unknown Function for p
-      //Sundance::Expr p = new Sundance::UnknownFunction(pbasis, "p");
-
-      // mesh.spatialDim() returns n for nD
-      int dim = mesh.spatialDim();
-
-      // Define our differential operators; note Derivative(x=0)
-      Expr grad = gradient(dim);
-
-      /*******************Begin trying to do PMB****************************************/
-
-      string pressureTag = "st-p";
-      string pressureFilename = fileDir + "/" + pressureTag;
-      Playa::LinearOperator<double> Q = snapshotToMatrix(pressureFilename, nSteps, mesh);
-
-      // Perform the POD of the matrix Q
-      Playa::LinearOperator<double> V;
-      Playa::LinearOperator<double> Psi;
-      Playa::Vector<double> pressureSigma;
-      DiscreteSpace p_ds(mesh, pbasis, epetraVecType);
-
-      // W and mesh need to be defined
-      SUNDANCE_ROOT_MSG1(verbosity, "Entering POD for pressure");
-      POD(Q,pressureSigma,V,Psi,p_ds,verbosity);
-      SUNDANCE_ROOT_MSG2(verbosity, "POD finished for pressure");
-
-      Vector<double> pressureLambda = pressureSigma.copy();
-      for(int count = 0; count < pressureSigma.dim(); count++)
-	pressureLambda[count] = sqrt(pressureLambda[count]);
-      lambdaTotal = pressureLambda.norm1();
-      lambdaSum = 0.0;
-      int pressure_R = 0;
-      for(int i = 0; i<pressureLambda.dim(); i++)
-	{
-	  lambdaSum += pressureLambda[i];
-	  if(lambdaSum/lambdaTotal >= .999)
-	    {
-	      // R is the number of lambdas to keep
-	      pressure_R = i + 1;
-	      SUNDANCE_ROOT_MSG2(verbosity, "Number of pressureLambda[i] kept: " + Teuchos::toString(pressure_R));
-	      break;
-	    }
-	}
-
-      // Based off the value for R, create an appropriate VectorSpace<double>
-      VectorType<double> pressure_R_vecType = new SerialVectorType();
-      VectorSpace<double> pressure_R_vecSpace = pressure_R_vecType.createEvenlyPartitionedSpace(MPIComm::self(), pressure_R);
-
-      // Looking at PlayaSVD.cpp, Psi is a DenseSerialMatrix
-      Playa::Vector<double> ek = Psi.domain().createMember();
-      Playa::Vector<double> psiCoeff = Psi.range().createMember(); // These are the coefficient vectors
-      Array<Expr> psi(pressure_R); // These are the pressure POD basis functions
-      SUNDANCE_ROOT_MSG2(verbosity, "Size of psi: " + Teuchos::toString(psi.size()));
-
-      // Get the Expr psi_r(x)
-      for(int r = 0; r<pressure_R; r++)
-	{
-	  ek.zero();
-	  ek[r] = 1.0;
-	  psiCoeff.zero();
-	  Psi.apply(ek,psiCoeff);
-	  psi[r] = new DiscreteFunction(p_ds, serialToEpetra(psiCoeff)); //DiscreteFunction requires Epetra vectors
-	  TEUCHOS_TEST_FOR_EXCEPTION( fabs(L2Norm(p_ds.mesh(), interior, psi[r], quad4) - 1.0) >= 1.0e-6, runtime_error, "||psi["+Teuchos::toString(r)+"]|| = " + Teuchos::toString(L2Norm(p_ds.mesh(), interior, psi[r], quad4)) + " != 1");
-	}
-
-      //Find the exact betas
-      Array<Vector<double> > beta(nSteps+1);
-      for(int count = 0; count<beta.length(); count++)
-	beta[count] = pressure_R_vecSpace.createMember();
-
-      t.setParameterValue(0.0);
-      for(int tIndex=0; tIndex < beta.length(); tIndex++)
-	{
-	  for(int r=0; r<pressure_R; r++)
-	    {
-	      // beta_r(t_m) = ( pEx(t_m, x, y), psi[r] )
-	      FunctionalEvaluator ExactEvaluator(mesh, Integral(interior, pExact*psi[r], quad4));
-	      beta[tIndex][r] = ExactEvaluator.evaluate();
-	    }
-	  t.setParameterValue(t.getParameterValue()+deltat);
-	}
-      
-
-      SUNDANCE_ROOT_MSG1(verbosity, "Staring to build reduced-order p from betaExact ");
-      Array<Expr> pRO(nSteps+1);
-      for(int m=0; m<beta.length(); m++)
-	{	
-	  pRO[m] = 0.0;
-	  for(int r=0; r<pressure_R; r++)
-	    {
-	      pRO[m] = pRO[m] + beta[m][r]*psi[r]; 
-	    }
-	}
-
-      SUNDANCE_ROOT_MSG1(verbosity, "Comparing pExact(t_n) to pRO(t_n)");
-      Vector<double> pressure_l2norm = Psi.domain().createMember();
-      for(int time = 0; time < pRO.length(); time++)
-	{
-	  t.setParameterValue(time*deltat);
-	  pressure_l2norm[time] = L2Norm(mesh, interior, pExact - pRO[time], quad4);
-	  cout << "Error in pROExact at time " << time*deltat << "= " << pressure_l2norm[time] << endl;
-	}
- 
       /*
-           Vector<double> l2norm_p = Phi.domain().createMember();
-      for(int time = 0; time < pRO.length(); time++)
-	{
-	  t.setParameterValue(time*deltat);
-	  l2norm_p[time] = L2Norm(mesh, interior, pExact - pRO[time], quad4);
-	  cout << "Error at time " << time*deltat << "= " << l2norm_p[time] << endl;
-	}
-
       // Visualize the results
       string vtkDir = "Results/Visuals/";
-      system( ("mkdir -p " + vtkDir).c_str() ); 
       string vtkfilename = "nx"+Teuchos::toString(nx)+"nt"+Teuchos::toString(nSteps);
+      system( ("mkdir -p " + vtkDir).c_str() ); 
       FieldWriter writer = new VTKWriter(vtkDir+vtkfilename);
       writer.addMesh(mesh);
 
-      L2Projector uEx_projector(ds, uExact);
-
-      L2Projector pEx_projector(p_ds, pExact);
+      L2Projector projector(ds, uExact);
       //Write uExact for all the time steps
       for(int time=0; time<1; time++)
 	{
 	  t.setParameterValue(time*deltat);
-	  L2Projector uRO_projector(ds, uRO[time]);
-	  L2Projector pRO_projector(p_ds, pRO[time]);
-	  L2Projector uErrorProjector(ds, uExact - uRO[time]);
-	  L2Projector pErrorProjector(p_ds, pExact - pRO[time]);
-	  writer.addField("uExact[0]", new ExprFieldWrapper(uEx_projector.project()[0]) );
-	  writer.addField("uExact[1]", new ExprFieldWrapper(uEx_projector.project()[1]) );
-	  writer.addField("pExact", new ExprFieldWrapper(pEx_projector.project()) );
-	  writer.addField("uRO[0]", new ExprFieldWrapper(uRO_projector.project()[0]) );
-	  writer.addField("uRO[1]", new ExprFieldWrapper(uRO_projector.project()[1]) );
-	  writer.addField("pRO", new ExprFieldWrapper(pRO_projector.project()) );
-	  writer.addField("uError[0]", new ExprFieldWrapper(uErrorProjector.project()[0]) );
-	  writer.addField("uError[1]", new ExprFieldWrapper(uErrorProjector.project()[1]) );
-	  writer.addField("pError", new ExprFieldWrapper(pErrorProjector.project()) );
+	  L2Projector projectorRO(ds, uRO[time]);
+	  writer.addField("uExact[0]", new ExprFieldWrapper(projector.project()[0]) );
+	  writer.addField("uExact[1]", new ExprFieldWrapper(projector.project()[1]) );
+	  writer.addField("uRO[0]", new ExprFieldWrapper(projectorRO.project()[0]) );
+	  writer.addField("uRO[1]", new ExprFieldWrapper(projectorRO.project()[1]) );
+	  //writer.addField("error", new ExprFieldWrapper(l2norm[time]) );
 	  writer.write();
 	}
       */
 
-      cout << "The 2-norm for the velocity error for nx = " << nx << ", nt = " << nSteps << ": "  << l2norm.norm2() << endl;
-      cout << "The 2-norm for the pROExact error for nx = " << nx << ", nt = " << nSteps << ": "  << pressure_l2norm.norm2() << endl;
+      //      cout << "The 2-norm for the velocity error over all " << nSteps+1 << " timesteps: " << l2norm.norm2() << endl;
 	
     }
   catch(std::exception& e)
