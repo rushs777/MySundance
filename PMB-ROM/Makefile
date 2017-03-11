@@ -66,9 +66,15 @@
 # 
 #--------------------------------------------------------------------------
 #
-EXTRA_OBJS = /home/sirush/PhDResearch/SVD/PlayaSVD.o /home/sirush/PhDResearch/ODETest/denseSerialMatrixIO.o /home/sirush/PhDResearch/ODETest/ODERHSBase.o /home/sirush/PhDResearch/ODETest/QuadraticODERHSBase.o
-#EXTRA_OBJS = denseSerialMatrixIO.o
-#EXTRA_OBJS = ODERHSBase.o QuadraticODERHSBase.o
+#EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
+		/home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
+		/home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
+		/home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
+
+
+EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
+		PMB.o
+
 #EXTRA_OBJS =
 
 # ***
@@ -102,7 +108,7 @@ VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
 #--------------------------------------------------------------------------
 # If needed, set extra include and lib macros
 #--------------------------------------------------------------------------
-CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SVD -I/home/sirush/PhDResearch/ODETest
+CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles
 #CLIENT_EXTRA_INCLUDES =
 
 CLIENT_EXTRA_LIBS = 

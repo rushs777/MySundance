@@ -24,6 +24,7 @@
 
 //Local files
 #include "PlayaSVD.hpp"
+#include "MathematicaConverter.hpp" // converts Mathematica ouput to c++
 
 #include "Sundance.hpp"
 
@@ -33,17 +34,6 @@ using std::cout;
 using namespace Teuchos;
 using namespace Playa;
 using namespace PlayaExprTemplates;
-
-// Things necessary for mathematica generated fs to be understood
-const double Pi = 4.0*atan(1.0);
-Expr Cos(const Expr& x) {return cos(x);}
-Expr Sin(const Expr& x) {return sin(x);}
-Expr Power(const Expr& x, const double& p) {return pow(x,p);}
-Expr Power(const double& x, const Expr& p) {return exp(p*log(x));}
-const double E = exp(1.0);
-Expr Sqrt(const Expr& x) {return sqrt(x);}
-double Sqrt(const double& x) {return sqrt(x);}
-
 
 class MMSQuadODE : public QuadraticODERHSBase
 {
@@ -607,6 +597,8 @@ Power(Sin(x),2) + 9*Power(Cos(3*t),2)*Power(Sin(2*x),2))*Power(Sin(y),3))/18.);
 	}
       */
 
+      cout << "The 2-norm for the velocity error over all timesteps: " << l2norm.norm2() << endl;
+      cout << "The 2-norm for the pressure error over all timestpes: " << pressure_l2norm.norm2() << endl;
 	
     }
   catch(std::exception& e)
