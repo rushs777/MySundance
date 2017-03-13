@@ -1,0 +1,371 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     11352,        363]
+NotebookOptionsPosition[     10296,        324]
+NotebookOutlinePosition[     10663,        340]
+CellTagsIndexPosition[     10620,        337]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell["\<\
+
+Work on the square [0,2 \[Pi]],[0,2 \[Pi]]. Pick a streamfunction that has \
+zero value and zero normal derivative on boundary. Then, both components of \
+velocity will be zero on boundary.\
+\>", "Text",
+ CellChangeTimes->{{3.6960865165161543`*^9, 3.6960866062370462`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"\[Psi]", "[", 
+   RowBox[{"x_", ",", "y_", ",", "z_", ",", "t_"}], "]"}], "=", 
+  RowBox[{"Sum", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"1", " ", "/", 
+      RowBox[{"(", 
+       RowBox[{"1", " ", "+", " ", "n", " ", "+", " ", "m", "+", "k"}], 
+       ")"}]}], 
+     RowBox[{
+      RowBox[{"Sin", "[", 
+       RowBox[{"m", " ", "x"}], "]"}], "^", "2"}], " ", 
+     RowBox[{
+      RowBox[{"Sin", "[", 
+       RowBox[{"n", " ", "y"}], "]"}], "^", "2"}], 
+     RowBox[{
+      RowBox[{"Sin", "[", 
+       RowBox[{"k", " ", "z"}], "]"}], "^", "2"}], 
+     RowBox[{"Cos", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"m", "+", "n", "+", "k"}], ")"}], "t"}], "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"m", ",", "1", ",", "2"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"n", ",", "1", ",", "2", ",", "3"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"k", ",", "1", ",", "2", ",", "3"}], "}"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.6960847483073072`*^9, 3.69608482043478*^9}, {
+  3.696084868994605*^9, 3.696084949125535*^9}, {3.69608521461001*^9, 
+  3.69608525304009*^9}, {3.696085372643549*^9, 3.696085462143374*^9}, {
+  3.6960855901380243`*^9, 3.696085598921496*^9}, {3.6960858261609287`*^9, 
+  3.6960858794531927`*^9}, {3.69842104899647*^9, 3.698421091816955*^9}}],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{
+   RowBox[{
+    FractionBox["1", "4"], " ", 
+    RowBox[{"cos", "(", 
+     RowBox[{"3", " ", "t"}], ")"}], " ", 
+    RowBox[{
+     SuperscriptBox["sin", "2"], "(", "x", ")"}], " ", 
+    RowBox[{
+     SuperscriptBox["sin", "2"], "(", "y", ")"}], " ", 
+    RowBox[{
+     SuperscriptBox["sin", "2"], "(", "z", ")"}]}], "+", 
+   RowBox[{
+    FractionBox["1", "5"], " ", 
+    RowBox[{"cos", "(", 
+     RowBox[{"4", " ", "t"}], ")"}], " ", 
+    RowBox[{
+     SuperscriptBox["sin", "2"], "(", 
+     RowBox[{"2", " ", "x"}], ")"}], " ", 
+    RowBox[{
+     SuperscriptBox["sin", "2"], "(", "y", ")"}], " ", 
+    RowBox[{
+     SuperscriptBox["sin", "2"], "(", "z", ")"}]}]}], 
+  TraditionalForm]], "Output",
+ CellChangeTimes->{3.69842109327967*^9, 3.698421142053401*^9, 
+  3.698421363866078*^9, 3.698421424032042*^9}]
+}, Open  ]],
+
+Cell["To get velocity field, take curl of streamfunction {0,0,\[Psi]}", "Text",
+ CellChangeTimes->{{3.696086628765201*^9, 3.6960866683222313`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"v", "[", 
+    RowBox[{"x_", ",", "y_", ",", "z_", ",", "t_"}], "]"}], "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"D", "[", 
+      RowBox[{
+       RowBox[{"\[Psi]", "[", 
+        RowBox[{"x", ",", "y", ",", "z", ",", "t"}], "]"}], ",", "y"}], "]"}],
+      ",", 
+     RowBox[{"-", 
+      RowBox[{"D", "[", 
+       RowBox[{
+        RowBox[{"\[Psi]", "[", 
+         RowBox[{"x", ",", "y", ",", "z", ",", "t"}], "]"}], ",", "x"}], 
+       "]"}]}]}], "}"}]}], "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.696085988603459*^9, 3.696086029918282*^9}, {
+  3.696163315655284*^9, 3.696163320318664*^9}, {3.698421154684531*^9, 
+  3.698421155334695*^9}, {3.698421289518334*^9, 3.698421306168543*^9}}],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      FractionBox["1", "2"], " ", 
+      RowBox[{"cos", "(", 
+       RowBox[{"3", " ", "t"}], ")"}], " ", 
+      RowBox[{
+       SuperscriptBox["sin", "2"], "(", "x", ")"}], " ", 
+      RowBox[{"sin", "(", "y", ")"}], " ", 
+      RowBox[{"cos", "(", "y", ")"}], " ", 
+      RowBox[{
+       SuperscriptBox["sin", "2"], "(", "z", ")"}]}], "+", 
+     RowBox[{
+      FractionBox["2", "5"], " ", 
+      RowBox[{"cos", "(", 
+       RowBox[{"4", " ", "t"}], ")"}], " ", 
+      RowBox[{
+       SuperscriptBox["sin", "2"], "(", 
+       RowBox[{"2", " ", "x"}], ")"}], " ", 
+      RowBox[{"sin", "(", "y", ")"}], " ", 
+      RowBox[{"cos", "(", "y", ")"}], " ", 
+      RowBox[{
+       SuperscriptBox["sin", "2"], "(", "z", ")"}]}]}], ",", 
+    RowBox[{
+     RowBox[{"-", 
+      RowBox[{
+       FractionBox["1", "2"], " ", 
+       RowBox[{"cos", "(", 
+        RowBox[{"3", " ", "t"}], ")"}], " ", 
+       RowBox[{"sin", "(", "x", ")"}], " ", 
+       RowBox[{"cos", "(", "x", ")"}], " ", 
+       RowBox[{
+        SuperscriptBox["sin", "2"], "(", "y", ")"}], " ", 
+       RowBox[{
+        SuperscriptBox["sin", "2"], "(", "z", ")"}]}]}], "-", 
+     RowBox[{
+      FractionBox["4", "5"], " ", 
+      RowBox[{"cos", "(", 
+       RowBox[{"4", " ", "t"}], ")"}], " ", 
+      RowBox[{"sin", "(", 
+       RowBox[{"2", " ", "x"}], ")"}], " ", 
+      RowBox[{"cos", "(", 
+       RowBox[{"2", " ", "x"}], ")"}], " ", 
+      RowBox[{
+       SuperscriptBox["sin", "2"], "(", "y", ")"}], " ", 
+      RowBox[{
+       SuperscriptBox["sin", "2"], "(", "z", ")"}]}]}]}], "}"}], 
+  TraditionalForm]], "Output",
+ CellChangeTimes->{{3.698421277004498*^9, 3.698421308864874*^9}, 
+   3.698421366941506*^9, 3.698421427843885*^9}]
+}, Open  ]],
+
+Cell["Make sure that v(\[CapitalGamma]) = 0", "Text",
+ CellChangeTimes->{{3.696086676217938*^9, 3.696086696297052*^9}, {
+  3.69621192289489*^9, 3.696212018555773*^9}, {3.698421868320191*^9, 
+  3.698421877782177*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.698421863052194*^9, 3.698421863424672*^9}, 
+   3.698421926641344*^9}],
+
+Cell["\<\
+Choose a pressure having zero normal derivative (i.e. \\partial p / \\partial \
+n = n.grad(p) = 0) \
+\>", "Text",
+ CellChangeTimes->{{3.696086676217938*^9, 3.696086696297052*^9}, {
+  3.69621192289489*^9, 3.696212018555773*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"p", "[", 
+   RowBox[{"x_", ",", "y_", ",", "z_", ",", "t_"}], "]"}], "=", 
+  RowBox[{
+   RowBox[{"Cos", "[", "x", "]"}], " ", 
+   RowBox[{"Cos", "[", "y", "]"}], 
+   RowBox[{"Cos", "[", "z", "]"}], 
+   RowBox[{"Sin", "[", "t", "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.698421511419979*^9, 3.698421546914233*^9}, {
+  3.698421596977469*^9, 3.6984215982234497`*^9}, {3.698421633135543*^9, 
+  3.6984218354773693`*^9}}],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{
+   RowBox[{"sin", "(", "t", ")"}], " ", 
+   RowBox[{"cos", "(", "x", ")"}], " ", 
+   RowBox[{"cos", "(", "y", ")"}], " ", 
+   RowBox[{"cos", "(", "z", ")"}]}], TraditionalForm]], "Output",
+ CellChangeTimes->{{3.69842151778893*^9, 3.698421598754537*^9}, 
+   3.698421633607233*^9, {3.698421679557863*^9, 3.698421685000175*^9}, 
+   3.698421771134255*^9, {3.6984218096539593`*^9, 3.6984218360346603`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Grad", "[", 
+    RowBox[{
+     RowBox[{"p", "[", 
+      RowBox[{"x", ",", "y", ",", "z", ",", "t"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "y", ",", "z"}], "}"}]}], "]"}], ".", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], "/.", 
+  RowBox[{"{", 
+   RowBox[{"x", "\[Rule]", "0"}], "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Grad", "[", 
+    RowBox[{
+     RowBox[{"p", "[", 
+      RowBox[{"x", ",", "y", ",", "z", ",", "t"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "y", ",", "z"}], "}"}]}], "]"}], ".", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], "/.", 
+  RowBox[{"{", 
+   RowBox[{"x", "\[Rule]", 
+    RowBox[{"2", "\[Pi]"}]}], "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Grad", "[", 
+    RowBox[{
+     RowBox[{"p", "[", 
+      RowBox[{"x", ",", "y", ",", "z", ",", "t"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "y", ",", "z"}], "}"}]}], "]"}], ".", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], "/.", 
+  RowBox[{"{", 
+   RowBox[{"y", "\[Rule]", "0"}], "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Grad", "[", 
+    RowBox[{
+     RowBox[{"p", "[", 
+      RowBox[{"x", ",", "y", ",", "z", ",", "t"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "y", ",", "z"}], "}"}]}], "]"}], ".", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], "/.", 
+  RowBox[{"{", 
+   RowBox[{"y", "\[Rule]", 
+    RowBox[{"2", "\[Pi]"}]}], "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Grad", "[", 
+    RowBox[{
+     RowBox[{"p", "[", 
+      RowBox[{"x", ",", "y", ",", "z", ",", "t"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "y", ",", "z"}], "}"}]}], "]"}], ".", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], "/.", 
+  RowBox[{"{", 
+   RowBox[{"z", "\[Rule]", "0"}], "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Grad", "[", 
+    RowBox[{
+     RowBox[{"p", "[", 
+      RowBox[{"x", ",", "y", ",", "z", ",", "t"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "y", ",", "z"}], "}"}]}], "]"}], ".", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], "/.", 
+  RowBox[{"{", 
+   RowBox[{"z", "\[Rule]", 
+    RowBox[{"2", "\[Pi]"}]}], "}"}]}]}], "Input"],
+
+Cell[BoxData[
+ FormBox["0", TraditionalForm]], "Output",
+ CellChangeTimes->{3.69842184455214*^9}],
+
+Cell[BoxData[
+ FormBox["0", TraditionalForm]], "Output",
+ CellChangeTimes->{3.6984218445537663`*^9}],
+
+Cell[BoxData[
+ FormBox["0", TraditionalForm]], "Output",
+ CellChangeTimes->{3.698421844555193*^9}],
+
+Cell[BoxData[
+ FormBox["0", TraditionalForm]], "Output",
+ CellChangeTimes->{3.698421844556381*^9}],
+
+Cell[BoxData[
+ FormBox["0", TraditionalForm]], "Output",
+ CellChangeTimes->{3.698421844557396*^9}],
+
+Cell[BoxData[
+ FormBox["0", TraditionalForm]], "Output",
+ CellChangeTimes->{3.6984218445584087`*^9}]
+}, Open  ]]
+},
+WindowSize->{928, 1028},
+WindowMargins->{{Automatic, 0}, {0, Automatic}},
+Magnification:>2. Inherited,
+FrontEndVersion->"11.0 for Linux x86 (64-bit) (September 21, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 284, 6, 232, "Text"],
+Cell[CellGroupData[{
+Cell[867, 30, 1325, 34, 193, "Input"],
+Cell[2195, 66, 842, 26, 179, "Output"]
+}, Open  ]],
+Cell[3052, 95, 147, 1, 64, "Text"],
+Cell[CellGroupData[{
+Cell[3224, 100, 751, 20, 150, "Input"],
+Cell[3978, 122, 1773, 52, 341, "Output"]
+}, Open  ]],
+Cell[5766, 177, 216, 3, 64, "Text"],
+Cell[5985, 182, 118, 2, 63, "Input"],
+Cell[6106, 186, 237, 5, 106, "Text"],
+Cell[CellGroupData[{
+Cell[6368, 195, 450, 11, 65, "Input"],
+Cell[6821, 208, 436, 9, 91, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7294, 222, 2377, 75, 532, "Input"],
+Cell[9674, 299, 97, 2, 89, "Output"],
+Cell[9774, 303, 100, 2, 89, "Output"],
+Cell[9877, 307, 98, 2, 89, "Output"],
+Cell[9978, 311, 98, 2, 89, "Output"],
+Cell[10079, 315, 98, 2, 89, "Output"],
+Cell[10180, 319, 100, 2, 122, "Output"]
+}, Open  ]]
+}
+]
+*)
+

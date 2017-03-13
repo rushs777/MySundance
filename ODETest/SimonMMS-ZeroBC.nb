@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[   2845342,      46998]
+NotebookDataLength[   2845368,      46999]
 NotebookOptionsPosition[   2844121,      46956]
-NotebookOutlinePosition[   2844488,      46972]
-CellTagsIndexPosition[   2844445,      46969]
+NotebookOutlinePosition[   2844511,      46973]
+CellTagsIndexPosition[   2844468,      46970]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -46956,6 +46956,7 @@ Cos(4*x)))*
 },
 WindowSize->{928, 1028},
 WindowMargins->{{0, Automatic}, {0, Automatic}},
+CellContext->Notebook,
 Magnification:>2. Inherited,
 FrontEndVersion->"11.0 for Linux x86 (64-bit) (September 21, 2016)",
 StyleDefinitions->"Default.nb"
@@ -46991,14 +46992,14 @@ Cell[2833628, 46666, 237, 5, 106, "Text"],
 Cell[CellGroupData[{
 Cell[2833890, 46675, 415, 10, 107, "Input"],
 Cell[2834308, 46687, 250, 6, 63, "Output"],
-Cell[2834561, 46695, 106, 1, 63, "Output"]
+Cell[2834561, 46695, 106, 1, 126, "Output"]
 }, Open  ]],
-Cell[2834682, 46699, 128, 1, 64, "Text"],
-Cell[2834813, 46702, 1020, 32, 194, "Input"],
+Cell[2834682, 46699, 128, 1, 128, "Text"],
+Cell[2834813, 46702, 1020, 32, 388, "Input"],
 Cell[CellGroupData[{
-Cell[2835858, 46738, 680, 15, 107, "Input"],
-Cell[2836541, 46755, 6533, 176, 896, "Output"],
-Cell[2843077, 46933, 1028, 20, 417, "Output"]
+Cell[2835858, 46738, 680, 15, 214, "Input"],
+Cell[2836541, 46755, 6533, 176, 1792, "Output"],
+Cell[2843077, 46933, 1028, 20, 834, "Output"]
 }, Open  ]]
 }
 ]
