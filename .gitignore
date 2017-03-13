@@ -1,6 +1,10 @@
 results/
+Results/
 *.exe
 *.jpg
+*.exo
+*valgrind*
+*~
 
 #Folders I don't want added
 latex/
@@ -10,3 +14,21 @@ Chandani/
 epetraTutorial/
 KISS/
 OrthogonalIteration/
+A_and_T/
+VMB-ROM/
+
+#Mathematica Notebooks to ignore
+ODETest/MMS.nb
+
+#Files I don't want tracked
+ODETest/ODETest.cpp
+ODETest/parameter.cpp
+SVD/1.0svd.cpp
+SVD/1.1svd.cpp
+SVD/Noodle.cpp
+SVD/log.txt
+SVD/MMS_SVD.cpp
+PMB-ROM/log.txt
+PMB-ROM/log_tau_8.txt
+SVD/cube3DTest.99.vec
+
