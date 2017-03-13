@@ -61,9 +61,6 @@ double tensorIP(Expr f, Expr g, Expr h, Mesh mesh, QuadratureFamily quad)
 ********************************************************************************/
 LinearOperator<double> makeA(Teuchos::Array<Expr> phi, Mesh mesh, QuadratureFamily quad, VectorType<double> vecType)
 {
-// Cause I don’t know how to get the type from a vector object
-//	Playa::VectorType<double> vecType = phi[0].getVector().space().createMember();
-
 	// Create an RxR matrix
 	Playa::VectorSpace<double> domain = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), phi.length());
 	Playa::VectorSpace<double> range = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), phi.size());
@@ -73,9 +70,7 @@ LinearOperator<double> makeA(Teuchos::Array<Expr> phi, Mesh mesh, QuadratureFami
 	// Access the matrix as a DenseSerialMatrix
 	Teuchos::RCP<Playa::DenseSerialMatrix> APtr 
 		        = Teuchos::rcp_dynamic_cast<Playa::DenseSerialMatrix>(A.ptr());
-	/* Access the matrix as an EpetraMatrix
-	Teuchos::RCP<Playa::EpetraMatrix> APtr 
-		        = Teuchos::rcp_dynamic_cast<Playa::EpetraMatrix>(A.ptr());*/
+
 	double* data = APtr->dataPtr();
 
 	// a_{ij} = data[i + R*j]
@@ -128,9 +123,6 @@ void deepCopy(Playa::LinearOperator<double>& A, Playa::LinearOperator<double> ot
 ********************************************************************************/
 Teuchos::Array<Playa::LinearOperator<double> > makeT(Teuchos::Array<Expr> phi, Mesh mesh, QuadratureFamily quad, VectorType<double> vecType)
 {
-// Cause I don’t know how to get the type from a vector object
-//	Playa::VectorType<double> vecType = phi[0].getVector().space().createMember();
-
 	// Create an RxR matrix
 	Playa::VectorSpace<double> domain = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), phi.size());
 	Playa::VectorSpace<double> range = vecType.createEvenlyPartitionedSpace(Playa::MPIComm::world(), phi.size());
@@ -263,8 +255,6 @@ Trying to figure out how Sundance handles the dot product; i.e. if i give it u*v
 
 	// Begin testing tensorIP
 	Expr h1 = List(x*x, 3*y + 2*x);
-//	Expr h1 = List(List(x*x), List(3*y+2*x));
-//	Expr h1 = List(List(x*x, 3*y+2*x));
 	Expr h2 = List(x*x*x*x + 10*y, y*y*y -1);
 	Expr h3 = List(x*y+y*y, 24*y);
 	Expr t = h3*((h1*grad)*h2);
@@ -297,6 +287,11 @@ Trying to figure out how Sundance handles the dot product; i.e. if i give it u*v
 
 	for(int count = 0; count<h_array.size(); count++)
 		std::cout << "Here is T[" << count << "]: " << std::endl << tensorArray[count] << std::endl << std::endl;
+
+	Teuchos::Array<Playa::LinearOperator<double> > fgTensor = makeT(array, mesh, quad4, vecType);
+	for(int count = 0; count<array.size(); count++)
+		std::cout << "Here is T[" << count << "]: " << std::endl << fgTensor[count] << std::endl << std::endl;
+
 
 /*
 	Teuchos::Array<int> array3;

@@ -188,7 +188,7 @@ private:
 }; // End of MMSQuadODE class
 
 
-y
+
 /*****************************************************************************************
  *
  * The class MyNLO inherits from NonLinearOperatorBase. As such, it must provide
@@ -213,13 +213,7 @@ public:
   MyNLO(MMSQuadODE f, double h) : NonlinearOperatorBase(f.space(), f.space()), f_(f) 
   {
     uPrev_ = f.space().createMember();
-    uNext_ = f.space().createMember();
-    //setEvalPt(epetraToSerial(getInitialGuess()));
     setEvalPt(getInitialGuess());
-
-    for(int count = 0; count < f.space().dim(); count++)
-      uNext_[count] = 1.0;
-
 
     h_ = h;
     tPrev_ = 0.0;
@@ -231,10 +225,6 @@ public:
 
   Vector<double> getInitialGuess() const
   {
-    // seems to have an underlying SerialVector that is causing problems
-    //return uPrev_.copy();
-
-    //return serialToEpetra(uPrev_).copy();
     return uPrev_.copy();
   }
 
@@ -255,15 +245,10 @@ protected:
     LinearOperator<double> Jf;
     // Calculate f(t_n, u_n)
     Vector<double> fPrev = f_.eval1(tPrev_, uPrev_, Jf);
-    //	std::cout << "The value of fPrev " << std::endl << fPrev << std::endl << std::endl;
     // Calculate f(t_{n+1}, x^n)
     Vector<double> fNext = f_.eval1(tNext_, currentEvalPt(), Jf); 
-    //	Vector<double> fNext = f_.eval1(tNext_, epetraToSerial(currentEvalPt()), Jf); 
-    //	std::cout << "The value of fNext " << std::endl << fNext << std::endl << std::endl;
     // Calculate F(x^n)
     functionValue = currentEvalPt() - uPrev_ - (h_/2.0)*(fPrev + fNext);
-    //	functionValue = epetraToSerial(currentEvalPt()) - uPrev_ - (h_/2.0)*(fPrev + fNext);
-    //	functionValue = serialToEpetra(functionValue);
     // Calculate JF(x^n) = I - (h/2)Jf(x^n)
     LinearOperator<double> JF(rcp(new DenseSerialMatrix(f_.space(), f_.space())));
     RCP<DenseSerialMatrix> JFptr = DenseSerialMatrix::getConcretePtr(JF);
@@ -277,9 +262,6 @@ protected:
 	  if(i!=j)
 	    JFptr->setElement(i,j, (-h_/2.0)*Jfptr->getElement(i,j));
 	}
-
-    //	std::cout << "Jf" << std::endl << Jf << std::endl;
-    //	std::cout << "JF" << std::endl << JF << std::endl;
 
     return JF;
   }
@@ -338,6 +320,7 @@ int main(int argc, char *argv[])
       Expr x = new CoordExpr(0,"x");
       Expr y = new CoordExpr(1,"y");
       Expr t = new Sundance::Parameter(0.0);
+      double deltat = tFinal/nSteps;
 
       // Define our solution
       Expr uExact = List((2*Cos(2*t)*Cos(y)*Power(Sin(x),2)*Sin(y))/3. + 
@@ -423,56 +406,16 @@ int main(int argc, char *argv[])
 			Vector<double> temp = getDiscreteFunctionVector(phi[r]);
 			setDiscreteFunctionVector(phi[r], temp/l2norm);
 	  */
-	  cout << "||phi[r]|| = " << L2Norm(mesh, interior, phi[r], quad4) << endl;
-	  //	phi[r] = List(phi[r][0], phi[r][1]);	
+	  cout << "||phi[r]|| = " << L2Norm(mesh, interior, phi[r], quad4) << endl;	
 	}
 
-
-      // Create the nonlinear operator for solving our nonlinear ODE
-      MMSQuadODE f(phi, mesh, AreMatrixAndTensorInFile, verbosity);
-      f.initialize();
-      double deltat = tFinal/nSteps;
-
-      MyNLO* prob = new MyNLO(f, deltat);
-      NonlinearOperator<double> F = prob;
-      F.setVerb(verbosity);
-
-
-      // create the Newton-Armijo solver
-      /*	string NLParamFile = "playa-newton-armijo.xml";
-		ParameterXMLFileReader reader(NLParamFile);
-		ParameterList solverParams = reader.getParameters();
-		//Next line possible since DenseLUSolver and LinearSolver both inherit from LinearSolverBase
-		LinearSolver<double> linearSolver(rcp(new DenseLUSolver())); 
-		NewtonArmijoSolver<double> nonlinearSolver(solverParams, linearSolver);
-
-		Array<Vector<double> > soln(nSteps+1);
-		for(int time = 0; time < soln.length(); time++)
-		{
-		SUNDANCE_ROOT_MSG1(verbosity, "Nonlinear Solve at time step " + Teuchos::toString(time) + " of " + Teuchos::toString(nSteps));
-		prob->set_tPrev( time*deltat );
-    		SolverState<double> state = nonlinearSolver.solve(F, soln[time]);
-	    	TEUCHOS_TEST_FOR_EXCEPTION(state.finalState() != SolveConverged,
-	 	runtime_error, "solve failed");
-		prob->set_uPrev(soln[time]);
-		}
-
-		SUNDANCE_ROOT_MSG2(verbosity, "numerical solution finished");
-      */   	//Out::os() << soln[0] << std::endl;
-
-      cout << "Compare numerical solution to exact solution " << endl;
-
-	
+      //Find the exact alphas
       Array<Vector<double> > alpha(nSteps+1);
       for(int count = 0; count<alpha.length(); count++)
 	alpha[count] = R_vecSpace.createMember();
 
       // Needs to be of size nSteps+1;
       Vector<double> error = Phi.domain().createMember();
-	
-
-
-
       for(int tIndex=0; tIndex < alpha.length(); tIndex++)
 	{
 	  for(int r=0; r<R; r++)
@@ -484,20 +427,60 @@ int main(int argc, char *argv[])
 	  //		error[tIndex] = alpha[tIndex].norm2();
 	  t.setParameterValue(t.getParameterValue()+deltat);
 	}
+      
+
+      // Create the nonlinear operator for solving our nonlinear ODE
+      MMSQuadODE f(phi, mesh, AreMatrixAndTensorInFile, verbosity);
+      f.initialize();
 
 
-      /*	for(int i=0; i < alpha.length(); i++)
-		{
-		cout << "Exact alpha(t=" << i << "): " << endl << alpha[i] << endl;	
-		cout << "Approximate alpha(t=" << i << "): " << endl << soln[i] << endl;	
-		}
+      MyNLO* prob = new MyNLO(f, deltat);
+      NonlinearOperator<double> F = prob;
+      //F.setVerb(verbosity);
 
-		for(int i=0; i < alpha.length(); i++)
-		{	
-		cout << "Error for alpha(t=" << i << "): " << error[i] << endl << endl;
-		}
-		cout << "Max error: " << error.normInf() << endl;
-      */	//cout << "lambda " << endl << lambda << endl;
+
+      // create the Newton-Armijo solver
+      string NLParamFile = "playa-newton-armijo.xml";
+      ParameterXMLFileReader reader(NLParamFile);
+      ParameterList solverParams = reader.getParameters();
+      //Next line possible since DenseLUSolver and LinearSolver both inherit from LinearSolverBase
+      LinearSolver<double> linearSolver(rcp(new DenseLUSolver())); 
+      NewtonArmijoSolver<double> nonlinearSolver(solverParams, linearSolver);
+      
+      Array<Vector<double> > soln(nSteps+1);
+      // Establish alpha(t_init)
+      soln[0] = R_vecSpace.createMember();
+      soln[0] = alpha[0].copy();
+      prob->set_uPrev(soln[0]);
+      
+      for(int time = 1; time < soln.length(); time++)
+	{
+	  SUNDANCE_ROOT_MSG1(verbosity, "Nonlinear Solve at time step " + Teuchos::toString(time) + " of " + Teuchos::toString(nSteps));
+	  prob->set_tPrev( (time-1.0)*deltat );
+	  SolverState<double> state = nonlinearSolver.solve(F, soln[time]);
+	  TEUCHOS_TEST_FOR_EXCEPTION(state.finalState() != SolveConverged,
+				     runtime_error, "solve failed");
+	  prob->set_uPrev(soln[time]);
+	}
+
+      SUNDANCE_ROOT_MSG2(verbosity, "numerical solution finished");
+      //Out::os() << soln[0] << std::endl;
+
+      cout << "Compare numerical solution to exact solution " << endl;
+
+
+      for(int i=0; i < alpha.length(); i++)
+	{
+	  cout << "Exact alpha(t=" << i << "): " << endl << alpha[i] << endl;	
+	  cout << "Approximate alpha(t=" << i << "): " << endl << soln[i] << endl;	
+	}
+      
+      for(int i=0; i < alpha.length(); i++)
+	{	
+	  cout << "Error for alpha(t=" << i << "): " << error[i] << endl << endl;
+	}
+      cout << "Max error: " << error.normInf() << endl;
+      //cout << "lambda " << endl << lambda << endl;
 
 
 

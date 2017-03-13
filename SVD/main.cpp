@@ -39,11 +39,13 @@ int main (int argc, char *argv[])
 	int nx = 1;
 	int verbosity = 0;
 	int PhiCol = 0;
+	int debug = 1;
 
       //Use this options from the command line via ./executable --"name"=value
       Sundance::setOption("nx",nx,"Number of elements along each axis");
       Sundance::setOption("verbosity",verbosity,"Controls the level of detail the program prints to screen about what it is doing");
 	Sundance::setOption("PhiCol",PhiCol,"Controls what column of Phi is printed out");
+      Sundance::setOption("debugLevel",debug,"Controls the level of debugging information that is printed out");
       // Initialization steps (MPI, etc)
       Sundance::init(&argc,&argv);
 
@@ -126,9 +128,10 @@ int main (int argc, char *argv[])
 */
 // End of the code to get S/mesh, which is no longer necessary
 
-	std::cout << "Reading mesh.........." << std::endl;
+	SUNDANCE_ROOT_MSG1(debug, "Reading mesh..........");
 	Sundance::MeshSource meshReader = new Sundance::ExodusMeshReader("cyl-0", meshType, verbosity);
 	Sundance::Mesh mesh = meshReader.getMesh();
+	SUNDANCE_ROOT_MSG2(debug, "Mesh read.............");
 
 /*	int dim = 0;
 	std::cout << "Here is the number of cells along the x-axis: " << mesh.numCells(dim) << std::endl
@@ -136,7 +139,9 @@ int main (int argc, char *argv[])
 
 */
 	// Set up W for cyl-0.exo
-	Playa::LinearOperator<double> W = snapshotToMatrix("results/st-p", 3, mesh);
+	SUNDANCE_ROOT_MSG1(debug, "Reading in the snapshots..........");
+	Playa::LinearOperator<double> W = snapshotToMatrix("results/st-v", 5, mesh);
+	SUNDANCE_ROOT_MSG2(debug, "After reading in the snapshots..........");
 
 	// Get the POD
 	Playa::LinearOperator<double> Alpha;
@@ -144,8 +149,9 @@ int main (int argc, char *argv[])
 	Playa::Vector<double> lambda;
 
 	// W and mesh need to be defined
-	POD(W,lambda,Alpha,Phi,mesh);
-	std::cout << "POD finished" << std::endl;
+	SUNDANCE_ROOT_MSG1(debug, "Entering POD");
+	POD(W,lambda,Alpha,Phi,mesh, debug);
+	SUNDANCE_ROOT_MSG1(debug, "POD finished");
 
 
 	//Start looking at svd.cpp
@@ -191,8 +197,7 @@ int main (int argc, char *argv[])
 	//std::cout << "Here is lambda " << std::endl << lambda << std::endl;
 	//std::cout << "Here is Alpha " << std::endl << Alpha << std::endl;
 	//std::cout << "Here is Phi " << std::endl << Phi << std::endl;
-	//Teuchos::RCP<Playa::DenseSerialMatrix> PhiPtr = 						
-		Teuchos::rcp_dynamic_cast<Playa::DenseSerialMatrix>(Phi.ptr());
+	//Teuchos::RCP<Playa::DenseSerialMatrix> PhiPtr = 		Teuchos::rcp_dynamic_cast<Playa::DenseSerialMatrix>(Phi.ptr());
 
 	//std::cout << "Here is Phi[[All," << PhiCol << "]]" << std::endl;
 	//for(int row = 0; row < PhiPtr->numRows(); row++)

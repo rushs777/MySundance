@@ -437,13 +437,17 @@ int main(int argc, char *argv[])
 
       MyNLO* prob = new MyNLO(f, deltat);
       NonlinearOperator<double> F = prob;
-      //F.setVerb(verbosity);
+      F.setVerb(verbosity);
 
 
       // create the Newton-Armijo solver
       string NLParamFile = "playa-newton-armijo.xml";
       ParameterXMLFileReader reader(NLParamFile);
-      ParameterList solverParams = reader.getParameters();
+      ParameterList params = reader.getParameters();
+      const ParameterList& solverParams = params.sublist("NewtonArmijoSolver");
+      //cout << "tau absolute " << solverParams.get<double>("Tau Absolute") << endl;
+      cout << "the verbosity from playa...xm." << solverParams.get<int>("Verbosity") << endl;
+	
       //Next line possible since DenseLUSolver and LinearSolver both inherit from LinearSolverBase
       LinearSolver<double> linearSolver(rcp(new DenseLUSolver())); 
       NewtonArmijoSolver<double> nonlinearSolver(solverParams, linearSolver);

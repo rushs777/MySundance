@@ -163,5 +163,5 @@ spotless:
 
 redo:
 	make spotless;	\
-	make main.exe; \
-	./main.exe
+	make TestPOD.exe; \
+	./TestPOD.exe
