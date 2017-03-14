@@ -22,6 +22,16 @@
 #include "PlayaNonlinearSolverBuilder.hpp"
 
 
+#include <sys/resource.h>
+void memcheck()
+{
+  Tabs tab;
+  struct rusage r_usage;
+  getrusage(RUSAGE_SELF, &r_usage);
+  Out::root() << tab << "Memory used (MB): " << r_usage.ru_maxrss / ((double) 1.0e6) << endl;
+}
+
+
 //Local files
 #include "PlayaSVD.hpp"
 
@@ -49,8 +59,10 @@ class MMSQuadODE : public QuadraticODERHSBase
 {
 public:
   MMSQuadODE(Teuchos::Array<Expr> phi, Mesh mesh, bool MatrixAndTensorInFile = false, int verbosity = 1, int quadOrder = 6) 
-    : QuadraticODERHSBase(phi.size(), verbosity), 
-      phi_(phi), mesh_(mesh), 
+    : QuadraticODERHSBase(phi.size(), verbosity),
+      interior_(new MaximalCellFilter()),
+      phi_(phi), mesh_(mesh),
+      forceIP_(phi.size()),
       MatrixAndTensorInFile_(MatrixAndTensorInFile),
       quad_(new GaussianQuadrature(quadOrder))
   {
@@ -69,20 +81,28 @@ public:
 	       2*Cos(y)*(Cos(2*t_)*(4*Cos(2*t_) - 3*Cos(3*t_)*(-3 - 6*Cos(2*x) + Cos(4*x)))*
 			 Power(Sin(x),2) + 9*Power(Cos(3*t_),2)*Power(Sin(2*x),2))*Power(Sin(y),3))/
 	      18.);
+
+    for(int r = 0; r < phi_.size(); r++)
+      {
+	forceIP_[r] = FunctionalEvaluator(mesh_, Integral(interior_, q_*phi_[r], quad_));
+      }
   }
 
   Vector<double> evalForceTerm(const double& t) const
   {
+    SUNDANCE_ROOT_MSG1(getVerbosity(), "start eval force");
+    memcheck();
     t_.setParameterValue(t);
-    CellFilter interior = new MaximalCellFilter();
 
     Vector<double> rtn = space().createMember();
+    SUNDANCE_ROOT_MSG1(getVerbosity(), "vec size: " << 8*space().dim());
     for(int r = 0; r < phi_.size(); r++)
       {
-	FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior, q_*phi_[r], quad_));		
-	rtn[r] = IP.evaluate();
+	rtn[r] = forceIP_[r].evaluate();
       }
-
+    
+    SUNDANCE_ROOT_MSG1(getVerbosity(), "end eval force");
+    memcheck();
     //std::cout << "Here is the value of (vf, phi) " << std::endl << rtn << std::endl;
     return rtn;
   }
@@ -129,6 +149,7 @@ public:
 	    readDenseSerialMatrix(T[s], T_filename);
 	  }
       }
+    SUNDANCE_ROOT_MSG1(getVerbosity(), "Done fillMatrixAndTensor");
   } // End of fillMatrixAndTensor
 	
 
@@ -144,8 +165,10 @@ private:
    * Expr q_ - Holds the volume force term
    * bool MatrixAndTensorInFile_ - True if A and T are on hand; false if they need to be created
    */
-  Teuchos::Array<Expr> phi_; 
+  CellFilter interior_;
+  Teuchos::Array<Expr> phi_;
   Mesh mesh_;
+  Teuchos::Array<FunctionalEvaluator> forceIP_;
   bool MatrixAndTensorInFile_;
   QuadratureFamily quad_;
   mutable Expr t_;
@@ -156,15 +179,13 @@ private:
    ********************************************************************************/
   double gradIP(Expr f, Expr g)
   {
-
-    CellFilter interior = new MaximalCellFilter();
     // mesh.spatialDim() returns n for nD
     int dim = mesh_.spatialDim();
 
     // Define our differential operators; note Derivative(x=0)
     Expr grad = gradient(dim);
 
-    FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior, colonProduct(outerProduct(grad,f),outerProduct(grad,g)), quad_));
+    FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, colonProduct(outerProduct(grad,f),outerProduct(grad,g)), quad_));
     return (IP.evaluate());
   }
 
@@ -173,14 +194,13 @@ private:
    ********************************************************************************/
   double tensorIP(Expr f, Expr g, Expr h)
   {
-    CellFilter interior = new MaximalCellFilter();
     // mesh.spatialDim() returns n for nD
     // Define grad operator
     Expr grad = gradient(mesh_.spatialDim());
 
     //      The first one is what KL and I did on 1/27; then I realized the indices were off
     //	FunctionalEvaluator IP = FunctionalEvaluator(mesh, Integral(interior, h*((f*grad)*g),quad));
-    FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior, f*((h*grad)*g),quad_));
+    FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, f*((h*grad)*g),quad_));
     return (IP.evaluate());
   }
 
@@ -267,6 +287,7 @@ protected:
   }
 
 private:
+
   MMSQuadODE f_;
   Vector<double> uPrev_;
   Vector<double> uNext_;
@@ -340,7 +361,8 @@ int main(int argc, char *argv[])
       Mesh mesh = mesher.getMesh();
 
       // Read the snapshots into a matrix
-      string outDir = "/home/sirush/PhDResearch/ODETest/Results";
+      //      string outDir = "/home/sirush/PhDResearch/ODETest/Results";
+      string outDir = "../ODETest/Results";
       string fileDir = outDir + "/pcd-err-nx-" + Teuchos::toString(nx)
 	+ "-nt-" + Teuchos::toString(nSteps);
       string tag = "st-v";
@@ -429,17 +451,19 @@ int main(int argc, char *argv[])
 	}
 
       
-
+      SUNDANCE_ROOT_MSG1(verbosity, "Creating MMSQuadODE");
       // Create the nonlinear operator for solving our nonlinear ODE
       MMSQuadODE f(phi, mesh, AreMatrixAndTensorInFile, verbosity);
       f.initialize();
 
-
+      
+      SUNDANCE_ROOT_MSG1(verbosity, "Creating NLO");
       MyNLO* prob = new MyNLO(f, deltat);
       NonlinearOperator<double> F = prob;
       F.setVerb(verbosity);
 
 
+      SUNDANCE_ROOT_MSG1(verbosity, "Creating solver");
       // create the Newton-Armijo solver
       string NLParamFile = "playa-newton-armijo.xml";
       ParameterXMLFileReader reader(NLParamFile);
@@ -451,13 +475,15 @@ int main(int argc, char *argv[])
       //Next line possible since DenseLUSolver and LinearSolver both inherit from LinearSolverBase
       LinearSolver<double> linearSolver(rcp(new DenseLUSolver())); 
       NewtonArmijoSolver<double> nonlinearSolver(solverParams, linearSolver);
-      
+
+
       Array<Vector<double> > soln(nSteps+1);
       // Establish alpha(t_init)
       soln[0] = R_vecSpace.createMember();
       soln[0] = alpha[0].copy();
       prob->set_uPrev(soln[0]);
       
+      SUNDANCE_ROOT_MSG1(verbosity, "Running...");      
       for(int time = 1; time < soln.length(); time++)
 	{
 	  SUNDANCE_ROOT_MSG1(verbosity, "Nonlinear Solve at time step " + Teuchos::toString(time) + " of " + Teuchos::toString(nSteps));

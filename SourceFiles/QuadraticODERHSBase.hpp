@@ -49,7 +49,7 @@ public:
 				   Array<RCP<DenseSerialMatrix> >& T) = 0 ;
 
 /** Returns the verbosity level for this RHS */
-  int getVerbosity();
+  int getVerbosity() const ; // KRL: this should be const
 
 
 
