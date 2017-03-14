@@ -66,13 +66,13 @@
 # 
 #--------------------------------------------------------------------------
 #
-#EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
+EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
 		/home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
 		/home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
 		/home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
 
 
-EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
+#EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
 		PMB.o
 
 #EXTRA_OBJS =
