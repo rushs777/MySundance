@@ -1,8 +1,9 @@
 #ifndef ODERHSBase_HPP
 #define ODERHSBase_HPP
 
-#include "PlayaSerialVectorType.hpp"
+
 #include "PlayaDenseSerialMatrix.hpp"
+#include "PlayaSerialVectorType.hpp"
 #include "PlayaVectorImpl.hpp"
 #include "PlayaLinearOperatorImpl.hpp"
 #include "PlayaLinearCombinationImpl.hpp"

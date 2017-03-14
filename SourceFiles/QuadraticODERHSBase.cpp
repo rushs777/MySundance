@@ -65,5 +65,5 @@ Vector<double> QuadraticODERHSBase::eval1(const double& t,
     return rtn;
 }
 
-int QuadraticODERHSBase::getVerbosity()
+int QuadraticODERHSBase::getVerbosity() const 
 {return verbosity_;}
