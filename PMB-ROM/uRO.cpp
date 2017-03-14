@@ -12,6 +12,7 @@
 #include "VientoSnapshotIO.hpp" //For snapshotToMatrix
 #include "denseSerialMatrixIO.hpp"
 #include "QuadraticODERHSBase.hpp"
+#include "MathematicaConverter.hpp"
 
 //For using newton-armijo
 #include "PlayaDenseLUSolver.hpp"
@@ -44,7 +45,7 @@ using namespace Teuchos;
 using namespace Playa;
 using namespace PlayaExprTemplates;
 
-// Things necessary for mathematica generated fs to be understood
+/* Things necessary for mathematica generated fs to be understood
 const double Pi = 4.0*atan(1.0);
 Expr Cos(const Expr& x) {return cos(x);}
 Expr Sin(const Expr& x) {return sin(x);}
@@ -53,7 +54,7 @@ Expr Power(const double& x, const Expr& p) {return exp(p*log(x));}
 const double E = exp(1.0);
 Expr Sqrt(const Expr& x) {return sqrt(x);}
 double Sqrt(const double& x) {return sqrt(x);}
-
+*/
 
 class MMSQuadODE : public QuadraticODERHSBase
 {
@@ -90,19 +91,19 @@ public:
 
   Vector<double> evalForceTerm(const double& t) const
   {
-    SUNDANCE_ROOT_MSG1(getVerbosity(), "start eval force");
-    memcheck();
+    SUNDANCE_ROOT_MSG3(getVerbosity(), "start eval force");
+    //memcheck();
     t_.setParameterValue(t);
 
     Vector<double> rtn = space().createMember();
-    SUNDANCE_ROOT_MSG1(getVerbosity(), "vec size: " << 8*space().dim());
+    SUNDANCE_ROOT_MSG3(getVerbosity(), "vec size: " << 8*space().dim());
     for(int r = 0; r < phi_.size(); r++)
       {
 	rtn[r] = forceIP_[r].evaluate();
       }
     
-    SUNDANCE_ROOT_MSG1(getVerbosity(), "end eval force");
-    memcheck();
+    SUNDANCE_ROOT_MSG3(getVerbosity(), "end eval force");
+    //memcheck();
     //std::cout << "Here is the value of (vf, phi) " << std::endl << rtn << std::endl;
     return rtn;
   }
@@ -185,7 +186,7 @@ private:
     // Define our differential operators; note Derivative(x=0)
     Expr grad = gradient(dim);
 
-    FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, colonProduct(outerProduct(grad,f),outerProduct(grad,g)), quad_));
+    FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, -colonProduct(outerProduct(grad,f),outerProduct(grad,g)), quad_));
     return (IP.evaluate());
   }
 
@@ -200,7 +201,7 @@ private:
 
     //      The first one is what KL and I did on 1/27; then I realized the indices were off
     //	FunctionalEvaluator IP = FunctionalEvaluator(mesh, Integral(interior, h*((f*grad)*g),quad));
-    FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, f*((h*grad)*g),quad_));
+    FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, -f*((h*grad)*g),quad_));
     return (IP.evaluate());
   }
 
@@ -460,7 +461,7 @@ int main(int argc, char *argv[])
       SUNDANCE_ROOT_MSG1(verbosity, "Creating NLO");
       MyNLO* prob = new MyNLO(f, deltat);
       NonlinearOperator<double> F = prob;
-      F.setVerb(verbosity);
+      //F.setVerb(verbosity);
 
 
       SUNDANCE_ROOT_MSG1(verbosity, "Creating solver");
@@ -489,6 +490,8 @@ int main(int argc, char *argv[])
 	  SUNDANCE_ROOT_MSG1(verbosity, "Nonlinear Solve at time step " + Teuchos::toString(time) + " of " + Teuchos::toString(nSteps));
 	  prob->set_tPrev( (time-1.0)*deltat );
 	  SolverState<double> state = nonlinearSolver.solve(F, soln[time]);
+
+	  cout << "soln[" << time << "]: " << endl << soln[time] << endl;
 	  TEUCHOS_TEST_FOR_EXCEPTION(state.finalState() != SolveConverged,
 				     runtime_error, "solve failed");
 	  prob->set_uPrev(soln[time]);
