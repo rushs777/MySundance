@@ -45,17 +45,6 @@ using namespace Teuchos;
 using namespace Playa;
 using namespace PlayaExprTemplates;
 
-/* Things necessary for mathematica generated fs to be understood
-const double Pi = 4.0*atan(1.0);
-Expr Cos(const Expr& x) {return cos(x);}
-Expr Sin(const Expr& x) {return sin(x);}
-Expr Power(const Expr& x, const double& p) {return pow(x,p);}
-Expr Power(const double& x, const Expr& p) {return exp(p*log(x));}
-const double E = exp(1.0);
-Expr Sqrt(const Expr& x) {return sqrt(x);}
-double Sqrt(const double& x) {return sqrt(x);}
-*/
-
 class MMSQuadODE : public QuadraticODERHSBase
 {
 public:
@@ -110,7 +99,7 @@ public:
 
   void fillMatrixAndTensor(RCP<DenseSerialMatrix>& A, Array<RCP<DenseSerialMatrix> >& T)
   {
-    Out::root() << "Starting fillMatrixAndTensor " << endl;
+    SUNDANCE_ROOT_MSG1(getVerbosity(), "Starting fillMatrixAndTensor");
     // Access the matrix as a DenseSerialMatrix; note that A is a pointer to A_
     // This will create the matrix A = [(grad*phi_i, grad*phi_j)]
     string fileDir = "A_and_T";
@@ -176,7 +165,7 @@ private:
   Expr q_;
 
   /********************************************************************************
-   * gradIP peforms the IP (grad*f, grad*g)
+   * gradIP peforms the IP -(grad*f, grad*g)
    ********************************************************************************/
   double gradIP(Expr f, Expr g)
   {
@@ -191,7 +180,7 @@ private:
   }
 
   /********************************************************************************
-   * tensorIP peforms the IP (f, (h*grad)*g)
+   * tensorIP peforms the IP -(f, (h*grad)*g)
    ********************************************************************************/
   double tensorIP(Expr f, Expr g, Expr h)
   {
@@ -296,21 +285,6 @@ private:
   double tPrev_;
   double tNext_;
 };
-
-
-/*
- * 1. How to set up computeJacobainAndFunction so that the problem is only created once
- * 2. Clean up format/datatypes of ""
- * 3. How to calculate an actual initial guess
- * 4. How to handle updating the value for x^{n+1}
- *
- * Create a setuPrev and settPrev that are member functions of MyNLO but not of the public UI
- * NonlinearOperator; similar to lines 83 and 84 of PoissonBoltzmannTest.cpp
- * In ODERHS, make time a parameter for evalForceTerm. In MyNLO, make time a double
- */
-
-
-
 
 
 
@@ -470,8 +444,7 @@ int main(int argc, char *argv[])
       ParameterXMLFileReader reader(NLParamFile);
       ParameterList params = reader.getParameters();
       const ParameterList& solverParams = params.sublist("NewtonArmijoSolver");
-      //cout << "tau absolute " << solverParams.get<double>("Tau Absolute") << endl;
-      cout << "the verbosity from playa...xm." << solverParams.get<int>("Verbosity") << endl;
+      //cout << "the verbosity from playa...xm." << solverParams.get<int>("Verbosity") << endl;
 	
       //Next line possible since DenseLUSolver and LinearSolver both inherit from LinearSolverBase
       LinearSolver<double> linearSolver(rcp(new DenseLUSolver())); 
@@ -491,7 +464,7 @@ int main(int argc, char *argv[])
 	  prob->set_tPrev( (time-1.0)*deltat );
 	  SolverState<double> state = nonlinearSolver.solve(F, soln[time]);
 
-	  cout << "soln[" << time << "]: " << endl << soln[time] << endl;
+	  SUNDANCE_ROOT_MSG3(verbosity, "soln[" + Teuchos::toString(time) + "]: " + Teuchos::toString(soln[time]));
 	  TEUCHOS_TEST_FOR_EXCEPTION(state.finalState() != SolveConverged,
 				     runtime_error, "solve failed");
 	  prob->set_uPrev(soln[time]);
@@ -500,20 +473,46 @@ int main(int argc, char *argv[])
       SUNDANCE_ROOT_MSG2(verbosity, "numerical solution finished");
       //Out::os() << soln[0] << std::endl;
 
-      cout << "Compare numerical solution to exact solution " << endl;
-
 
       Vector<double> alphaError = Phi.domain().createMember();
       for(int i=0; i < alpha.length(); i++)
 	{
-	  cout << "Exact alpha(t=" << i << "): " << endl << alpha[i] << endl;	
-	  cout << "Approximate alpha(t=" << i << "): " << endl << soln[i] << endl;
 	  alphaError[i] = (alpha[i] - soln[i]).norm2();
-	  cout << "Error for alpha(t=" << i << "): " << alphaError[i] << endl << endl;
-	}
-      cout << "Max error: " << alphaError.normInf() << endl;
-      //cout << "lambda " << endl << lambda << endl;
+	  if(verbosity>=2)
+	    cout << "Error for alpha(t=" << i << "): " << alphaError[i] << endl;
 
+	  if(verbosity>=3)
+	    {
+	      cout << "Exact alpha(t=" << i << "): " << endl << alpha[i] << endl;	
+	      cout << "Approximate alpha(t=" << i << "): " << endl << soln[i] << endl << endl;
+	    }
+	}
+      cout << "||alphaExact - alphaApprox||_2: " << alphaError.norm2() << endl;
+      cout << "||alphaExact - alphaApprox||_inf: " << alphaError.normInf() << endl;
+
+
+      SUNDANCE_ROOT_MSG1(verbosity,"Creating uRO");
+      Array<Expr> uRO(nSteps+1);
+      for(int time = 0; time < uRO.length(); time++)
+	{
+	  uRO[time] = List(0.0,0.0);
+	  for(int r = 0; r < R; r++)
+	    {
+	      uRO[time] = uRO[time] + alpha[time][r]*phi[r];
+	    }
+	}
+
+
+      SUNDANCE_ROOT_MSG2(verbosity, "Comparing uExact(t_n) to uRO(t_n)");
+      Vector<double> l2norm = Phi.domain().createMember();
+      for(int time = 0; time < uRO.length(); time++)
+	{
+	  t.setParameterValue(time*deltat);
+	  l2norm[time] = L2Norm(mesh, interior, uExact - uRO[time], quad4);
+	  SUNDANCE_ROOT_MSG2(verbosity, "Error for uROExact at time " + Teuchos::toString(time*deltat) + "= " + Teuchos::toString(l2norm[time]));
+	}
+      cout << "||uExact - uRO||_2 " << l2norm.norm2() << endl;
+      cout << "||uExact - uRO||_inf " << l2norm.normInf() << endl;
 
       /*
       cout << "Staring to build reduced-order u from alphaExact " << endl;
@@ -539,9 +538,9 @@ int main(int argc, char *argv[])
       */
 
       
-      /*
+      
       // Visualize the results
-      string vtkDir = "Results/Visuals/";
+      string vtkDir = "Results/Visuals/uRO/";
       string vtkfilename = "nx"+Teuchos::toString(nx)+"nt"+Teuchos::toString(nSteps);
       system( ("mkdir -p " + vtkDir).c_str() ); 
       FieldWriter writer = new VTKWriter(vtkDir+vtkfilename);
@@ -553,14 +552,17 @@ int main(int argc, char *argv[])
 	{
 	  t.setParameterValue(time*deltat);
 	  L2Projector projectorRO(ds, uRO[time]);
+	  L2Projector uErrorProjector(ds, uExact - uRO[time]);
 	  writer.addField("uExact[0]", new ExprFieldWrapper(projector.project()[0]) );
 	  writer.addField("uExact[1]", new ExprFieldWrapper(projector.project()[1]) );
 	  writer.addField("uRO[0]", new ExprFieldWrapper(projectorRO.project()[0]) );
 	  writer.addField("uRO[1]", new ExprFieldWrapper(projectorRO.project()[1]) );
-	  //writer.addField("error", new ExprFieldWrapper(l2norm[time]) );
+	  writer.addField("uError[0]", new ExprFieldWrapper(uErrorProjector.project()[0]) );
+	  writer.addField("uError[1]", new ExprFieldWrapper(uErrorProjector.project()[1]) );
+
 	  writer.write();
 	}
-      */
+      
 
       //      cout << "The 2-norm for the velocity error over all " << nSteps+1 << " timesteps: " << l2norm.norm2() << endl;
 	

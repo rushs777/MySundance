@@ -175,17 +175,11 @@ namespace Playa
       }	
 
     // Set a flag to make sure that all of the phi_r are orthonormal
-    bool orthonormal = true;
+    //bool orthonormal = true;
     Vector<double> ei = Phi.domain().createMember();	
     Vector<double> phi_i = Phi.range().createMember();
     Vector<double> phi_j = Phi.range().createMember();
-    /*
-    cout << "Phi is " << PhiPtr->numRows() << "x" << PhiPtr->numCols() << endl;
-    cout << "ei is " << ei << endl;
-    cout << "ej is " << ej << endl;
-    cout << "phi_i is " << phi_i << endl;
-    cout << "phi_j is " << phi_j << endl;
-    */
+
     Vector<double> Sx = S.range().createMember();
     for(int i = 0; i<PhiPtr->numCols(); i++)
       {
@@ -203,14 +197,14 @@ namespace Playa
 	    if( fabs( Sip(S,serialToEpetra(phi_i), serialToEpetra(phi_j)) ) < - 1.0 )
 	      {
 		cout << "(phi[" << i << "], phi[" << j << "])_S = " << Sip(S,serialToEpetra(phi_i), serialToEpetra(phi_j)) << endl;
-		orthonormal = false;
+		//		orthonormal = false;
 	      }
 	  }
 
 	if( fabs(Snorm(S, serialToEpetra(phi_i) ) -1.0) > 1.0e-10)
 	  {
 	    cout << "phi[" << i << "].norm2() = " << phi_i.norm2() << endl;
-	    orthonormal = false;
+	    //orthonormal = false;
 	  }
 
 	if(i>-1)
