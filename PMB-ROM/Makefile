@@ -70,6 +70,8 @@ EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
 		/home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
 		/home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
 		/home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
+		/home/sirush/PhDResearch/PMB-ROM/MMSQuadODE.o \
+		/home/sirush/PhDResearch/PMB-ROM/MyNLO.o
 
 
 #EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \

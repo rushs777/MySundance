@@ -11,7 +11,6 @@
 #include <vector>
 
 
-#include "VientoSnapshotIO.hpp" //For snapshotToMatrix
 #include "denseSerialMatrixIO.hpp"
 #include "QuadraticODERHSBase.hpp"
 #include "MathematicaConverter.hpp"
@@ -41,20 +40,22 @@ private:
    * Expr q_ - Holds the volume force term
    * bool MatrixAndTensorInFile_ - True if A and T are on hand; false if they need to be created
    */
-  Teuchos::Array<Expr> phi_; 
+  CellFilter interior_;
+  Teuchos::Array<Expr> phi_;
   Mesh mesh_;
+  Teuchos::Array<FunctionalEvaluator> forceIP_;
   bool MatrixAndTensorInFile_;
   QuadratureFamily quad_;
   mutable Expr t_;
   Expr q_;
-
+  
   /********************************************************************************
-   * gradIP peforms the IP (grad*f, grad*g)
+   * gradIP peforms the IP -(grad*f, grad*g)
    ********************************************************************************/
   double gradIP(Expr f, Expr g);
 
   /********************************************************************************
-   * tensorIP peforms the IP (f, (h*grad)*g)
+   * tensorIP peforms the IP -(f, (h*grad)*g)
    ********************************************************************************/
   double tensorIP(Expr f, Expr g, Expr h);
 

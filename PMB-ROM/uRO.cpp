@@ -13,6 +13,8 @@
 #include "denseSerialMatrixIO.hpp"
 #include "QuadraticODERHSBase.hpp"
 #include "MathematicaConverter.hpp"
+#include "MMSQuadODE.hpp"
+#include "MyNLO.hpp"
 
 //For using newton-armijo
 #include "PlayaDenseLUSolver.hpp"
@@ -44,248 +46,6 @@ using std::cout;
 using namespace Teuchos;
 using namespace Playa;
 using namespace PlayaExprTemplates;
-
-class MMSQuadODE : public QuadraticODERHSBase
-{
-public:
-  MMSQuadODE(Teuchos::Array<Expr> phi, Mesh mesh, bool MatrixAndTensorInFile = false, int verbosity = 1, int quadOrder = 6) 
-    : QuadraticODERHSBase(phi.size(), verbosity),
-      interior_(new MaximalCellFilter()),
-      phi_(phi), mesh_(mesh),
-      forceIP_(phi.size()),
-      MatrixAndTensorInFile_(MatrixAndTensorInFile),
-      quad_(new GaussianQuadrature(quadOrder))
-  {
-    t_ = new Sundance::Parameter(0.0);
-    Expr x = new CoordExpr(0,"x");
-    Expr y = new CoordExpr(1,"y");
-    double nu = 1.0;
-    q_ = List((-36*Cos(y)*Sin(t_)*Sin(x) + (((44 + 30*Cos(t_) + 8*Cos(4*t_) + 30*Cos(5*t_))*
-					     Cos(x) + 9*((3 + 2*Cos(t_) + 2*Cos(5*t_))*Cos(3*x) + Cos(5*x)))*
-					    Power(Sin(x),3) + 9*Cos(6*t_)*Cos(2*x)*Power(Sin(2*x),3))*Power(Sin(y),2) - 
-	       3*(8*nu*Cos(2*t_)*(-1 + 2*Cos(2*x)) + 6*nu*Cos(3*t_)*(-1 + 5*Cos(4*x)) + 
-		  8*Sin(2*t_)*Power(Sin(x),2) + 9*Sin(3*t_)*Power(Sin(2*x),2))*Sin(2*y))/36.,
-	      (6*nu*(2*Cos(2*t_)*(-1 + 2*Cos(2*y))*Sin(2*x) + 
-		     3*Cos(3*t_)*(-4 + 5*Cos(2*y))*Sin(4*x)) - 18*Cos(x)*Sin(t_)*Sin(y) + 
-	       3*(4*Sin(2*t_)*Sin(2*x) + 9*Sin(3*t_)*Sin(4*x))*Power(Sin(y),2) + 
-	       2*Cos(y)*(Cos(2*t_)*(4*Cos(2*t_) - 3*Cos(3*t_)*(-3 - 6*Cos(2*x) + Cos(4*x)))*
-			 Power(Sin(x),2) + 9*Power(Cos(3*t_),2)*Power(Sin(2*x),2))*Power(Sin(y),3))/
-	      18.);
-
-    for(int r = 0; r < phi_.size(); r++)
-      {
-	forceIP_[r] = FunctionalEvaluator(mesh_, Integral(interior_, q_*phi_[r], quad_));
-      }
-  }
-
-  Vector<double> evalForceTerm(const double& t) const
-  {
-    SUNDANCE_ROOT_MSG3(getVerbosity(), "start eval force");
-    //memcheck();
-    t_.setParameterValue(t);
-
-    Vector<double> rtn = space().createMember();
-    SUNDANCE_ROOT_MSG3(getVerbosity(), "vec size: " << 8*space().dim());
-    for(int r = 0; r < phi_.size(); r++)
-      {
-	rtn[r] = forceIP_[r].evaluate();
-      }
-    
-    SUNDANCE_ROOT_MSG3(getVerbosity(), "end eval force");
-    //memcheck();
-    //std::cout << "Here is the value of (vf, phi) " << std::endl << rtn << std::endl;
-    return rtn;
-  }
-
-  void fillMatrixAndTensor(RCP<DenseSerialMatrix>& A, Array<RCP<DenseSerialMatrix> >& T)
-  {
-    SUNDANCE_ROOT_MSG1(getVerbosity(), "Starting fillMatrixAndTensor");
-    // Access the matrix as a DenseSerialMatrix; note that A is a pointer to A_
-    // This will create the matrix A = [(grad*phi_i, grad*phi_j)]
-    string fileDir = "A_and_T";
-    system( ("mkdir -p " + fileDir).c_str() );
-
-    if(!MatrixAndTensorInFile_)
-      {
-	SUNDANCE_ROOT_MSG1(getVerbosity(), "Creating A");
-	for(int i = 0; i<A->numRows(); i++)
-	  for(int r = 0; r<A->numCols(); r++)
-	    A->setElement(i,r,gradIP(phi_[i], phi_[r]));
-
-	string A_filename = fileDir + "/A.txt";
-	writeDenseSerialMatrix(A, A_filename);
-
-	// Remember T is a pointer to T_
-	for(int s = 0; s<phi_.size(); s++)
-	  {
-	    SUNDANCE_ROOT_MSG1(getVerbosity(), "Creating T[" + Teuchos::toString(s) + "] of " + Teuchos::toString(phi_.size()) );
-	    for(int i = 0; i<A->numRows(); i++)
-	      for(int r = 0; r<A->numCols(); r++)
-		T[s]->setElement(i,r,tensorIP(phi_[i], phi_[s], phi_[r]));
-	    string T_filename = fileDir + "/T[" + Teuchos::toString(s) + "].txt";		
-	    writeDenseSerialMatrix(T[s], T_filename);
-	  }
-      }
-    else
-      {
-	SUNDANCE_ROOT_MSG1(getVerbosity(), "Reading A from file");
-	string A_filename = fileDir + "/A.txt";
-	readDenseSerialMatrix(A, A_filename);
-
-	for(int s = 0; s<phi_.size(); s++)
-	  {
-	    SUNDANCE_ROOT_MSG1(getVerbosity(), "Reading T[" + Teuchos::toString(s) + "] of " + Teuchos::toString(phi_.size()) + " from file");
-	    string T_filename = fileDir + "/T[" + Teuchos::toString(s) + "].txt";	
-	    readDenseSerialMatrix(T[s], T_filename);
-	  }
-      }
-    SUNDANCE_ROOT_MSG1(getVerbosity(), "Done fillMatrixAndTensor");
-  } // End of fillMatrixAndTensor
-	
-
-private:
-  /********************************************************************************
-   *
-   * Teuchos::Array<Expr> phi - Array of basis function obtained from a POD;
-   *                            Each Expr has an underlying DiscreteFunction
-   * Mesh mesh - Considered the domain for the integral of the IP
-   * QuadratureFamily quad - quadrature rule to use for the integral of the IP
-   * mutable Expr t_ - time at this level is a Sundance::Paramter; mutable allows you to
-   *                   affect t_ in functions that are labled as const
-   * Expr q_ - Holds the volume force term
-   * bool MatrixAndTensorInFile_ - True if A and T are on hand; false if they need to be created
-   */
-  CellFilter interior_;
-  Teuchos::Array<Expr> phi_;
-  Mesh mesh_;
-  Teuchos::Array<FunctionalEvaluator> forceIP_;
-  bool MatrixAndTensorInFile_;
-  QuadratureFamily quad_;
-  mutable Expr t_;
-  Expr q_;
-
-  /********************************************************************************
-   * gradIP peforms the IP -(grad*f, grad*g)
-   ********************************************************************************/
-  double gradIP(Expr f, Expr g)
-  {
-    // mesh.spatialDim() returns n for nD
-    int dim = mesh_.spatialDim();
-
-    // Define our differential operators; note Derivative(x=0)
-    Expr grad = gradient(dim);
-
-    FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, -colonProduct(outerProduct(grad,f),outerProduct(grad,g)), quad_));
-    return (IP.evaluate());
-  }
-
-  /********************************************************************************
-   * tensorIP peforms the IP -(f, (h*grad)*g)
-   ********************************************************************************/
-  double tensorIP(Expr f, Expr g, Expr h)
-  {
-    // mesh.spatialDim() returns n for nD
-    // Define grad operator
-    Expr grad = gradient(mesh_.spatialDim());
-
-    //      The first one is what KL and I did on 1/27; then I realized the indices were off
-    //	FunctionalEvaluator IP = FunctionalEvaluator(mesh, Integral(interior, h*((f*grad)*g),quad));
-    FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, -f*((h*grad)*g),quad_));
-    return (IP.evaluate());
-  }
-
-
-}; // End of MMSQuadODE class
-
-
-
-/*****************************************************************************************
- *
- * The class MyNLO inherits from NonLinearOperatorBase. As such, it must provide
- * implementation for the pure virtual functions:
- *	Vector< double > getInitialGuess() const
- *	LinearOperator< double> computeJacobianAndFunction(Vector<double> &functionValue) const
- *
- * The purpose of MyNLO is work with the function
- *		F(z) = z - uPrev - (h/2.0)*(f(tPrev,uPrev) + f(tNext,z) )
- *
- * Which is the result of the Trapezoid Rule applied to a nonlinear ODE.
- * uNext = z + uPrev
- *
- *****************************************************************************************/
-class MyNLO : public NonlinearOperatorBase<double>
-{
-public:
-  //MyNLO(Teuchos::Array<Expr> phi, Mesh mesh) : NonlinearOperatorBase(),f_(phi,mesh) {}
-
-  //MyNLO(Teuchos::Array<Expr> phi, Mesh mesh, const VectorSpace<double>& domain, const VectorSpace<double>& range) : NonlinearOperatorBase(domain, range), f_(phi,mesh) {}
-
-  MyNLO(MMSQuadODE f, double h) : NonlinearOperatorBase(f.space(), f.space()), f_(f) 
-  {
-    uPrev_ = f.space().createMember();
-    setEvalPt(getInitialGuess());
-
-    h_ = h;
-    tPrev_ = 0.0;
-    tNext_ = h;
-  }
-
-
-  virtual RCP<NonlinearOperatorBase> getRcp() {return rcp(this);}
-
-  Vector<double> getInitialGuess() const
-  {
-    return uPrev_.copy();
-  }
-
-  void set_tPrev(const double t)
-  {
-    tPrev_ = t;
-    tNext_ = tPrev_ + h_;
-  }
-
-  void set_uPrev(const Vector<double> u)
-  {
-    uPrev_ = u.copy();
-  }
-
-protected:
-  LinearOperator<double> computeJacobianAndFunction(Vector<double>& functionValue) const
-  {
-    LinearOperator<double> Jf;
-    // Calculate f(t_n, u_n)
-    Vector<double> fPrev = f_.eval1(tPrev_, uPrev_, Jf);
-    // Calculate f(t_{n+1}, x^n)
-    Vector<double> fNext = f_.eval1(tNext_, currentEvalPt(), Jf); 
-    // Calculate F(x^n)
-    functionValue = currentEvalPt() - uPrev_ - (h_/2.0)*(fPrev + fNext);
-    // Calculate JF(x^n) = I - (h/2)Jf(x^n)
-    LinearOperator<double> JF(rcp(new DenseSerialMatrix(f_.space(), f_.space())));
-    RCP<DenseSerialMatrix> JFptr = DenseSerialMatrix::getConcretePtr(JF);
-    RCP<DenseSerialMatrix> Jfptr = DenseSerialMatrix::getConcretePtr(Jf);
-
-    for(int i = 0; i<Jfptr->numRows(); i++)
-      for(int j = 0; j<Jfptr->numCols(); j++)
-	{
-	  if(i==j)
-	    JFptr->setElement(i,i, 1.0 - (h_/2.0)*Jfptr->getElement(i,i));
-	  if(i!=j)
-	    JFptr->setElement(i,j, (-h_/2.0)*Jfptr->getElement(i,j));
-	}
-
-    return JF;
-  }
-
-private:
-
-  MMSQuadODE f_;
-  Vector<double> uPrev_;
-  Vector<double> uNext_;
-  double h_;
-  double tPrev_;
-  double tNext_;
-};
-
 
 
 
@@ -390,7 +150,6 @@ int main(int argc, char *argv[])
       Playa::Vector<double> ej = Phi.domain().createMember();
       Playa::Vector<double> phiCoeff = Phi.range().createMember(); // These are the coefficient vectors
       Array<Expr> phi(R); // These are the POD basis functions
-      SUNDANCE_ROOT_MSG2(verbosity, "Size of phi: " + Teuchos::toString(phi.size()));
 
       //Needed for the integral
       CellFilter interior = new MaximalCellFilter();
@@ -464,14 +223,15 @@ int main(int argc, char *argv[])
 	  prob->set_tPrev( (time-1.0)*deltat );
 	  SolverState<double> state = nonlinearSolver.solve(F, soln[time]);
 
-	  SUNDANCE_ROOT_MSG3(verbosity, "soln[" + Teuchos::toString(time) + "]: " + Teuchos::toString(soln[time]));
+	  if(verbosity>=3)
+	    cout << "soln[" << Teuchos::toString(time) << "]: " <<  soln[time];
+	  
 	  TEUCHOS_TEST_FOR_EXCEPTION(state.finalState() != SolveConverged,
 				     runtime_error, "solve failed");
 	  prob->set_uPrev(soln[time]);
 	}
 
       SUNDANCE_ROOT_MSG2(verbosity, "numerical solution finished");
-      //Out::os() << soln[0] << std::endl;
 
 
       Vector<double> alphaError = Phi.domain().createMember();
@@ -487,8 +247,9 @@ int main(int argc, char *argv[])
 	      cout << "Approximate alpha(t=" << i << "): " << endl << soln[i] << endl << endl;
 	    }
 	}
-      cout << "||alphaExact - alphaApprox||_2: " << alphaError.norm2() << endl;
-      cout << "||alphaExact - alphaApprox||_inf: " << alphaError.normInf() << endl;
+      Tabs tab;
+      cout << "||alphaExact - alphaApprox||_2:\t "  << alphaError.norm2() << endl;
+      cout << "||alphaExact - alphaApprox||_inf:\t " << alphaError.normInf() << endl;
 
 
       SUNDANCE_ROOT_MSG1(verbosity,"Creating uRO");
@@ -498,7 +259,8 @@ int main(int argc, char *argv[])
 	  uRO[time] = List(0.0,0.0);
 	  for(int r = 0; r < R; r++)
 	    {
-	      uRO[time] = uRO[time] + alpha[time][r]*phi[r];
+	      //uRO[time] = uRO[time] + alpha[time][r]*phi[r];
+	      uRO[time] = uRO[time] + soln[time][r]*phi[r];
 	    }
 	}
 
@@ -511,8 +273,10 @@ int main(int argc, char *argv[])
 	  l2norm[time] = L2Norm(mesh, interior, uExact - uRO[time], quad4);
 	  SUNDANCE_ROOT_MSG2(verbosity, "Error for uROExact at time " + Teuchos::toString(time*deltat) + "= " + Teuchos::toString(l2norm[time]));
 	}
-      cout << "||uExact - uRO||_2 " << l2norm.norm2() << endl;
-      cout << "||uExact - uRO||_inf " << l2norm.normInf() << endl;
+      Out::root() << "||uExact - uRO||_2:\t " << l2norm.norm2() << endl;
+      Out::root() << "||uExact - uRO||_inf:\t " << tab << l2norm.normInf() << endl << endl;
+
+      SUNDANCE_ROOT_MSG1(verbosity, "Number of velocity modes kept: " + Teuchos::toString(phi.size()));
 
       /*
       cout << "Staring to build reduced-order u from alphaExact " << endl;

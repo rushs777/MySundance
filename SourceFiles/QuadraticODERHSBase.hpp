@@ -1,5 +1,5 @@
 #ifndef QuadraticODERHSBase_HPP
-#define QuadratricODERHSBase_HPP
+#define QuadraticODERHSBase_HPP
 
 #include "PlayaSerialVectorType.hpp"
 #include "PlayaDenseSerialMatrix.hpp"
