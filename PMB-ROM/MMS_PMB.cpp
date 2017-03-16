@@ -193,7 +193,7 @@ int main(int argc, char *argv[])
 	{
 	  t.setParameterValue(time*deltat);
 	  l2norm[time] = L2Norm(mesh, interior, uExact - uRO[time], quad4);
-	  cout << "Error for uROExact at time " << time*deltat << "= " << l2norm[time] << endl;
+	  SUNDANCE_ROOT_MSG2(verbosity, "Error for uROExact at time " + Teuchos::toString(time*deltat) + "= " + Teuchos::toString(l2norm[time]));
 	}
 
       double nu = 1.0;
@@ -255,12 +255,12 @@ Power(Sin(x),2) + 9*Power(Cos(3*t),2)*Power(Sin(2*x),2))*Power(Sin(y),3))/18.);
 	{
 	  t.setParameterValue(time*deltat);
 	  pressure_l2norm[time] = L2Norm(mesh, interior, pExact - pRO[time], quad4);
-	  cout << "Error for pROPMB at time " << time*deltat << "= " << pressure_l2norm[time] << endl;
+	  SUNDANCE_ROOT_MSG2(verbosity, "Error for pROPMB at time " + Teuchos::toString(time*deltat) + "= " + Teuchos::toString(pressure_l2norm[time]));
 	}
  
       
       // Visualize the results
-      string vtkDir = "Results/Visuals/";
+      string vtkDir = "Results/Visuals/pRO";
       system( ("mkdir -p " + vtkDir).c_str() ); 
       string vtkfilename = "nx"+Teuchos::toString(nx)+"nt"+Teuchos::toString(nSteps);
       FieldWriter writer = new VTKWriter(vtkDir+vtkfilename);
@@ -289,8 +289,9 @@ Power(Sin(x),2) + 9*Power(Cos(3*t),2)*Power(Sin(2*x),2))*Power(Sin(y),3))/18.);
 	  writer.write();
 	}
 
-      cout << "The 2-norm for the velocity error for nx = " << nx << ", nt = " << nSteps << ": "  << l2norm.norm2() << endl;
-      cout << "The 2-norm for the pROPMB error for nx = " << nx << ", nt = " << nSteps << ": "  << pressure_l2norm.norm2() << endl;
+      cout << "nt = " << nSteps << "\t nx = " << nx << endl;
+      cout << "The 2-norm for the velocity error:\t " << l2norm.norm2() << endl;
+      cout << "The 2-norm for the pROPMB error:\t "  << pressure_l2norm.norm2() << endl << endl;
 
 	
     }

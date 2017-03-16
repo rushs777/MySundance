@@ -7,7 +7,7 @@
 #ntEnd is the power of 2 to end nSteps with
 #filename is the name of the file to store the output from the runs
 
-filename=pRO_comparisonLog.txt
+filename=uRO_comparisonLog.txt
 
 nxStart=$1
 let nxEnd=$2+1
@@ -17,9 +17,8 @@ let ntEnd=$4+1
 echo $nxStart $nxEnd $ntStart $ntEnd
 for ((nt=$ntStart; nt<$ntEnd; nt++)); do
     for ((nx=$nxStart; nx<$nxEnd; nx++)); do
-	echo Starting run for nx = $nx, nt = $nt
-	./Exact_MMS_PMB.exe --nx=$[ 2**nx ] --nSteps=$[ 2**nt ] --verbosity=0 >> $filename
-	./MMS_PMB.exe --nx=$[ 2**nx ] --nSteps=$[ 2**nt ] --verbosity=0 >> $filename
+	echo Starting run for nx = $[ 2**nx ], nt = $[ 2**nt ]
+	./uRO.exe --nx=$[ 2**nx ] --nSteps=$[ 2**nt ] --verbosity=0 >> $filename
     done
 done
 

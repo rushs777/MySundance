@@ -41,7 +41,6 @@ protected:
 private:
   MMSQuadODE f_;
   Vector<double> uPrev_;
-  Vector<double> uNext_;
   double h_;
   double tPrev_;
   double tNext_;

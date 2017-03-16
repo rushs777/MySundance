@@ -271,7 +271,7 @@ int main(int argc, char *argv[])
 	{
 	  t.setParameterValue(time*deltat);
 	  l2norm[time] = L2Norm(mesh, interior, uExact - uRO[time], quad4);
-	  SUNDANCE_ROOT_MSG2(verbosity, "Error for uROExact at time " + Teuchos::toString(time*deltat) + "= " + Teuchos::toString(l2norm[time]));
+	  SUNDANCE_ROOT_MSG2(verbosity, "Error for uRO at time " + Teuchos::toString(time*deltat) + "= " + Teuchos::toString(l2norm[time]));
 	}
       Out::root() << "||uExact - uRO||_2:\t " << l2norm.norm2() << endl;
       Out::root() << "||uExact - uRO||_inf:\t " << tab << l2norm.normInf() << endl << endl;
