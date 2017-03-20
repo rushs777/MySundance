@@ -260,7 +260,7 @@ Power(Sin(x),2) + 9*Power(Cos(3*t),2)*Power(Sin(2*x),2))*Power(Sin(y),3))/18.);
  
       
       // Visualize the results
-      string vtkDir = "Results/Visuals/pRO";
+      string vtkDir = "Results/Visuals/pRO/";
       system( ("mkdir -p " + vtkDir).c_str() ); 
       string vtkfilename = "nx"+Teuchos::toString(nx)+"nt"+Teuchos::toString(nSteps);
       FieldWriter writer = new VTKWriter(vtkDir+vtkfilename);
