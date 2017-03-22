@@ -15,6 +15,7 @@
 #include "MathematicaConverter.hpp"
 #include "MMSQuadODE.hpp"
 #include "MyNLO.hpp"
+#include "velocityROM.hpp"
 
 //For using newton-armijo
 #include "PlayaDenseLUSolver.hpp"
@@ -95,6 +96,8 @@ int main(int argc, char *argv[])
       MeshSource mesher = new Sundance::PartitionedRectangleMesher(xmin,xmax,nx,1,ymin,ymax,nx,1,meshType,0);
       Mesh mesh = mesher.getMesh();
 
+
+
       // Read the snapshots into a matrix
       //      string outDir = "/home/sirush/PhDResearch/ODETest/Results";
       string outDir = "../ODETest/Results";
@@ -102,6 +105,7 @@ int main(int argc, char *argv[])
 	+ "-nt-" + Teuchos::toString(nSteps);
       string tag = "st-v";
       string filename = fileDir + "/" + tag;
+      /*
       Playa::LinearOperator<double> W = snapshotToMatrix(filename, nSteps, mesh);
       SUNDANCE_ROOT_MSG2(verbosity, "Size of W: " << W.range().dim() << " by " << W.domain().dim());
 
@@ -109,6 +113,7 @@ int main(int argc, char *argv[])
       Playa::LinearOperator<double> U;
       Playa::LinearOperator<double> Phi;
       Playa::Vector<double> sigma;
+      */
 
       // Create a BasisFamily to express our solution
       Array<Sundance::BasisFamily> ubasis = List(new Sundance::Lagrange(2), new Sundance::Lagrange(2)); // 2nd order Piece-Wise Quad Lagrange in 2D
@@ -116,63 +121,36 @@ int main(int argc, char *argv[])
       Playa::VectorType<double> epetraVecType = new Playa::EpetraVectorType();
       Sundance::DiscreteSpace ds(mesh, ubasis, epetraVecType);
 
-      // W and mesh need to be defined
-      SUNDANCE_ROOT_MSG1(verbosity, "Entering POD");
-      POD(W,sigma,U,Phi,ds,verbosity);
-      SUNDANCE_ROOT_MSG2(verbosity, "POD finished");
-
-      Vector<double> lambda = sigma.copy();
-      for(int count = 0; count < sigma.dim(); count++)
-	lambda[count] = sqrt(lambda[count]);
-      double lambdaTotal = lambda.norm1();
-      double lambdaSum = 0.0;
-      int R = 0;
-      for(int i = 0; i<lambda.dim(); i++)
-	{
-	  lambdaSum += lambda[i];
-	  if(lambdaSum/lambdaTotal >= .999)
-	    {
-	      // R is the number of lambdas to keep
-	      R = i + 1;
-	      SUNDANCE_ROOT_MSG2(verbosity, "Number of lambda[i] kept: " + Teuchos::toString(R));
-	      break;
-	    }
-	}
+      string NLParamFile = "playa-newton-armijo.xml";
 
       // Based off the value for R, create an appropriate VectorSpace<double>
+      int R = 2;
       VectorType<double> R_vecType = new SerialVectorType();
       VectorSpace<double> R_vecSpace = R_vecType.createEvenlyPartitionedSpace(MPIComm::self(), R);
-
-
-
-
-      // Looking at PlayaSVD.cpp, Phi is a DenseSerialMatrix
-      Playa::Vector<double> ej = Phi.domain().createMember();
-      Playa::Vector<double> phiCoeff = Phi.range().createMember(); // These are the coefficient vectors
-      Array<Expr> phi(R); // These are the POD basis functions
-
-      //Needed for the integral
-      CellFilter interior = new MaximalCellFilter();
-      QuadratureFamily quad4 = new GaussianQuadrature(4);
-
-      // Get the Expr phi_r(x)
-      for(int r = 0; r<R; r++)
-	{
-	  ej.zero();
-	  ej[r] = 1.0;
-	  phiCoeff.zero();
-	  Phi.apply(ej,phiCoeff);
-	  phi[r] = new DiscreteFunction(ds, serialToEpetra(phiCoeff)); //DiscreteFunction requires Epetra vectors
-	  TEUCHOS_TEST_FOR_EXCEPTION( fabs(L2Norm(mesh, interior, phi[r], quad4) - 1.0) >= 1.0e-6,
-				     runtime_error, "||phi["+Teuchos::toString(r)+"]|| = " + Teuchos::toString(L2Norm(mesh, interior, phi[r], quad4)) + " != 1");
-	}
-
+      
       //Find the exact alphas
       Array<Vector<double> > alpha(nSteps+1);
       for(int count = 0; count<alpha.length(); count++)
 	alpha[count] = R_vecSpace.createMember();
 
-      // Needs to be of size nSteps+1;
+      alpha[0][0] = -2.18212;
+      alpha[0][1] = -0.137505;      
+
+      // Attempt to declare a velocityRO object
+      velocityROM ROM(filename, NLParamFile, ds, alpha[0], nSteps, deltat, .999, verbosity);
+      ROM.initialize();
+      cout << "Value of alpha[0]" << endl << alpha[0] << endl;
+      ROM.generate_alpha();
+      Array<Expr> uRO(ROM.get_uRO() );
+      Array<Expr> phi(ROM.get_phi() ); // These are the POD basis functions
+
+
+
+      //Needed for the integral
+      CellFilter interior = new MaximalCellFilter();
+      QuadratureFamily quad4 = new GaussianQuadrature(4);
+
+      //Find the exact alphas
       for(int tIndex=0; tIndex < alpha.length(); tIndex++)
 	{
 	  for(int r=0; r<R; r++)
@@ -184,57 +162,11 @@ int main(int argc, char *argv[])
 	  t.setParameterValue(t.getParameterValue()+deltat);
 	}
 
-      
-      SUNDANCE_ROOT_MSG1(verbosity, "Creating MMSQuadODE");
-      // Create the nonlinear operator for solving our nonlinear ODE
-      MMSQuadODE f(phi, mesh, AreMatrixAndTensorInFile, verbosity);
-      f.initialize();
 
-      
-      SUNDANCE_ROOT_MSG1(verbosity, "Creating NLO");
-      MyNLO* prob = new MyNLO(f, deltat);
-      NonlinearOperator<double> F = prob;
-      //F.setVerb(verbosity);
-
-
-      SUNDANCE_ROOT_MSG1(verbosity, "Creating solver");
-      // create the Newton-Armijo solver
-      string NLParamFile = "playa-newton-armijo.xml";
-      ParameterXMLFileReader reader(NLParamFile);
-      ParameterList params = reader.getParameters();
-      const ParameterList& solverParams = params.sublist("NewtonArmijoSolver");
-      //cout << "the verbosity from playa...xm." << solverParams.get<int>("Verbosity") << endl;
-	
-      //Next line possible since DenseLUSolver and LinearSolver both inherit from LinearSolverBase
-      LinearSolver<double> linearSolver(rcp(new DenseLUSolver())); 
-      NewtonArmijoSolver<double> nonlinearSolver(solverParams, linearSolver);
-
-
-      Array<Vector<double> > soln(nSteps+1);
-      // Establish alpha(t_init)
-      soln[0] = R_vecSpace.createMember();
-      soln[0] = alpha[0].copy();
-      prob->set_uPrev(soln[0]);
-      
-      SUNDANCE_ROOT_MSG1(verbosity, "Running...");      
-      for(int time = 1; time < soln.length(); time++)
-	{
-	  SUNDANCE_ROOT_MSG1(verbosity, "Nonlinear Solve at time step " + Teuchos::toString(time) + " of " + Teuchos::toString(nSteps));
-	  prob->set_tPrev( (time-1.0)*deltat );
-	  SolverState<double> state = nonlinearSolver.solve(F, soln[time]);
-
-	  if(verbosity>=3)
-	    cout << "soln[" << Teuchos::toString(time) << "]: " <<  soln[time];
-	  
-	  TEUCHOS_TEST_FOR_EXCEPTION(state.finalState() != SolveConverged,
-				     runtime_error, "solve failed");
-	  prob->set_uPrev(soln[time]);
-	}
-
-      SUNDANCE_ROOT_MSG2(verbosity, "numerical solution finished");
-
-
-      Vector<double> alphaError = Phi.domain().createMember();
+      Array<Vector<double> > soln(ROM.get_alpha() );
+      VectorType<double> time_vecType = new SerialVectorType();
+      VectorSpace<double> time_vecSpace = time_vecType.createEvenlyPartitionedSpace(MPIComm::self(), nSteps+1.0);
+      Vector<double> alphaError = time_vecSpace.createMember();
       for(int i=0; i < alpha.length(); i++)
 	{
 	  alphaError[i] = (alpha[i] - soln[i]).norm2();
@@ -247,26 +179,13 @@ int main(int argc, char *argv[])
 	      cout << "Approximate alpha(t=" << i << "): " << endl << soln[i] << endl << endl;
 	    }
 	}
-      Tabs tab;
-      cout << "||alphaExact - alphaApprox||_2:\t "  << alphaError.norm2() << endl;
-      cout << "||alphaExact - alphaApprox||_inf:\t " << alphaError.normInf() << endl;
-
-
-      SUNDANCE_ROOT_MSG1(verbosity,"Creating uRO");
-      Array<Expr> uRO(nSteps+1);
-      for(int time = 0; time < uRO.length(); time++)
-	{
-	  uRO[time] = List(0.0,0.0);
-	  for(int r = 0; r < R; r++)
-	    {
-	      //uRO[time] = uRO[time] + alpha[time][r]*phi[r];
-	      uRO[time] = uRO[time] + soln[time][r]*phi[r];
-	    }
-	}
+      
+      cout << "||alphaExact - alphaApprox||_2:\t\t "  << alphaError.norm2() << endl;
+      cout << "||alphaExact - alphaApprox||_inf:\t\t " << alphaError.normInf() << endl;
 
 
       SUNDANCE_ROOT_MSG2(verbosity, "Comparing uExact(t_n) to uRO(t_n)");
-      Vector<double> l2norm = Phi.domain().createMember();
+      Vector<double> l2norm = time_vecSpace.createMember();
       for(int time = 0; time < uRO.length(); time++)
 	{
 	  t.setParameterValue(time*deltat);
@@ -274,10 +193,14 @@ int main(int argc, char *argv[])
 	  SUNDANCE_ROOT_MSG2(verbosity, "Error for uRO at time " + Teuchos::toString(time*deltat) + "= " + Teuchos::toString(l2norm[time]));
 	}
       Out::root() << "||uExact - uRO||_2:\t " << l2norm.norm2() << endl;
-      Out::root() << "||uExact - uRO||_inf:\t " << tab << l2norm.normInf() << endl << endl;
+      Out::root() << "||uExact - uRO||_inf:\t " << l2norm.normInf() << endl << endl;
 
       SUNDANCE_ROOT_MSG1(verbosity, "Number of velocity modes kept: " + Teuchos::toString(phi.size()));
 
+      cout << "Value for alpha(0) " << endl << soln[0] << endl;
+
+
+      
       /*
       cout << "Staring to build reduced-order u from alphaExact " << endl;
       Array<Expr> uRO(nSteps+1);
@@ -304,6 +227,7 @@ int main(int argc, char *argv[])
       
       
       // Visualize the results
+      /*
       string vtkDir = "Results/Visuals/uRO/";
       string vtkfilename = "nx"+Teuchos::toString(nx)+"nt"+Teuchos::toString(nSteps);
       system( ("mkdir -p " + vtkDir).c_str() ); 
@@ -326,9 +250,7 @@ int main(int argc, char *argv[])
 
 	  writer.write();
 	}
-      
-
-      //      cout << "The 2-norm for the velocity error over all " << nSteps+1 << " timesteps: " << l2norm.norm2() << endl;
+      */
 	
     }
   catch(std::exception& e)
