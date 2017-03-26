@@ -1,17 +1,22 @@
 #include "MMSQuadODE.hpp"
 
-MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Mesh mesh, bool MatrixAndTensorInFile, int verbosity, int quadOrder) 
+MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, Mesh mesh, bool MatrixAndTensorInFile, int verbosity, int quadOrder) 
     : QuadraticODERHSBase(phi.size(), verbosity),
       interior_(new MaximalCellFilter()),
-      phi_(phi), mesh_(mesh),
+      phi_(phi),
+      uB_(uB),
+      q_(q),
+      t_(t),
+      mesh_(mesh),
       forceIP_(phi.size()),
       MatrixAndTensorInFile_(MatrixAndTensorInFile),
       quad_(new GaussianQuadrature(quadOrder))
   {
-    t_ = new Sundance::Parameter(0.0);
+    //t_ = new Sundance::Parameter(0.0);
+    t_.setParameterValue(0.0);
     Expr x = new CoordExpr(0,"x");
     Expr y = new CoordExpr(1,"y");
-    double nu = 1.0;
+    /*double nu = 1.0;
     q_ = List((-36*Cos(y)*Sin(t_)*Sin(x) + (((44 + 30*Cos(t_) + 8*Cos(4*t_) + 30*Cos(5*t_))*
 					     Cos(x) + 9*((3 + 2*Cos(t_) + 2*Cos(5*t_))*Cos(3*x) + Cos(5*x)))*
 					    Power(Sin(x),3) + 9*Cos(6*t_)*Cos(2*x)*Power(Sin(2*x),3))*Power(Sin(y),2) - 
@@ -23,6 +28,11 @@ MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Mesh mesh, bool MatrixAndTensor
 	       2*Cos(y)*(Cos(2*t_)*(4*Cos(2*t_) - 3*Cos(3*t_)*(-3 - 6*Cos(2*x) + Cos(4*x)))*
 			 Power(Sin(x),2) + 9*Power(Cos(3*t_),2)*Power(Sin(2*x),2))*Power(Sin(y),3))/
 	      18.);
+    */
+    
+    // mesh.spatialDim() returns n for nD
+    // Define grad operator
+    Expr grad = gradient(mesh_.spatialDim());
 
     for(int r = 0; r < phi_.size(); r++)
       {

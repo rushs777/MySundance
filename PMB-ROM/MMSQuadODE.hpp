@@ -20,7 +20,7 @@ class MMSQuadODE : public QuadraticODERHSBase
 {
 public:
   /**Constructor*/
-  MMSQuadODE(Teuchos::Array<Expr> phi, Mesh mesh, bool MatrixAndTensorInFile = false, int verbosity = 1, int quadOrder = 6);
+  MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, Mesh mesh, bool MatrixAndTensorInFile = false, int verbosity = 1, int quadOrder = 6);
 
   /**Project the force term onto the basis*/
   Vector<double> evalForceTerm(const double& t) const;
@@ -42,12 +42,14 @@ private:
    */
   CellFilter interior_;
   Teuchos::Array<Expr> phi_;
+  Expr uB_;
   Mesh mesh_;
   Teuchos::Array<FunctionalEvaluator> forceIP_;
   bool MatrixAndTensorInFile_;
   QuadratureFamily quad_;
-  mutable Expr t_;
   Expr q_;
+  mutable Expr t_;
+
   
   /********************************************************************************
    * gradIP peforms the IP -(grad*f, grad*g)

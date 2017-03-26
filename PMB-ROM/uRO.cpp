@@ -78,7 +78,8 @@ int main(int argc, char *argv[])
       Expr y = new CoordExpr(1,"y");
       Expr t = new Sundance::Parameter(0.0);
       double deltat = tFinal/nSteps;
-
+      double nu = 1.0;
+      
       // Define our solution
       Expr uExact = List((2*Cos(2*t)*Cos(y)*Power(Sin(x),2)*Sin(y))/3. + 
 			 (Cos(3*t)*Cos(y)*Power(Sin(2*x),2)*Sin(y))/2.,
@@ -86,6 +87,22 @@ int main(int argc, char *argv[])
 			 Cos(3*t)*Cos(2*x)*Sin(2*x)*Power(Sin(y),2));
 
       Expr pExact = Cos(x)*Cos(y)*Sin(t);
+      Expr u0 = List((2*Cos(y)*Power(Sin(x),2)*Sin(y))/3. + (Cos(y)*Power(Sin(2*x),2)*
+                     Sin(y))/2., (-2*Cos(x)*Sin(x)*Power(Sin(y),2))/3. - Cos(2*x)*Sin(2*x)*
+                     Power(Sin(y),2));
+
+      Expr q = List((-36*Cos(y)*Sin(t)*Sin(x) + (((44 + 30*Cos(t) + 8*Cos(4*t) + 30*Cos(5*t))*
+					     Cos(x) + 9*((3 + 2*Cos(t) + 2*Cos(5*t))*Cos(3*x) + Cos(5*x)))*
+					    Power(Sin(x),3) + 9*Cos(6*t)*Cos(2*x)*Power(Sin(2*x),3))*Power(Sin(y),2) - 
+	       3*(8*nu*Cos(2*t)*(-1 + 2*Cos(2*x)) + 6*nu*Cos(3*t)*(-1 + 5*Cos(4*x)) + 
+		  8*Sin(2*t)*Power(Sin(x),2) + 9*Sin(3*t)*Power(Sin(2*x),2))*Sin(2*y))/36.,
+	      (6*nu*(2*Cos(2*t)*(-1 + 2*Cos(2*y))*Sin(2*x) + 
+		     3*Cos(3*t)*(-4 + 5*Cos(2*y))*Sin(4*x)) - 18*Cos(x)*Sin(t)*Sin(y) + 
+	       3*(4*Sin(2*t)*Sin(2*x) + 9*Sin(3*t)*Sin(4*x))*Power(Sin(y),2) + 
+	       2*Cos(y)*(Cos(2*t)*(4*Cos(2*t) - 3*Cos(3*t)*(-3 - 6*Cos(2*x) + Cos(4*x)))*
+			 Power(Sin(x),2) + 9*Power(Cos(3*t),2)*Power(Sin(2*x),2))*Power(Sin(y),3))/
+	      18.);
+      
 
       // Define our mesh
       MeshType meshType = new Sundance::BasicSimplicialMeshType();
@@ -105,15 +122,6 @@ int main(int argc, char *argv[])
 	+ "-nt-" + Teuchos::toString(nSteps);
       string tag = "st-v";
       string filename = fileDir + "/" + tag;
-      /*
-      Playa::LinearOperator<double> W = snapshotToMatrix(filename, nSteps, mesh);
-      SUNDANCE_ROOT_MSG2(verbosity, "Size of W: " << W.range().dim() << " by " << W.domain().dim());
-
-      // Perform the POD of the matrix W
-      Playa::LinearOperator<double> U;
-      Playa::LinearOperator<double> Phi;
-      Playa::Vector<double> sigma;
-      */
 
       // Create a BasisFamily to express our solution
       Array<Sundance::BasisFamily> ubasis = List(new Sundance::Lagrange(2), new Sundance::Lagrange(2)); // 2nd order Piece-Wise Quad Lagrange in 2D
@@ -123,23 +131,12 @@ int main(int argc, char *argv[])
 
       string NLParamFile = "playa-newton-armijo.xml";
 
-      // Based off the value for R, create an appropriate VectorSpace<double>
-      int R = 2;
-      VectorType<double> R_vecType = new SerialVectorType();
-      VectorSpace<double> R_vecSpace = R_vecType.createEvenlyPartitionedSpace(MPIComm::self(), R);
-      
-      //Find the exact alphas
-      Array<Vector<double> > alpha(nSteps+1);
-      for(int count = 0; count<alpha.length(); count++)
-	alpha[count] = R_vecSpace.createMember();
-
-      alpha[0][0] = -2.18212;
-      alpha[0][1] = -0.137505;      
+      //      alpha[0][0] = -2.18212;
+      //alpha[0][1] = -0.137505;      
 
       // Attempt to declare a velocityRO object
-      velocityROM ROM(filename, NLParamFile, ds, alpha[0], nSteps, deltat, .999, verbosity);
+      velocityROM ROM(filename, NLParamFile, ds, u0, q, t, nSteps, deltat, .999, verbosity);
       ROM.initialize();
-      cout << "Value of alpha[0]" << endl << alpha[0] << endl;
       ROM.generate_alpha();
       Array<Expr> uRO(ROM.get_uRO() );
       Array<Expr> phi(ROM.get_phi() ); // These are the POD basis functions
@@ -148,7 +145,29 @@ int main(int argc, char *argv[])
 
       //Needed for the integral
       CellFilter interior = new MaximalCellFilter();
-      QuadratureFamily quad4 = new GaussianQuadrature(4);
+      QuadratureFamily quad4 = new GaussianQuadrature(6);
+
+      // Based off the value for R, create an appropriate VectorSpace<double>
+      int R = phi.length();
+      VectorType<double> R_vecType = new SerialVectorType();
+      VectorSpace<double> R_vecSpace = R_vecType.createEvenlyPartitionedSpace(MPIComm::self(), R);
+      
+      //Find the exact alphas
+      Array<Vector<double> > alpha(nSteps+1);
+      for(int count = 0; count<alpha.length(); count++)
+	alpha[count] = R_vecSpace.createMember();
+
+
+
+      // Calculate ubar(x)
+      LinearOperator<double> Wprime = snapshotToMatrix(filename, nSteps, mesh);
+      SUNDANCE_ROOT_MSG2(verbosity, "Size of W: " << Wprime.range().dim() << " by " << Wprime.domain().dim());
+      Vector<double> ubarVec = Wprime.range().createMember();
+      Vector<double> ones = Wprime.domain().createMember();
+      ones.setToConstant(1.0);
+      Wprime.apply(ones, ubarVec);
+      ubarVec *= (1.0/ (nSteps+1.0) );
+      Expr ubar = new DiscreteFunction(ds, serialToEpetra(ubarVec));
 
       //Find the exact alphas
       for(int tIndex=0; tIndex < alpha.length(); tIndex++)
@@ -156,7 +175,8 @@ int main(int argc, char *argv[])
 	  for(int r=0; r<R; r++)
 	    {
 	      // alpha_r(t_m) = ( uEx(t_m, x, y), phi[r] )
-	      FunctionalEvaluator ExactEvaluator(mesh, Integral(interior, uExact*phi[r], quad4));
+	      // FunctionalEvaluator ExactEvaluator(mesh, Integral(interior, uExact*phi[r], quad4));
+	      FunctionalEvaluator ExactEvaluator(mesh, Integral(interior, (uExact-ubar)*phi[r], quad4));
 	      alpha[tIndex][r] = ExactEvaluator.evaluate();
 	    }
 	  t.setParameterValue(t.getParameterValue()+deltat);
@@ -180,8 +200,8 @@ int main(int argc, char *argv[])
 	    }
 	}
       
-      cout << "||alphaExact - alphaApprox||_2:\t\t "  << alphaError.norm2() << endl;
-      cout << "||alphaExact - alphaApprox||_inf:\t\t " << alphaError.normInf() << endl;
+      cout << "||alphaExact - alphaApprox||_2  :\t "  << alphaError.norm2() << endl;
+      cout << "||alphaExact - alphaApprox||_inf:\t " << alphaError.normInf() << endl;
 
 
       SUNDANCE_ROOT_MSG2(verbosity, "Comparing uExact(t_n) to uRO(t_n)");
@@ -192,40 +212,14 @@ int main(int argc, char *argv[])
 	  l2norm[time] = L2Norm(mesh, interior, uExact - uRO[time], quad4);
 	  SUNDANCE_ROOT_MSG2(verbosity, "Error for uRO at time " + Teuchos::toString(time*deltat) + "= " + Teuchos::toString(l2norm[time]));
 	}
-      Out::root() << "||uExact - uRO||_2:\t " << l2norm.norm2() << endl;
+      Out::root() << "||uExact - uRO||_2  :\t " << l2norm.norm2() << endl;
       Out::root() << "||uExact - uRO||_inf:\t " << l2norm.normInf() << endl << endl;
 
       SUNDANCE_ROOT_MSG1(verbosity, "Number of velocity modes kept: " + Teuchos::toString(phi.size()));
 
-      cout << "Value for alpha(0) " << endl << soln[0] << endl;
-
 
       
-      /*
-      cout << "Staring to build reduced-order u from alphaExact " << endl;
-      Array<Expr> uRO(nSteps+1);
-      for(int n=0; n<alpha.length(); n++)
-	{	
-	  uRO[n] = List(0.0, 0.0);
-	  for(int r=0; r<R; r++)
-	    {
-	      uRO[n] = uRO[n] + alpha[n][r]*phi[r]; 
-	    }
-	}
-
-      cout << "Comparing uExact(t_n) to uRO(t_n)" << endl;
-      Vector<double> l2norm = Phi.domain().createMember();
-      cout << "size of l2norm: " << l2norm.dim() << endl;
-      for(int time = 0; time < uRO.length(); time++)
-	{
-	  t.setParameterValue(time*deltat);
-	  l2norm[time] = L2Norm(mesh, interior, uExact - uRO[time], quad4);
-	  cout << "Error at time " << time*deltat << "= " << l2norm[time] << endl;
-	}
-      */
-
-      
-      
+     
       // Visualize the results
       /*
       string vtkDir = "Results/Visuals/uRO/";

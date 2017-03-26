@@ -1,17 +1,21 @@
 #include "velocityROM.hpp"
 
-velocityROM::velocityROM(const string snapshotFilename, string nlParamFile, const DiscreteSpace& ds, Vector<double> u0, int nSteps, double deltat, double tolerance, int verbosity)
+velocityROM::velocityROM(const string snapshotFilename, string nlParamFile, const DiscreteSpace& ds, Expr u0, Expr forceTerm, Expr t, int nSteps, double deltat, double tolerance, int verbosity)
   : snapshotFilename_(snapshotFilename),
     nlParamFile_(nlParamFile),
     ds_(ds),
     u0_(u0),
+    forceTerm_(forceTerm),
+    t_(t),
     nSteps_(nSteps), deltat_(deltat),
     tol_(tolerance),
     verbosity_(verbosity)
 {
-  t_ = new Sundance::Parameter(0.0);
+  //  t_ = new Sundance::Parameter(0.0);
+  t_.setParameterValue(0.0);
   Expr x = new CoordExpr(0,"x");
   Expr y = new CoordExpr(1,"y");
+  /*
   double nu = 1.0;
   forceTerm_ = List((-36*cos(y)*sin(t_)*sin(x) + (((44 + 30*cos(t_) + 8*cos(4*t_) + 30*cos(5*t_))*
 						   cos(x) + 9*((3 + 2*cos(t_) + 2*cos(5*t_))*cos(3*x) + cos(5*x)))*
@@ -24,7 +28,7 @@ velocityROM::velocityROM(const string snapshotFilename, string nlParamFile, cons
 	       2*cos(y)*(cos(2*t_)*(4*cos(2*t_) - 3*cos(3*t_)*(-3 - 6*cos(2*x) + cos(4*x)))*
 			 pow(sin(x),2) + 9*pow(cos(3*t_),2)*pow(sin(2*x),2))*pow(sin(y),3))/
 	      18.);
-
+  */
 }
 
 void velocityROM::initialize()
@@ -36,14 +40,13 @@ void velocityROM::initialize()
   Vector<double> ubarVec = Wprime_.range().createMember();
   Vector<double> ones = Wprime_.domain().createMember();
   ones.setToConstant(0.0);
-  //  ones.setToConstant(1.0);
+  //ones.setToConstant(1.0);
   Wprime_.apply(ones, ubarVec);
   ubarVec *= (1.0/ (nSteps_+1.0) );
   ubar_ = new DiscreteFunction(ds_, serialToEpetra(ubarVec));
 
   // Make W be W'
   RCP<DenseSerialMatrix> WPtr = DenseSerialMatrix::getConcretePtr(Wprime_);
-  /*
   double Wij;
   for(int j = 0; j < Wprime_.domain().dim(); j++)
     {
@@ -53,7 +56,6 @@ void velocityROM::initialize()
 	  WPtr->setElement(i,j,Wij-ubarVec[i]);
 	}  
     }
-  */  
       // Perform the POD of the matrix W'
       Playa::LinearOperator<double> U;
       Playa::LinearOperator<double> Phi;
@@ -91,7 +93,7 @@ void velocityROM::initialize()
 
       // Get the Expr phi_r(x)
       CellFilter interior = new MaximalCellFilter();
-      QuadratureFamily quad4 = new GaussianQuadrature(4);
+      QuadratureFamily quad4 = new GaussianQuadrature(6);
       for(int r = 0; r<R_; r++)
 	{
 	  ej.zero();
@@ -103,6 +105,21 @@ void velocityROM::initialize()
 				     runtime_error, "||phi["+Teuchos::toString(r)+"]|| = " + Teuchos::toString(L2Norm(ds_.mesh(), interior, phi_[r], quad4)) + " != 1");
 	}
 
+      // Generate alpha[0] based off of u0_ and ubar_
+      // (u0_ - ubar_, phi[i]) = alpha[0][i]
+      alpha_.resize(nSteps_+1);
+
+      VectorType<double> R_vecType = new SerialVectorType();
+      VectorSpace<double> R_vecSpace = R_vecType.createEvenlyPartitionedSpace(MPIComm::self(), R_);
+      alpha_[0] = R_vecSpace.createMember();
+      
+      for(int i = 0; i < R_; i++)
+	{
+	  FunctionalEvaluator IP = FunctionalEvaluator(ds_.mesh(), Integral(interior, (u0_ - ubar_)*phi_[i], quad4));
+	  //FunctionalEvaluator IP = FunctionalEvaluator(ds_.mesh(), Integral(interior, u0_*phi_[i], quad4));
+	  alpha_[0][i] = IP.evaluate();
+	}
+
 }
 
 
@@ -110,13 +127,13 @@ void velocityROM::generate_alpha()
 {
   SUNDANCE_ROOT_MSG1(verbosity_, "Creating MMSQuadODE");
   // Create the nonlinear operator for solving our nonlinear ODE
-  MMSQuadODE f(phi_, ds_.mesh(), false, verbosity_);
+  MMSQuadODE f(phi_, ubar_, forceTerm_, t_, ds_.mesh(), false, verbosity_);
   f.initialize();
 
   SUNDANCE_ROOT_MSG1(verbosity_, "Creating NLO");
   MyNLO* prob = new MyNLO(f, deltat_);
   NonlinearOperator<double> F = prob;
-  if(verbosity_>=2)
+  if(verbosity_>=3)
     F.setVerb(verbosity_);
 
 
@@ -124,23 +141,16 @@ void velocityROM::generate_alpha()
   // create the Newton-Armijo solver
   ParameterXMLFileReader reader(nlParamFile_);
   ParameterList params = reader.getParameters();
-  std::cout << "Got params" << std::endl;
   const ParameterList& solverParams = params.sublist("NewtonArmijoSolver");
   
   //Next line possible since DenseLUSolver and LinearSolver both inherit from LinearSolverBase
-  std::cout << "Creating linearSolver" << std::endl;
   LinearSolver<double> linearSolver(rcp(new DenseLUSolver())); 
-  std::cout << "Creating nonlinearSolver" << std::endl;
   NewtonArmijoSolver<double> nonlinearSolver(solverParams, linearSolver);
 
 
   // Establish alpha_(t_init)
-  alpha_.resize(nSteps_+1);
-  alpha_[0] = u0_.copy();
-  std::cout << "set initial conditions to " << std::endl << alpha_[0] << std::endl;
-  prob->set_uPrev(alpha_[0]);
-  
   SUNDANCE_ROOT_MSG1(verbosity_, "Running nonlinear solves...");
+  prob->set_uPrev(alpha_[0]);
   for(int time = 1; time < alpha_.length(); time++)
     {
       SUNDANCE_ROOT_MSG1(verbosity_, "Nonlinear Solve at time step " + Teuchos::toString(time) + " of " + Teuchos::toString(nSteps_));
