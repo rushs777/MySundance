@@ -1,43 +1,35 @@
 #include "MMSQuadODE.hpp"
 
-MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, Mesh mesh, bool MatrixAndTensorInFile, int verbosity, int quadOrder) 
+MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double deltat, Mesh mesh, bool MatrixAndTensorInFile, int verbosity, int quadOrder) 
     : QuadraticODERHSBase(phi.size(), verbosity),
       interior_(new MaximalCellFilter()),
       phi_(phi),
       uB_(uB),
       q_(q),
       t_(t),
+      deltat_(deltat),
       mesh_(mesh),
       forceIP_(phi.size()),
       MatrixAndTensorInFile_(MatrixAndTensorInFile),
       quad_(new GaussianQuadrature(quadOrder))
   {
     //t_ = new Sundance::Parameter(0.0);
+    // NEED TO ADD A NU VALUE
     t_.setParameterValue(0.0);
+    tNext_ = new Sundance::Parameter(deltat_);
     Expr x = new CoordExpr(0,"x");
     Expr y = new CoordExpr(1,"y");
-    /*double nu = 1.0;
-    q_ = List((-36*Cos(y)*Sin(t_)*Sin(x) + (((44 + 30*Cos(t_) + 8*Cos(4*t_) + 30*Cos(5*t_))*
-					     Cos(x) + 9*((3 + 2*Cos(t_) + 2*Cos(5*t_))*Cos(3*x) + Cos(5*x)))*
-					    Power(Sin(x),3) + 9*Cos(6*t_)*Cos(2*x)*Power(Sin(2*x),3))*Power(Sin(y),2) - 
-	       3*(8*nu*Cos(2*t_)*(-1 + 2*Cos(2*x)) + 6*nu*Cos(3*t_)*(-1 + 5*Cos(4*x)) + 
-		  8*Sin(2*t_)*Power(Sin(x),2) + 9*Sin(3*t_)*Power(Sin(2*x),2))*Sin(2*y))/36.,
-	      (6*nu*(2*Cos(2*t_)*(-1 + 2*Cos(2*y))*Sin(2*x) + 
-		     3*Cos(3*t_)*(-4 + 5*Cos(2*y))*Sin(4*x)) - 18*Cos(x)*Sin(t_)*Sin(y) + 
-	       3*(4*Sin(2*t_)*Sin(2*x) + 9*Sin(3*t_)*Sin(4*x))*Power(Sin(y),2) + 
-	       2*Cos(y)*(Cos(2*t_)*(4*Cos(2*t_) - 3*Cos(3*t_)*(-3 - 6*Cos(2*x) + Cos(4*x)))*
-			 Power(Sin(x),2) + 9*Power(Cos(3*t_),2)*Power(Sin(2*x),2))*Power(Sin(y),3))/
-	      18.);
-    */
     
     // mesh.spatialDim() returns n for nD
     // Define grad operator
     Expr grad = gradient(mesh_.spatialDim());
-
+    
     for(int r = 0; r < phi_.size(); r++)
       {
-	forceIP_[r] = FunctionalEvaluator(mesh_, Integral(interior_, q_*phi_[r], quad_));
+	Expr integrand = -outerProduct(grad,uB_)*phi_[r]*uB_ + q_*phi_[r] - (1.0)*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
+	forceIP_[r] = FunctionalEvaluator(mesh_, Integral(interior_, integrand, quad_));
       }
+
   }
 
 Vector<double> MMSQuadODE::evalForceTerm(const double& t) const
@@ -70,7 +62,7 @@ void MMSQuadODE::fillMatrixAndTensor(RCP<DenseSerialMatrix>& A, Array<RCP<DenseS
 	SUNDANCE_ROOT_MSG1(getVerbosity(), "Creating A");
 	for(int i = 0; i<A->numRows(); i++)
 	  for(int r = 0; r<A->numCols(); r++)
-	    A->setElement(i,r,gradIP(phi_[i], phi_[r]));
+	    A->setElement(i,r,A_IP(phi_[i], phi_[r])); //HOW TO HANDLE PASSING TIME?
 
 	string A_filename = fileDir + "/A.txt";
 	writeDenseSerialMatrix(A, A_filename);
@@ -104,9 +96,9 @@ void MMSQuadODE::fillMatrixAndTensor(RCP<DenseSerialMatrix>& A, Array<RCP<DenseS
 	
 
   /********************************************************************************
-   * gradIP peforms the IP -(grad*f, grad*g)
+   * A_IP peforms the IP -(phi_i, uB*(grad*phi_j)) - (phi_i, phi_j*(grad*uB_)) - nu*(grad*f, grad*g)
    ********************************************************************************/
-double MMSQuadODE::gradIP(Expr f, Expr g)
+double MMSQuadODE::A_IP(Expr phi_i, Expr phi_j)
   {
     // mesh.spatialDim() returns n for nD
     int dim = mesh_.spatialDim();
@@ -114,7 +106,8 @@ double MMSQuadODE::gradIP(Expr f, Expr g)
     // Define our differential operators; note Derivative(x=0)
     Expr grad = gradient(dim);
 
-    FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, -colonProduct(outerProduct(grad,f),outerProduct(grad,g)), quad_));
+    Expr integrand = -outerProduct(grad,phi_j)*phi_i*uB_ - outerProduct(grad,uB_)*phi_i*phi_j - (1.0)*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
+    FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, integrand, quad_));
     return (IP.evaluate());
   }
 

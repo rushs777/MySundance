@@ -39,8 +39,8 @@ void velocityROM::initialize()
   // Calculate ubar(x)
   Vector<double> ubarVec = Wprime_.range().createMember();
   Vector<double> ones = Wprime_.domain().createMember();
-  ones.setToConstant(0.0);
-  //ones.setToConstant(1.0);
+  //ones.setToConstant(0.0);
+  ones.setToConstant(1.0);
   Wprime_.apply(ones, ubarVec);
   ubarVec *= (1.0/ (nSteps_+1.0) );
   ubar_ = new DiscreteFunction(ds_, serialToEpetra(ubarVec));
@@ -127,7 +127,7 @@ void velocityROM::generate_alpha()
 {
   SUNDANCE_ROOT_MSG1(verbosity_, "Creating MMSQuadODE");
   // Create the nonlinear operator for solving our nonlinear ODE
-  MMSQuadODE f(phi_, ubar_, forceTerm_, t_, ds_.mesh(), false, verbosity_);
+  MMSQuadODE f(phi_, ubar_, forceTerm_, t_, deltat_, ds_.mesh(), false, verbosity_);
   f.initialize();
 
   SUNDANCE_ROOT_MSG1(verbosity_, "Creating NLO");

@@ -221,8 +221,7 @@ int main(int argc, char *argv[])
       
      
       // Visualize the results
-      /*
-      string vtkDir = "Results/Visuals/uRO/";
+      string vtkDir = "Results/Visuals/uROFluctuations/";
       string vtkfilename = "nx"+Teuchos::toString(nx)+"nt"+Teuchos::toString(nSteps);
       system( ("mkdir -p " + vtkDir).c_str() ); 
       FieldWriter writer = new VTKWriter(vtkDir+vtkfilename);
@@ -244,7 +243,6 @@ int main(int argc, char *argv[])
 
 	  writer.write();
 	}
-      */
 	
     }
   catch(std::exception& e)

@@ -7,7 +7,7 @@
 #ntEnd is the power of 2 to end nSteps with
 #filename is the name of the file to store the output from the runs
 
-filename=uRO_comparisonLog.txt
+filename=uRO_comparisonFluctuationLog.txt
 
 nxStart=$1
 let nxEnd=$2+1

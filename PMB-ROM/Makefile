@@ -72,7 +72,8 @@ EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
 		/home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
 		/home/sirush/PhDResearch/PMB-ROM/MMSQuadODE.o \
 		/home/sirush/PhDResearch/PMB-ROM/MyNLO.o \
-		/home/sirush/PhDResearch/PMB-ROM/PMB.o
+		/home/sirush/PhDResearch/SourceFiles/PMB.o \
+		/home/sirush/PhDResearch/PMB-ROM/velocityROM.o
 
 
 #EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
