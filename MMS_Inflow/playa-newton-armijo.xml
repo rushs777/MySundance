@@ -1,0 +1,11 @@
+<!-- nonlinear solver 
+Changed tau from 1.0e-12
+-->
+<ParameterList>
+  <ParameterList name="NewtonArmijoSolver">
+    <Parameter name="Tau Relative"      type="double" value="1.0e-8"/>
+    <Parameter name="Tau Absolute"      type="double" value="1.0e-8"/>
+    <Parameter name="Verbosity"         type="int" value="0"/>
+    <Parameter name="Max Iterations"    type="int" value="20"/>
+  </ParameterList>
+</ParameterList>
