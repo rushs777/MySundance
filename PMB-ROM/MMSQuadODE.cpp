@@ -1,5 +1,12 @@
 #include "MMSQuadODE.hpp"
 
+/*******************************************************************************************
+ *
+ * NOTE: IF YOUR CODE IS NOT WORKING MAKE SURE IT IS NOT BECAUSE uB DEPENDS ON TIME
+ * CURRENTLY uB = ubar, so the time derivative is zero and not implemented
+ *
+ ******************************************************************************************/
+
 MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double deltat, Mesh mesh, bool MatrixAndTensorInFile, int verbosity, int quadOrder) 
     : QuadraticODERHSBase(phi.size(), verbosity),
       interior_(new MaximalCellFilter()),
@@ -97,6 +104,7 @@ void MMSQuadODE::fillMatrixAndTensor(RCP<DenseSerialMatrix>& A, Array<RCP<DenseS
 
   /********************************************************************************
    * A_IP peforms the IP -(phi_i, uB*(grad*phi_j)) - (phi_i, phi_j*(grad*uB_)) - nu*(grad*f, grad*g)
+   * Does not have the time derivative component implemented
    ********************************************************************************/
 double MMSQuadODE::A_IP(Expr phi_i, Expr phi_j)
   {

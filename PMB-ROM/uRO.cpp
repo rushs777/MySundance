@@ -172,16 +172,17 @@ int main(int argc, char *argv[])
       //Find the exact alphas
       for(int tIndex=0; tIndex < alpha.length(); tIndex++)
 	{
+	  t.setParameterValue(0.0+tIndex*deltat);
 	  for(int r=0; r<R; r++)
 	    {
 	      // alpha_r(t_m) = ( uEx(t_m, x, y), phi[r] )
 	      // FunctionalEvaluator ExactEvaluator(mesh, Integral(interior, uExact*phi[r], quad4));
-	      FunctionalEvaluator ExactEvaluator(mesh, Integral(interior, (uExact-ubar)*phi[r], quad4));
+	      //FunctionalEvaluator ExactEvaluator(mesh, Integral(interior, (uExact-ubar)*phi[r], quad4));
+	      FunctionalEvaluator ExactEvaluator = FunctionalEvaluator(mesh, Integral(interior, (uExact-ubar)*phi[r], quad4));
 	      alpha[tIndex][r] = ExactEvaluator.evaluate();
 	    }
-	  t.setParameterValue(t.getParameterValue()+deltat);
+	  // t.setParameterValue(t.getParameterValue()+deltat);
 	}
-
 
       Array<Vector<double> > soln(ROM.get_alpha() );
       VectorType<double> time_vecType = new SerialVectorType();
@@ -199,7 +200,8 @@ int main(int argc, char *argv[])
 	      cout << "Approximate alpha(t=" << i << "): " << endl << soln[i] << endl << endl;
 	    }
 	}
-      
+
+      cout << "Run for nx = " << nx << ", nSteps = " << nSteps << endl;
       cout << "||alphaExact - alphaApprox||_2  :\t "  << alphaError.norm2() << endl;
       cout << "||alphaExact - alphaApprox||_inf:\t " << alphaError.normInf() << endl;
 
@@ -212,25 +214,26 @@ int main(int argc, char *argv[])
 	  l2norm[time] = L2Norm(mesh, interior, uExact - uRO[time], quad4);
 	  SUNDANCE_ROOT_MSG2(verbosity, "Error for uRO at time " + Teuchos::toString(time*deltat) + "= " + Teuchos::toString(l2norm[time]));
 	}
-      Out::root() << "||uExact - uRO||_2  :\t " << l2norm.norm2() << endl;
-      Out::root() << "||uExact - uRO||_inf:\t " << l2norm.normInf() << endl << endl;
+
 
       SUNDANCE_ROOT_MSG1(verbosity, "Number of velocity modes kept: " + Teuchos::toString(phi.size()));
-
+      Out::root() << "||uExact - uRO||_2  :\t " << l2norm.norm2() << endl;
+      Out::root() << "||uExact - uRO||_inf:\t " << l2norm.normInf() << endl << endl;
 
       
      
       // Visualize the results
       string vtkDir = "Results/Visuals/uROFluctuations/";
       string vtkfilename = "nx"+Teuchos::toString(nx)+"nt"+Teuchos::toString(nSteps);
+      vtkDir = vtkDir + vtkfilename + "/";
       system( ("mkdir -p " + vtkDir).c_str() ); 
-      FieldWriter writer = new VTKWriter(vtkDir+vtkfilename);
-      writer.addMesh(mesh);
 
       L2Projector projector(ds, uExact);
       //Write uExact for all the time steps
-      for(int time=0; time<1; time++)
+      for(int time=0; time< nSteps+1; time++)
 	{
+	  FieldWriter writer = new VTKWriter(vtkDir+vtkfilename+"step"+Teuchos::toString(time));
+	  writer.addMesh(mesh);
 	  t.setParameterValue(time*deltat);
 	  L2Projector projectorRO(ds, uRO[time]);
 	  L2Projector uErrorProjector(ds, uExact - uRO[time]);
@@ -240,9 +243,9 @@ int main(int argc, char *argv[])
 	  writer.addField("uRO[1]", new ExprFieldWrapper(projectorRO.project()[1]) );
 	  writer.addField("uError[0]", new ExprFieldWrapper(uErrorProjector.project()[0]) );
 	  writer.addField("uError[1]", new ExprFieldWrapper(uErrorProjector.project()[1]) );
-
-	  writer.write();
+      	  writer.write();	  
 	}
+
 	
     }
   catch(std::exception& e)

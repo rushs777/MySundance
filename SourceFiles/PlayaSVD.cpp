@@ -216,7 +216,7 @@ namespace Playa
 	    W.applyTranspose(epetraToSerial(Sphi_r), Wt_Sphi_r);
 	    W.apply(Wt_Sphi_r, result);
 
-	    if( (result-sigma[i]*phi_i).norm2() > 1.0e-4)
+	    if( (result-sigma[i]*phi_i).norm2() > 1.0e-2)
 	      {
 		cout << "Are my coefficient vectors solving equation 8? " << endl
 		     << "Testing for r = " << i << endl;

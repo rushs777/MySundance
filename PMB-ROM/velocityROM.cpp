@@ -11,24 +11,7 @@ velocityROM::velocityROM(const string snapshotFilename, string nlParamFile, cons
     tol_(tolerance),
     verbosity_(verbosity)
 {
-  //  t_ = new Sundance::Parameter(0.0);
   t_.setParameterValue(0.0);
-  Expr x = new CoordExpr(0,"x");
-  Expr y = new CoordExpr(1,"y");
-  /*
-  double nu = 1.0;
-  forceTerm_ = List((-36*cos(y)*sin(t_)*sin(x) + (((44 + 30*cos(t_) + 8*cos(4*t_) + 30*cos(5*t_))*
-						   cos(x) + 9*((3 + 2*cos(t_) + 2*cos(5*t_))*cos(3*x) + cos(5*x)))*
-						  pow(sin(x),3) + 9*cos(6*t_)*cos(2*x)*pow(sin(2*x),3))*pow(sin(y),2) - 
-	       3*(8*nu*cos(2*t_)*(-1 + 2*cos(2*x)) + 6*nu*cos(3*t_)*(-1 + 5*cos(4*x)) + 
-		  8*sin(2*t_)*pow(sin(x),2) + 9*sin(3*t_)*pow(sin(2*x),2))*sin(2*y))/36.,
-	      (6*nu*(2*cos(2*t_)*(-1 + 2*cos(2*y))*sin(2*x) + 
-		     3*cos(3*t_)*(-4 + 5*cos(2*y))*sin(4*x)) - 18*cos(x)*sin(t_)*sin(y) + 
-	       3*(4*sin(2*t_)*sin(2*x) + 9*sin(3*t_)*sin(4*x))*pow(sin(y),2) + 
-	       2*cos(y)*(cos(2*t_)*(4*cos(2*t_) - 3*cos(3*t_)*(-3 - 6*cos(2*x) + cos(4*x)))*
-			 pow(sin(x),2) + 9*pow(cos(3*t_),2)*pow(sin(2*x),2))*pow(sin(y),3))/
-	      18.);
-  */
 }
 
 void velocityROM::initialize()
@@ -85,7 +68,7 @@ void velocityROM::initialize()
 	    }
 	}
 
-      // Looking at PlayaSVD.cpp, Phi is a DenseSerialMatrix
+      // Phi is a DenseSerialMatrix
       Playa::Vector<double> ej = Phi.domain().createMember();
       Playa::Vector<double> phiCoeff = Phi.range().createMember(); // These are the coefficient vectors
       phi_.resize(R_); // These are the velocity POD basis functions
