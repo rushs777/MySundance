@@ -22,7 +22,6 @@ void velocityROM::initialize()
   // Calculate ubar(x)
   Vector<double> ubarVec = Wprime_.range().createMember();
   Vector<double> ones = Wprime_.domain().createMember();
-  //ones.setToConstant(0.0);
   ones.setToConstant(1.0);
   Wprime_.apply(ones, ubarVec);
   ubarVec *= (1.0/ (nSteps_+1.0) );
@@ -76,7 +75,7 @@ void velocityROM::initialize()
 
       // Get the Expr phi_r(x)
       CellFilter interior = new MaximalCellFilter();
-      QuadratureFamily quad4 = new GaussianQuadrature(6);
+      QuadratureFamily quad = new GaussianQuadrature(6);
       for(int r = 0; r<R_; r++)
 	{
 	  ej.zero();
@@ -84,8 +83,8 @@ void velocityROM::initialize()
 	  phiCoeff.zero();
 	  Phi.apply(ej,phiCoeff);
 	  phi_[r] = new DiscreteFunction(ds_, serialToEpetra(phiCoeff)); //DiscreteFunction requires Epetra vectors
-	  TEUCHOS_TEST_FOR_EXCEPTION( fabs(L2Norm(ds_.mesh(), interior, phi_[r], quad4) - 1.0) >= 1.0e-6,
-				     runtime_error, "||phi["+Teuchos::toString(r)+"]|| = " + Teuchos::toString(L2Norm(ds_.mesh(), interior, phi_[r], quad4)) + " != 1");
+	  TEUCHOS_TEST_FOR_EXCEPTION( fabs(L2Norm(ds_.mesh(), interior, phi_[r], quad) - 1.0) >= 1.0e-6,
+				     runtime_error, "||phi["+Teuchos::toString(r)+"]|| = " + Teuchos::toString(L2Norm(ds_.mesh(), interior, phi_[r], quad)) + " != 1");
 	}
 
       // Generate alpha[0] based off of u0_ and ubar_
@@ -98,8 +97,8 @@ void velocityROM::initialize()
       
       for(int i = 0; i < R_; i++)
 	{
-	  FunctionalEvaluator IP = FunctionalEvaluator(ds_.mesh(), Integral(interior, (u0_ - ubar_)*phi_[i], quad4));
-	  //FunctionalEvaluator IP = FunctionalEvaluator(ds_.mesh(), Integral(interior, u0_*phi_[i], quad4));
+	  FunctionalEvaluator IP = FunctionalEvaluator(ds_.mesh(), Integral(interior, (u0_ - ubar_)*phi_[i], quad));
+	  //FunctionalEvaluator IP = FunctionalEvaluator(ds_.mesh(), Integral(interior, u0_*phi_[i], quad));
 	  alpha_[0][i] = IP.evaluate();
 	}
 
@@ -116,7 +115,7 @@ void velocityROM::generate_alpha()
   SUNDANCE_ROOT_MSG1(verbosity_, "Creating NLO");
   MyNLO* prob = new MyNLO(f, deltat_);
   NonlinearOperator<double> F = prob;
-  if(verbosity_>=3)
+  if(verbosity_>=4)
     F.setVerb(verbosity_);
 
 

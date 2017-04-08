@@ -28,26 +28,28 @@ Expr uExFunc(const Expr& t)
   Expr x = new CoordExpr(0);
   Expr y = new CoordExpr(1);
 
-  return List(1 + (x*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
-         (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
-         (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. + 
-         (2*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. + 
-         (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. + 
-         (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.))/(1 + x),
-   -((x*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
-           (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
-           (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
-           (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
-           (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.))/(1 + x)) + 
-    (x*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
-         (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
-         (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
-         (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
-         (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.))/Power(1 + x,2) - 
-    ((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
-       (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
+  return List(1 + x*Power(-2*Pi + x,2)*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
+       (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
+       (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. + 
+       (2*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. + 
+       (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. + 
+       (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.),
+   -(x*Power(-2*Pi + x,2)*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
+         (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
+         (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
+         (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
+         (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
+         (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.)) - 
+    2*x*(-2*Pi + x)*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + 
+       (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
+       (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
        (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
-     (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.)/(1 + x));
+       (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.) - 
+    Power(-2*Pi + x,2)*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + 
+       (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
+       (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
+       (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
+			(Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.));
 }
 
 Expr pExFunc(const Expr& t)
@@ -64,267 +66,276 @@ Expr qExFunc(const Expr& t)
   Expr y = new CoordExpr(1);
   double nu = 1.0;
 
-  return List(-1 + Cos(x)*Cos(y) + (x*((Power(Cos(t),2)*Cos(y)*Sin(x))/5. + 
-         (2*Cos(t)*Cos(2*t)*Cos(2*y)*Sin(x))/5. - 
-         (Cos(y)*Power(Sin(t),2)*Sin(x))/5. - 
-         (4*Cos(2*y)*Sin(t)*Sin(2*t)*Sin(x))/5. + 
-         (2*Cos(t)*Cos(2*t)*Cos(y)*Sin(2*x))/3. + 
-         (4*Power(Cos(2*t),2)*Cos(2*y)*Sin(2*x))/5. - 
-         (Cos(y)*Sin(t)*Sin(2*t)*Sin(2*x))/3. - 
-         (4*Cos(2*y)*Power(Sin(2*t),2)*Sin(2*x))/5. + 
-         (Cos(t)*Cos(3*t)*Cos(y)*Sin(3*x))/2. + 
-         (6*Cos(2*t)*Cos(3*t)*Cos(2*y)*Sin(3*x))/7. - 
-         (Cos(y)*Sin(t)*Sin(3*t)*Sin(3*x))/6. - 
-         (4*Cos(2*y)*Sin(2*t)*Sin(3*t)*Sin(3*x))/7.))/(1 + x) + 
-    ((x*((Cos(t)*Cos(x)*Cos(y)*Sin(t))/5. + (2*Cos(2*t)*Cos(x)*Cos(2*y)*Sin(t))/5. + 
-            (2*Cos(t)*Cos(2*x)*Cos(y)*Sin(2*t))/3. + 
-            (4*Cos(2*t)*Cos(2*x)*Cos(2*y)*Sin(2*t))/5. + 
-            (Cos(t)*Cos(3*x)*Cos(y)*Sin(3*t))/2. + 
-            (6*Cos(2*t)*Cos(3*x)*Cos(2*y)*Sin(3*t))/7.))/(1 + x) - 
-       (x*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
-            (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
-            (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. + 
-            (2*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. + 
-            (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. + 
-            (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.))/Power(1 + x,2) + 
-       ((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
+  return List(-1 + Cos(x)*Cos(y) + x*Power(-2*Pi + x,2)*
+     ((Power(Cos(t),2)*Cos(y)*Sin(x))/5. + (2*Cos(t)*Cos(2*t)*Cos(2*y)*Sin(x))/5. - 
+       (Cos(y)*Power(Sin(t),2)*Sin(x))/5. - (4*Cos(2*y)*Sin(t)*Sin(2*t)*Sin(x))/5. + 
+       (2*Cos(t)*Cos(2*t)*Cos(y)*Sin(2*x))/3. + 
+       (4*Power(Cos(2*t),2)*Cos(2*y)*Sin(2*x))/5. - 
+       (Cos(y)*Sin(t)*Sin(2*t)*Sin(2*x))/3. - 
+       (4*Cos(2*y)*Power(Sin(2*t),2)*Sin(2*x))/5. + 
+       (Cos(t)*Cos(3*t)*Cos(y)*Sin(3*x))/2. + 
+       (6*Cos(2*t)*Cos(3*t)*Cos(2*y)*Sin(3*x))/7. - 
+       (Cos(y)*Sin(t)*Sin(3*t)*Sin(3*x))/6. - 
+       (4*Cos(2*y)*Sin(2*t)*Sin(3*t)*Sin(3*x))/7.) + 
+    (x*Power(-2*Pi + x,2)*((Cos(t)*Cos(x)*Cos(y)*Sin(t))/5. + 
+          (2*Cos(2*t)*Cos(x)*Cos(2*y)*Sin(t))/5. + 
+          (2*Cos(t)*Cos(2*x)*Cos(y)*Sin(2*t))/3. + 
+          (4*Cos(2*t)*Cos(2*x)*Cos(2*y)*Sin(2*t))/5. + 
+          (Cos(t)*Cos(3*x)*Cos(y)*Sin(3*t))/2. + 
+          (6*Cos(2*t)*Cos(3*x)*Cos(2*y)*Sin(3*t))/7.) + 
+       2*x*(-2*Pi + x)*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
           (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. + 
           (2*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. + 
           (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. + 
-          (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.)/(1 + x))*
-     (1 + (x*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
-            (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
-            (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. + 
-            (2*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. + 
-            (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. + 
-            (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.))/(1 + x)) - 
-    nu*(2*(-(x/Power(1 + x,2)) + 1/(1 + x))*
+          (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.) + 
+       Power(-2*Pi + x,2)*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
+          (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. + 
+          (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.))*
+     (1 + x*Power(-2*Pi + x,2)*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
+          (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. + 
+          (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.)) - 
+    nu*(2*(2*x*(-2*Pi + x) + Power(-2*Pi + x,2))*
         ((Cos(t)*Cos(x)*Cos(y)*Sin(t))/5. + (2*Cos(2*t)*Cos(x)*Cos(2*y)*Sin(t))/5. + 
           (2*Cos(t)*Cos(2*x)*Cos(y)*Sin(2*t))/3. + 
           (4*Cos(2*t)*Cos(2*x)*Cos(2*y)*Sin(2*t))/5. + 
           (Cos(t)*Cos(3*x)*Cos(y)*Sin(3*t))/2. + 
           (6*Cos(2*t)*Cos(3*x)*Cos(2*y)*Sin(3*t))/7.) + 
-       (x*(-(Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. - 
-            (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. - 
-            (4*Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. - 
-            (8*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. - 
-            (3*Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/2. - 
-            (18*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.))/(1 + x) + 
-       (x*(-(Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. - 
-            (8*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. - 
-            (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. - 
-            (8*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. - 
-            (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. - 
-            (8*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.))/(1 + x) + 
-       ((2*x)/Power(1 + x,3) - 2/Power(1 + x,2))*
-        ((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
+       x*Power(-2*Pi + x,2)*(-(Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. - 
+          (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. - 
+          (4*Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. - 
+          (8*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. - 
+          (3*Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/2. - 
+          (18*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.) + 
+       x*Power(-2*Pi + x,2)*(-(Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. - 
+          (8*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. - 
+          (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. - 
+          (8*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. - 
+          (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. - 
+          (8*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.) + 
+       (2*x + 4*(-2*Pi + x))*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
           (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. + 
           (2*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. + 
           (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. + 
           (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.)) + 
-    (x*(-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - 
-         (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. - 
-         (4*Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. - 
-         (4*Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. - 
-         (4*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.)*
-       (-((x*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
-                (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
-                (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
-                (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
-                (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
-                (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.))/(1 + x)) + 
-         (x*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + 
-              (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
-              (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
-              (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
-              (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
-              (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.))/Power(1 + x,2) - 
-         ((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
-            (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
-            (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
-            (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
-            (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.)/(1 + x)))/(1 + x),
-   -(Sin(x)*Sin(y)) - (x*((Power(Cos(t),2)*Cos(x)*Sin(y))/5. + 
-         (4*Cos(t)*Cos(2*t)*Cos(2*x)*Sin(y))/3. + 
-         (3*Cos(t)*Cos(3*t)*Cos(3*x)*Sin(y))/2. - 
-         (Cos(x)*Power(Sin(t),2)*Sin(y))/5. - 
-         (2*Cos(2*x)*Sin(t)*Sin(2*t)*Sin(y))/3. - 
-         (Cos(3*x)*Sin(t)*Sin(3*t)*Sin(y))/2. + 
-         (Cos(t)*Cos(2*t)*Cos(x)*Sin(2*y))/5. + 
-         (4*Power(Cos(2*t),2)*Cos(2*x)*Sin(2*y))/5. + 
-         (9*Cos(2*t)*Cos(3*t)*Cos(3*x)*Sin(2*y))/7. - 
-         (2*Cos(x)*Sin(t)*Sin(2*t)*Sin(2*y))/5. - 
-         (4*Cos(2*x)*Power(Sin(2*t),2)*Sin(2*y))/5. - 
-         (6*Cos(3*x)*Sin(2*t)*Sin(3*t)*Sin(2*y))/7.))/(1 + x) + 
-    (x*((Power(Cos(t),2)*Sin(x)*Sin(y))/5. - (Power(Sin(t),2)*Sin(x)*Sin(y))/5. + 
-         (2*Cos(t)*Cos(2*t)*Sin(2*x)*Sin(y))/3. - 
-         (Sin(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
-         (Cos(t)*Cos(3*t)*Sin(3*x)*Sin(y))/2. - 
-         (Sin(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
-         (Cos(t)*Cos(2*t)*Sin(x)*Sin(2*y))/5. - 
-         (2*Sin(t)*Sin(2*t)*Sin(x)*Sin(2*y))/5. + 
-         (2*Power(Cos(2*t),2)*Sin(2*x)*Sin(2*y))/5. - 
-         (2*Power(Sin(2*t),2)*Sin(2*x)*Sin(2*y))/5. + 
-         (3*Cos(2*t)*Cos(3*t)*Sin(3*x)*Sin(2*y))/7. - 
-         (2*Sin(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.))/Power(1 + x,2) - 
-    ((Power(Cos(t),2)*Sin(x)*Sin(y))/5. - (Power(Sin(t),2)*Sin(x)*Sin(y))/5. + 
-       (2*Cos(t)*Cos(2*t)*Sin(2*x)*Sin(y))/3. - 
+    x*Power(-2*Pi + x,2)*(-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - 
+       (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. - 
+       (4*Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. - 
+       (4*Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. - 
+       (4*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.)*
+     (-(x*Power(-2*Pi + x,2)*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
+            (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
+            (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
+            (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
+            (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
+            (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.)) - 
+       2*x*(-2*Pi + x)*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + 
+          (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
+          (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
+          (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
+          (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
+          (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.) - 
+       Power(-2*Pi + x,2)*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + 
+          (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
+          (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
+          (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
+          (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
+          (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.)),
+   -(Sin(x)*Sin(y)) - x*Power(-2*Pi + x,2)*
+     ((Power(Cos(t),2)*Cos(x)*Sin(y))/5. + (4*Cos(t)*Cos(2*t)*Cos(2*x)*Sin(y))/3. + 
+       (3*Cos(t)*Cos(3*t)*Cos(3*x)*Sin(y))/2. - (Cos(x)*Power(Sin(t),2)*Sin(y))/5. - 
+       (2*Cos(2*x)*Sin(t)*Sin(2*t)*Sin(y))/3. - 
+       (Cos(3*x)*Sin(t)*Sin(3*t)*Sin(y))/2. + (Cos(t)*Cos(2*t)*Cos(x)*Sin(2*y))/5. + 
+       (4*Power(Cos(2*t),2)*Cos(2*x)*Sin(2*y))/5. + 
+       (9*Cos(2*t)*Cos(3*t)*Cos(3*x)*Sin(2*y))/7. - 
+       (2*Cos(x)*Sin(t)*Sin(2*t)*Sin(2*y))/5. - 
+       (4*Cos(2*x)*Power(Sin(2*t),2)*Sin(2*y))/5. - 
+       (6*Cos(3*x)*Sin(2*t)*Sin(3*t)*Sin(2*y))/7.) - 
+    2*x*(-2*Pi + x)*((Power(Cos(t),2)*Sin(x)*Sin(y))/5. - 
+       (Power(Sin(t),2)*Sin(x)*Sin(y))/5. + (2*Cos(t)*Cos(2*t)*Sin(2*x)*Sin(y))/3. - 
        (Sin(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + (Cos(t)*Cos(3*t)*Sin(3*x)*Sin(y))/2. - 
        (Sin(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + (Cos(t)*Cos(2*t)*Sin(x)*Sin(2*y))/5. - 
        (2*Sin(t)*Sin(2*t)*Sin(x)*Sin(2*y))/5. + 
        (2*Power(Cos(2*t),2)*Sin(2*x)*Sin(2*y))/5. - 
        (2*Power(Sin(2*t),2)*Sin(2*x)*Sin(2*y))/5. + 
        (3*Cos(2*t)*Cos(3*t)*Sin(3*x)*Sin(2*y))/7. - 
-       (2*Sin(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.)/(1 + x) + 
-    (1 + (x*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
-            (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
-            (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. + 
-            (2*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. + 
-            (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. + 
-            (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.))/(1 + x))*
-     ((2*x*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
-            (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
-            (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
-            (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
-            (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
-            (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.))/Power(1 + x,2) - 
-       (2*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
-            (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
-            (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
-            (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
-            (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
-            (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.))/(1 + x) - 
-       (x*(-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - 
-            (4*Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - 
-            (3*Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/2. - 
-            (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. - 
-            (4*Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. - 
-            (9*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.))/(1 + x) - 
-       (2*x*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + 
-            (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
-            (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
-            (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
-            (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
-            (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.))/Power(1 + x,3) + 
-       (2*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
-            (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
-            (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
-            (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
-            (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.))/Power(1 + x,2)) + 
-    (-((x*((Cos(t)*Cos(x)*Cos(y)*Sin(t))/5. + 
-              (2*Cos(2*t)*Cos(x)*Cos(2*y)*Sin(t))/5. + 
-              (2*Cos(t)*Cos(2*x)*Cos(y)*Sin(2*t))/3. + 
-              (4*Cos(2*t)*Cos(2*x)*Cos(2*y)*Sin(2*t))/5. + 
-              (Cos(t)*Cos(3*x)*Cos(y)*Sin(3*t))/2. + 
-              (6*Cos(2*t)*Cos(3*x)*Cos(2*y)*Sin(3*t))/7.))/(1 + x)) + 
-       (x*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
-            (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
-            (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. + 
-            (2*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. + 
-            (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. + 
-            (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.))/Power(1 + x,2) - 
-       ((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
+       (2*Sin(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.) - 
+    Power(-2*Pi + x,2)*((Power(Cos(t),2)*Sin(x)*Sin(y))/5. - 
+       (Power(Sin(t),2)*Sin(x)*Sin(y))/5. + (2*Cos(t)*Cos(2*t)*Sin(2*x)*Sin(y))/3. - 
+       (Sin(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + (Cos(t)*Cos(3*t)*Sin(3*x)*Sin(y))/2. - 
+       (Sin(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + (Cos(t)*Cos(2*t)*Sin(x)*Sin(2*y))/5. - 
+       (2*Sin(t)*Sin(2*t)*Sin(x)*Sin(2*y))/5. + 
+       (2*Power(Cos(2*t),2)*Sin(2*x)*Sin(2*y))/5. - 
+       (2*Power(Sin(2*t),2)*Sin(2*x)*Sin(2*y))/5. + 
+       (3*Cos(2*t)*Cos(3*t)*Sin(3*x)*Sin(2*y))/7. - 
+       (2*Sin(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.) + 
+    (1 + x*Power(-2*Pi + x,2)*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
           (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. + 
           (2*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. + 
           (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. + 
-          (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.)/(1 + x))*
-     (-((x*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
-              (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
-              (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
-              (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
-              (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
-              (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.))/(1 + x)) + 
-       (x*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
-            (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
-            (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
-            (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
-            (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.))/Power(1 + x,2) - 
-       ((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
-          (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
-          (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
-          (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
-          (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.)/(1 + x)) - 
-    nu*(-((x*(-(Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. - 
-              (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. - 
-              (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. - 
-              (4*Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. - 
-              (8*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. - 
-              (12*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.))/(1 + x)) + 
-       (2*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
-            (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
-            (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
-            (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
-            (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
-            (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.))/Power(1 + x,2) + 
-       2*((-2*x)/Power(1 + x,3) + Power(1 + x,-2))*
-        ((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.))*
+     (-4*x*(-2*Pi + x)*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
+          (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
           (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
           (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
           (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
-          (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.) + 
-       (x*(-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - 
-            (4*Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - 
-            (3*Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/2. - 
-            (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. - 
-            (4*Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. - 
-            (9*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.))/Power(1 + x,2) - 
-       (-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - (4*Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - 
+          (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.) - 
+       2*Power(-2*Pi + x,2)*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
+          (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
+          (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
+          (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
+          (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
+          (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.) - 
+       x*Power(-2*Pi + x,2)*(-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - 
+          (4*Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - 
           (3*Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/2. - 
           (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. - 
           (4*Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. - 
-          (9*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.)/(1 + x) + 
-       (x*(-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - 
-            (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - 
-            (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. - 
-            (4*Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. - 
-            (4*Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. - 
-            (4*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.))/Power(1 + x,2) - 
-       (-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - 
-          (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. - 
-          (4*Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. - 
-          (4*Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. - 
-          (4*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.)/(1 + x) - 
-       (2*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
-            (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
-            (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
-            (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
-            (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.))/Power(1 + x,3) + 
-       ((6*x)/Power(1 + x,4) - 4/Power(1 + x,3))*
-        ((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
+          (9*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.) - 
+       2*x*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + 
+          (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
           (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
           (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
           (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
           (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.) - 
-       x*((-(Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. - 
-             (8*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. - 
-             (9*Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. - 
-             (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. - 
-             (8*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. - 
-             (27*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.)/(1 + x) + 
-          (2*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
-               (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
-               (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
-               (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
-               (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
-               (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.))/Power(1 + x,3) - 
-          (2*(-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - 
-               (4*Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - 
-               (3*Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/2. - 
-               (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. - 
-               (4*Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. - 
-               (9*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.))/Power(1 + x,2)) + 
-       2*(((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
+       4*(-2*Pi + x)*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + 
+          (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
+          (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
+          (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
+          (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
+          (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.)) + 
+    (-(x*Power(-2*Pi + x,2)*((Cos(t)*Cos(x)*Cos(y)*Sin(t))/5. + 
+            (2*Cos(2*t)*Cos(x)*Cos(2*y)*Sin(t))/5. + 
+            (2*Cos(t)*Cos(2*x)*Cos(y)*Sin(2*t))/3. + 
+            (4*Cos(2*t)*Cos(2*x)*Cos(2*y)*Sin(2*t))/5. + 
+            (Cos(t)*Cos(3*x)*Cos(y)*Sin(3*t))/2. + 
+            (6*Cos(2*t)*Cos(3*x)*Cos(2*y)*Sin(3*t))/7.)) - 
+       2*x*(-2*Pi + x)*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
+          (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. + 
+          (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.) - 
+       Power(-2*Pi + x,2)*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
+          (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. + 
+          (Cos(t)*Cos(y)*Sin(3*t)*Sin(3*x))/6. + 
+          (2*Cos(2*t)*Cos(2*y)*Sin(3*t)*Sin(3*x))/7.))*
+     (-(x*Power(-2*Pi + x,2)*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
+            (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
+            (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
+            (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
+            (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
+            (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.)) - 
+       2*x*(-2*Pi + x)*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + 
+          (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
+          (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
+          (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
+          (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
+          (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.) - 
+       Power(-2*Pi + x,2)*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + 
+          (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
+          (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
+          (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
+          (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
+          (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.)) - 
+    nu*(-(x*Power(-2*Pi + x,2)*(-(Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. - 
+            (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. - 
+            (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. - 
+            (4*Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. - 
+            (8*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. - 
+            (12*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.)) - 
+       4*(-2*Pi + x)*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
+          (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
+          (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
+          (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
+          (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
+          (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.) - 
+       Power(-2*Pi + x,2)*(-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - 
+          (4*Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - 
+          (3*Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/2. - 
+          (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. - 
+          (4*Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. - 
+          (9*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.) - 
+       2*x*(-2*Pi + x)*(-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - 
+          (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - 
+          (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. - 
+          (4*Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. - 
+          (4*Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. - 
+          (4*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.) - 
+       Power(-2*Pi + x,2)*(-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - 
+          (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - 
+          (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. - 
+          (4*Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. - 
+          (4*Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. - 
+          (4*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.) - 
+       2*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
+          (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
+          (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
+          (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
+          (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.) - 
+       4*((Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. + (Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. + 
+          (Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/6. + 
+          (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. + 
+          (Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. + 
+          (Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7. + 
+          (-2*Pi + x)*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
              (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
              (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
              (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
              (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
-             (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.)/Power(1 + x,2) - 
-          (-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - 
+             (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.)) - 
+       2*x*(2*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
+             (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
+             (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
+             (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
+             (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
+             (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.) + 
+          (-2*Pi + x)*(-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - 
              (4*Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - 
              (3*Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/2. - 
              (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. - 
              (4*Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. - 
-	   (9*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.)/(1 + x))));
+             (9*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.)) - 
+       x*(Power(-2*Pi + x,2)*(-(Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. - 
+             (8*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. - 
+             (9*Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. - 
+             (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. - 
+             (8*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. - 
+             (27*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.) + 
+          2*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
+             (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
+             (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
+             (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
+             (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
+             (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.) + 
+          4*(-2*Pi + x)*(-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - 
+             (4*Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - 
+             (3*Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/2. - 
+             (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. - 
+             (4*Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. - 
+             (9*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.)) + 
+       2*(-2*(-2*Pi + x)*((Cos(t)*Cos(x)*Sin(t)*Sin(y))/5. + 
+             (2*Cos(t)*Cos(2*x)*Sin(2*t)*Sin(y))/3. + 
+             (Cos(t)*Cos(3*x)*Sin(3*t)*Sin(y))/2. + 
+             (Cos(2*t)*Cos(x)*Sin(t)*Sin(2*y))/5. + 
+             (2*Cos(2*t)*Cos(2*x)*Sin(2*t)*Sin(2*y))/5. + 
+             (3*Cos(2*t)*Cos(3*x)*Sin(3*t)*Sin(2*y))/7.) - 
+          Power(-2*Pi + x,2)*(-(Cos(t)*Sin(t)*Sin(x)*Sin(y))/5. - 
+             (4*Cos(t)*Sin(2*t)*Sin(2*x)*Sin(y))/3. - 
+             (3*Cos(t)*Sin(3*t)*Sin(3*x)*Sin(y))/2. - 
+             (Cos(2*t)*Sin(t)*Sin(x)*Sin(2*y))/5. - 
+             (4*Cos(2*t)*Sin(2*t)*Sin(2*x)*Sin(2*y))/5. - 
+			      (9*Cos(2*t)*Sin(3*t)*Sin(3*x)*Sin(2*y))/7.))));
 }
 
 

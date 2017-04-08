@@ -33,7 +33,8 @@ MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double
     
     for(int r = 0; r < phi_.size(); r++)
       {
-	Expr integrand = -outerProduct(grad,uB_)*phi_[r]*uB_ + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
+	//	Expr integrand = -outerProduct(grad,uB_)*phi_[r]*uB_ + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
+	Expr integrand = -(uB_*grad)*uB_*phi_[r] + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
 	forceIP_[r] = FunctionalEvaluator(mesh_, Integral(interior_, integrand, quad_));
       }
 
@@ -41,17 +42,17 @@ MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double
 
 Vector<double> MMSQuadODE::evalForceTerm(const double& t) const
   {
-    SUNDANCE_ROOT_MSG3(getVerbosity(), "start eval force");
+    //SUNDANCE_ROOT_MSG3(getVerbosity(), "start eval force");
     t_.setParameterValue(t);
 
     Vector<double> rtn = space().createMember();
-    SUNDANCE_ROOT_MSG3(getVerbosity(), "vec size: " << 8*space().dim());
+    //SUNDANCE_ROOT_MSG3(getVerbosity(), "vec size: " << 8*space().dim());
     for(int r = 0; r < phi_.size(); r++)
       {
 	rtn[r] = forceIP_[r].evaluate();
       }
     
-    SUNDANCE_ROOT_MSG3(getVerbosity(), "end eval force");
+    //SUNDANCE_ROOT_MSG3(getVerbosity(), "end eval force");
     //std::cout << "Here is the value of (vf, phi) " << std::endl << rtn << std::endl;
     return rtn;
   }
@@ -113,7 +114,8 @@ double MMSQuadODE::A_IP(Expr phi_i, Expr phi_j)
     // Define our differential operators; note Derivative(x=0)
     Expr grad = gradient(dim);
 
-    Expr integrand = -outerProduct(grad,phi_j)*phi_i*uB_ - outerProduct(grad,uB_)*phi_i*phi_j - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
+    //    Expr integrand = -outerProduct(grad,phi_j)*phi_i*uB_ - outerProduct(grad,uB_)*phi_i*phi_j - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
+    Expr integrand = -phi_i*((uB_*grad)*phi_j) - phi_i*((phi_j*grad)*uB_) - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
     FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, integrand, quad_));
     return (IP.evaluate());
   }
