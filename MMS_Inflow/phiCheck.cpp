@@ -45,9 +45,6 @@ int main(int argc, char *argv[])
 {
   try
     {
-      Time timer("total");
-      timer.start();
-      
       int verbosity = 1;	
       Sundance::setOption("verbosity", verbosity, "verbosity level");
       
@@ -408,10 +405,10 @@ int main(int argc, char *argv[])
       string NLParamFile = "playa-newton-armijo.xml";
 
       // Create a velocityROM object
-      velocityROM ROM(filename, NLParamFile, velocityDS, u0, q, t, nSteps, deltat, .9999, verbosity);
+      velocityROM ROM(filename, NLParamFile, velocityDS, u0, q, t, nSteps, deltat, .999, verbosity);
       ROM.initialize();
-      ROM.generate_alpha();
-      Array<Expr> uRO(ROM.get_uRO() );
+      //ROM.generate_alpha();
+      //Array<Expr> uRO(ROM.get_uRO() );
      
       VectorType<double> time_vecType = new SerialVectorType();
       VectorSpace<double> time_vecSpace = time_vecType.createEvenlyPartitionedSpace(MPIComm::self(), nSteps+1.0);
@@ -461,7 +458,7 @@ int main(int argc, char *argv[])
 	      alpha[tIndex][r] = ExactEvaluator.evaluate();
 	    }
 	}
-
+      /*
       Array<Vector<double> > soln(ROM.get_alpha() ); // Approximate alphas
 
 
@@ -483,27 +480,41 @@ int main(int argc, char *argv[])
       cout << "Run for nx = " << nx << ", nSteps = " << nSteps << endl;
       cout << "||alphaExact - alphaApprox||_2  :\t "  << alphaError.norm2() << endl;
       cout << "||alphaExact - alphaApprox||_inf:\t " << alphaError.normInf() << endl;
-      
+      */
 
-      SUNDANCE_ROOT_MSG2(verbosity, "Comparing uExact(t_n) to uRO(t_n)");
+      SUNDANCE_ROOT_MSG2(verbosity, "Comparing uExact(t_n) to u(t_n)");
       Vector<double> l2norm = time_vecSpace.createMember();
+
+      Array<Expr> uIsh(nSteps+1, ubar);
+      for(int time = 0; time < nSteps+1; time++)
+	{
+	  for(int r = 0; r < R; r++)
+	    {
+	      uIsh[time] = uIsh[time] + alpha[time][r]*phi[r];
+	    }   
+	}
+
       
-      for(int time = 0; time < uRO.length(); time++)
+      for(int time = 0; time < nSteps+1; time++)
 	{
 	  t.setParameterValue(tInit+time*deltat);
-	  l2norm[time] = L2Norm(mesh, interior, uExact - uRO[time], quad);
-	  SUNDANCE_ROOT_MSG2(verbosity, "Error for uRO at time " + Teuchos::toString(time*deltat) + "= " + Teuchos::toString(l2norm[time]));
+	  l2norm[time] = L2Norm(mesh, interior, uExact - uIsh[time], quad);
+	  SUNDANCE_ROOT_MSG2(verbosity, "Error for uIsh at time " + Teuchos::toString(time*deltat) + "= " + Teuchos::toString(l2norm[time]));
 	}
       
-      timer.stop();
+
   SUNDANCE_ROOT_MSG1(verbosity, "Number of velocity modes kept: " + Teuchos::toString(ROM.get_phi().size()));
-      Out::root() << "||uExact - uRO||_2  :\t " << l2norm.norm2() << endl;
-      Out::root() << "||uExact - uRO||_inf:\t " << l2norm.normInf() << endl;
-      Out::root() << "runtime=" << timer.totalElapsedTime() << endl << endl;
+      Out::root() << "||uExact - uIsh||_2  :\t " << l2norm.norm2() << endl;
+      Out::root() << "||uExact - uIsh||_inf:\t " << l2norm.normInf() << endl << endl;
+
+      for(int i = 0; i<alpha.length(); i++)
+	{
+	  cout << "alpha[" << i << "] = " << endl << alpha[i] << endl << endl;
+	}
+      
      
       // Visualize the results
-      SUNDANCE_ROOT_MSG1(verbosity, "Writing results to file");
-      string vtkDir = "Results/Visuals/uRO/";
+      string vtkDir = "Results/Visuals/NOTREAL/";
       string vtkfilename = "nx"+Teuchos::toString(nx)+"nt"+Teuchos::toString(nSteps);
       vtkDir = vtkDir + vtkfilename + "/";
       system( ("mkdir -p " + vtkDir).c_str() ); 
@@ -515,18 +526,16 @@ int main(int argc, char *argv[])
 	  FieldWriter writer = new VTKWriter(vtkDir+vtkfilename+"step"+Teuchos::toString(time));
 	  writer.addMesh(mesh);
 	  t.setParameterValue(time*deltat);
-	  L2Projector projectorRO(velocityDS, uRO[time]);
-	  L2Projector uErrorProjector(velocityDS, uExact - uRO[time]);
+	  L2Projector projectorRO(velocityDS, uIsh[time]);
+	  L2Projector uErrorProjector(velocityDS, uExact - uIsh[time]);
 	  writer.addField("uExact[0]", new ExprFieldWrapper(projector.project()[0]) );
 	  writer.addField("uExact[1]", new ExprFieldWrapper(projector.project()[1]) );
-	  writer.addField("uRO[0]", new ExprFieldWrapper(projectorRO.project()[0]) );
-	  writer.addField("uRO[1]", new ExprFieldWrapper(projectorRO.project()[1]) );
+	  writer.addField("uIsh[0]", new ExprFieldWrapper(projectorRO.project()[0]) );
+	  writer.addField("uIsh[1]", new ExprFieldWrapper(projectorRO.project()[1]) );
 	  writer.addField("uError[0]", new ExprFieldWrapper(uErrorProjector.project()[0]) );
 	  writer.addField("uError[1]", new ExprFieldWrapper(uErrorProjector.project()[1]) );
       	  writer.write();	  
 	}
-
-      
 
 	
     }

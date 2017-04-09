@@ -66,7 +66,16 @@
 # 
 #--------------------------------------------------------------------------
 #
-EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
+EXTRA_OBJS = 	../SourceFiles/PlayaSVD.o \
+		../SourceFiles/denseSerialMatrixIO.o \
+		../SourceFiles/ODERHSBase.o \
+		../SourceFiles/QuadraticODERHSBase.o \
+		./MMSQuadODE.o \
+		../SourceFiles/MyNLO.o \
+		../SourceFiles/PMB.o \
+		../SourceFiles/velocityROM.o
+
+#EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
 		/home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
 		/home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
 		/home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
