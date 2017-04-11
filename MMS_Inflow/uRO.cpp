@@ -408,7 +408,8 @@ int main(int argc, char *argv[])
       string NLParamFile = "playa-newton-armijo.xml";
 
       // Create a velocityROM object
-      velocityROM ROM(filename, NLParamFile, velocityDS, u0, q, t, nSteps, deltat, .9999, verbosity);
+      velocityROM ROM(filename, NLParamFile, velocityDS, u0, q, t, nSteps, deltat,
+		      .99999, verbosity);
       ROM.initialize();
       ROM.generate_alpha();
       Array<Expr> uRO(ROM.get_uRO() );
@@ -492,7 +493,10 @@ int main(int argc, char *argv[])
 	{
 	  t.setParameterValue(tInit+time*deltat);
 	  l2norm[time] = L2Norm(mesh, interior, uExact - uRO[time], quad);
-	  SUNDANCE_ROOT_MSG2(verbosity, "Error for uRO at time " + Teuchos::toString(time*deltat) + "= " + Teuchos::toString(l2norm[time]));
+	  double uNorm = L2Norm(mesh, interior, uExact, quad);
+	  /* print the relative error */
+	  SUNDANCE_ROOT_MSG2(verbosity, "Error for uRO at time " << time*deltat
+			     << " = " << l2norm[time]/uNorm);
 	}
       
       timer.stop();
@@ -508,6 +512,7 @@ int main(int argc, char *argv[])
       vtkDir = vtkDir + vtkfilename + "/";
       system( ("mkdir -p " + vtkDir).c_str() ); 
 
+      DiscreteSpace scalarDS(mesh, new Lagrange(1), new EpetraVectorType());
       L2Projector projector(velocityDS, uExact);
       //Write uExact for all the time steps
       for(int time=0; time< nSteps+1; time++)
@@ -517,6 +522,14 @@ int main(int argc, char *argv[])
 	  t.setParameterValue(time*deltat);
 	  L2Projector projectorRO(velocityDS, uRO[time]);
 	  L2Projector uErrorProjector(velocityDS, uExact - uRO[time]);
+	  Expr absErr = sqrt( (uExact - uRO[time])*(uExact - uRO[time]));
+	  Expr absU = sqrt(uExact * uExact);
+	  L2Projector uMagProj(scalarDS, absU);
+	  L2Projector absErrorProj(scalarDS, absErr);
+	  L2Projector relErrorProj(scalarDS, absErr / (absU + 1.0));
+	  writer.addField("uMag", new ExprFieldWrapper(uMagProj.project()[0]) );
+	  writer.addField("errAbs", new ExprFieldWrapper(absErrorProj.project()[0]) );
+	  writer.addField("errRel", new ExprFieldWrapper(relErrorProj.project()[0]) );
 	  writer.addField("uExact[0]", new ExprFieldWrapper(projector.project()[0]) );
 	  writer.addField("uExact[1]", new ExprFieldWrapper(projector.project()[1]) );
 	  writer.addField("uRO[0]", new ExprFieldWrapper(projectorRO.project()[0]) );
