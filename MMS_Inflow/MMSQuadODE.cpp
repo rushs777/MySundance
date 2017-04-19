@@ -36,7 +36,7 @@ MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double
 	//Expr integrand = -outerProduct(grad,uB_)*phi_[r]*uB_ + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
 	//	Expr integrand = -(uB_*grad)*uB_*phi_[r] + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
 	Expr integrand_interior = -(uB_*grad)*uB_*phi_[r] + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
-	Expr integrand_boundary = nu_*(nHat*( outerProduct(grad,uB_)*phi_[r] ));
+	Expr integrand_boundary = nu_*(nHat*( phi_[r]*outerProduct(grad,uB_)  ));
 
 	
 	//forceIP_[r] = FunctionalEvaluator(mesh_, Integral(interior_, integrand_interior, quad_));
@@ -122,7 +122,7 @@ double MMSQuadODE::A_IP(Expr phi_i, Expr phi_j)
 
     //Expr integrand = -outerProduct(grad,phi_j)*phi_i*uB_ - outerProduct(grad,uB_)*phi_i*phi_j - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
     Expr integrand_interior = -phi_i*((uB_*grad)*phi_j) - phi_i*((phi_j*grad)*uB_) - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
-    Expr integrand_boundary = nu_*(nHat*( outerProduct(grad,phi_j)*phi_i ));
+    Expr integrand_boundary = nu_*(nHat*( phi_i*outerProduct(grad,phi_j) ));
 
     //    FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, integrand_interior, quad_));
 						 
