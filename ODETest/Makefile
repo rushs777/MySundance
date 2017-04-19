@@ -66,10 +66,10 @@
 # 
 #--------------------------------------------------------------------------
 #
-EXTRA_OBJS = /home/sirush/PhDResearch/SVD/PlayaSVD.o denseSerialMatrixIO.o ODERHSBase.o QuadraticODERHSBase.o
+#EXTRA_OBJS = /home/sirush/PhDResearch/SVD/PlayaSVD.o denseSerialMatrixIO.o ODERHSBase.o QuadraticODERHSBase.o
 #EXTRA_OBJS = denseSerialMatrixIO.o
 #EXTRA_OBJS = ODERHSBase.o QuadraticODERHSBase.o
-#EXTRA_OBJS =
+EXTRA_OBJS =
 
 # ***
 # *** End copy section
@@ -102,8 +102,8 @@ VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
 #--------------------------------------------------------------------------
 # If needed, set extra include and lib macros
 #--------------------------------------------------------------------------
-CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SVD
-#CLIENT_EXTRA_INCLUDES =
+CLIENT_EXTRA_INCLUDES = 
+#CLIENT_EXTRA_INCLUDES = Need to add the includes for the SourceFiles directory
 
 CLIENT_EXTRA_LIBS = 
 

@@ -1,23 +1,8 @@
 #include "PMB.hpp"
 
-PMB::PMB(const string filename, const Array<Expr>& uRO, const DiscreteSpace& ds, double deltat, double tolerance, int verbosity) : filename_(filename), uRO_(uRO), ds_(ds), deltat_(deltat), M_(uRO.length()), tol_(tolerance), verbosity_(verbosity)
+PMB::PMB(const string filename, const Array<Expr>& uRO, Expr forceTerm, Expr t, const DiscreteSpace& ds, double deltat, double tolerance, int verbosity) : filename_(filename), uRO_(uRO), forceTerm_(forceTerm), t_(t), ds_(ds), deltat_(deltat), M_(uRO.length()), tol_(tolerance), verbosity_(verbosity)
 {
-  t_ = new Sundance::Parameter(0.0);
-  Expr x = new CoordExpr(0,"x");
-  Expr y = new CoordExpr(1,"y");
-  double nu = 1.0;
-  forceTerm_ = List((-36*cos(y)*sin(t_)*sin(x) + (((44 + 30*cos(t_) + 8*cos(4*t_) + 30*cos(5*t_))*
-						   cos(x) + 9*((3 + 2*cos(t_) + 2*cos(5*t_))*cos(3*x) + cos(5*x)))*
-						  pow(sin(x),3) + 9*cos(6*t_)*cos(2*x)*pow(sin(2*x),3))*pow(sin(y),2) - 
-	       3*(8*nu*cos(2*t_)*(-1 + 2*cos(2*x)) + 6*nu*cos(3*t_)*(-1 + 5*cos(4*x)) + 
-		  8*sin(2*t_)*pow(sin(x),2) + 9*sin(3*t_)*pow(sin(2*x),2))*sin(2*y))/36.,
-	      (6*nu*(2*cos(2*t_)*(-1 + 2*cos(2*y))*sin(2*x) + 
-		     3*cos(3*t_)*(-4 + 5*cos(2*y))*sin(4*x)) - 18*cos(x)*sin(t_)*sin(y) + 
-	       3*(4*sin(2*t_)*sin(2*x) + 9*sin(3*t_)*sin(4*x))*pow(sin(y),2) + 
-	       2*cos(y)*(cos(2*t_)*(4*cos(2*t_) - 3*cos(3*t_)*(-3 - 6*cos(2*x) + cos(4*x)))*
-			 pow(sin(x),2) + 9*pow(cos(3*t_),2)*pow(sin(2*x),2))*pow(sin(y),3))/
-	      18.);
-
+  t_.setParameterValue(0.0);
 }
 
 void PMB::initialize()
@@ -123,15 +108,26 @@ void PMB::generate_beta()
 	}
     }
 
+  Expr nHat = CellNormalExpr(ds_.mesh().spatialDim(), "nHat");
+  CellFilter boundary = new BoundaryCellFilter();
+  QuadratureFamily quad = new GaussianQuadrature(6);
+
+  
   DenseLUSolver solver;
   for(int time = 0; time < M_; time++)
     {
       t_.setParameterValue( time*deltat_ );
       c.zero();
       //      std::cout << "Here is q(t_m) " << forceTerm_ << std::endl;
+
+      // Build c(t_m)
       for(int r = 0; r < R_; r++)
 	{
-	  c[r] = -1.0*L2IP(grad*pbar_, grad*psi_[r]) - L2IP( (uRO_[time]*grad)*uRO_[time] , grad*psi_[r]) - L2IP(div(forceTerm_), psi_[r]);
+	  //Expr integrand_boundary = nHat*(psi_[r]*(grad*pbar_)) + nHat*( psi_[r] * ((uRO_[time]*grad)*uRO_[time]) );
+	  Expr integrand_boundary = nHat*( psi_[r] * ((uRO_[time]*grad)*uRO_[time]) );
+	  FunctionalEvaluator integral_boundary = FunctionalEvaluator(ds_.mesh(), Integral(boundary, integrand_boundary, quad) );
+	  
+	  c[r] = -1.0*L2IP(grad*pbar_, grad*psi_[r]) - L2IP( (uRO_[time]*grad)*uRO_[time] , grad*psi_[r]) - L2IP(div(forceTerm_), psi_[r]) + integral_boundary.evaluate();
 	}
       SUNDANCE_ROOT_MSG1(verbosity_, "Solving for time step " + Teuchos::toString(time) + " of " + Teuchos::toString(M_-1));
       SolverState<double> state = solver.solve(A,c,beta_[time]);
@@ -144,15 +140,22 @@ void PMB::generate_beta()
 double PMB::gradIP(Expr f, Expr g)
   {
     CellFilter interior = new MaximalCellFilter();
-    QuadratureFamily quad = new GaussianQuadrature(4);
+    CellFilter boundary = new BoundaryCellFilter();
+    QuadratureFamily quad = new GaussianQuadrature(6);
 	  
     // mesh.spatialDim() returns n for nD
     int dim = ds_.mesh().spatialDim();
 
     // Define our differential operators; note Derivative(x=0)
     Expr grad = gradient(dim);
+    Expr nHat = CellNormalExpr(dim,"nHat");
 
-    FunctionalEvaluator IP = FunctionalEvaluator(ds_.mesh(), Integral(interior, (grad*f)*(grad*g), quad));
+    Expr integrand_interior = (grad*f)*(grad*g);
+    //Expr integrand_boundary = nHat*(f*(grad*g)); // Increased error from .04 to .11
+    //Expr integrand_boundary = f*(nHat*(grad*g)); // Same result
+    Expr integrand_boundary = f*0.0;
+    
+    FunctionalEvaluator IP = FunctionalEvaluator(ds_.mesh(), Integral(interior, integrand_interior, quad) - Integral(boundary, integrand_boundary, quad) ); 
     return (IP.evaluate());
   }
 

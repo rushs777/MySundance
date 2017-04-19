@@ -41,6 +41,7 @@ private:
    * bool MatrixAndTensorInFile_ - True if A and T are on hand; false if they need to be created
    */
   CellFilter interior_;
+  CellFilter boundary_;
   Teuchos::Array<Expr> phi_;
   Expr uB_;
   Expr q_;

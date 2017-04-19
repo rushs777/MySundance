@@ -13,6 +13,25 @@ using std::vector;
 using std::cout;
 using std::endl;
 
+void functionTwo(const Expr& q2, Expr t)
+{
+  t.setParameterValue(2);
+  cout << "The value of q in function2: " << q2 << endl;
+}
+
+void function(const Expr q1, Expr n)
+{
+  //Expr t = new Sundance::Parameter(1);
+  //n.setParameterValue(1);
+  Expr t = n;
+  t.setParameterValue(1);
+  cout << "The value of q in function: " << q1 << endl;
+
+  //functionTwo(q1, n);
+}
+
+
+
 int main(int argc, char *argv[])
 {
 
@@ -33,15 +52,15 @@ int main(int argc, char *argv[])
 	b[1] = 7.0;
 	b[2] = 8.0;
 
-	Vector<double> x;
+	Vector<double> soln;
 
 	DenseLUSolver solver;
-	SolverState<double> state = solver.solve(A, b, x);
+	SolverState<double> state = solver.solve(A, b, soln);
 	TEUCHOS_TEST_FOR_EXCEPTION(state.finalState() != SolveConverged,
       	runtime_error, "solve failed");
 
     	Out::root() << "numerical solution = " << std::endl;
-    	Out::os() << x << endl;
+    	Out::os() << soln << endl;
 
 	string NLParamFile = "playa-newton-armijo.xml";
 	ParameterXMLFileReader reader(NLParamFile);
@@ -99,12 +118,29 @@ int main(int argc, char *argv[])
 		cout << "2-norm value " << b_j.norm2() << endl << endl;
 	}
 
-	BasisArray basis = List(new Lagrange(2), new Lagrange(2));
-	cout << "basis's size " << basis.size() << endl;
-
-
-
-
+	/*
+	Expr x1;
+	Expr x2;
+	Expr y1;
+	Expr y2;
+	Expr x = List(x1,x2);
+	Expr y = List(y1,y2);
+	Expr OPxy = outerProduct(x,y);
+	Expr z1;
+	Expr z2;
+	Expr z = List(z1,z2);
+	*/
+	Expr x = List(3,8);
+	Expr y = List(2,7);
+	Expr OPxy = outerProduct(x,y);
+	Expr z = List (4,5);
+	//	cout << "Here is z*outerProduct(x,y) " << z*OPxy << endl;
+	cout << "x: " << x << endl;
+	cout << "y: " << y << endl;
+	cout << "OPxy " << OPxy << endl;
+	cout << "z " << z << endl;
+	cout << "Here is outerProduct(x,y)*z " << OPxy*z << endl;
+	
 
 
 

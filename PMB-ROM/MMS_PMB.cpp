@@ -218,7 +218,7 @@ Power(Sin(x),2) + 9*Power(Cos(3*t),2)*Power(Sin(2*x),2))*Power(Sin(y),3))/18.);
       string pressureTag = "st-p";
       string pressureFilename = fileDir + "/" + pressureTag;
 
-      PMB pmb(pressureFilename, uRO, p_ds, deltat, .999, verbosity);
+      PMB pmb(pressureFilename, uRO, q, t, p_ds, deltat, .999, verbosity);
       pmb.initialize();
       pmb.generate_beta();
 

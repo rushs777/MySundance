@@ -15,7 +15,7 @@ class PMB
 {
 public:
   /**Constructor*/
-  PMB(const string filename, const Array<Expr>& uRO, const DiscreteSpace& ds, double deltat, double tolerance = .999, int verbosity = 1);
+  PMB(const string filename, const Array<Expr>& uRO, Expr forceTerm, Expr t, const DiscreteSpace& ds, double deltat, double tolerance = .999, int verbosity = 1);
 
   /**initialize will set up the fluctuation matrix Qprime and the fluctuation pressure POD basis functions*/
   void initialize();
@@ -35,13 +35,13 @@ public:
 private:
   string filename_;
   Array<Expr> uRO_;
+  Expr forceTerm_;
+  Expr t_;
   DiscreteSpace ds_;
   double deltat_;
   int M_;
   double tol_;
   int verbosity_;
-  Expr t_;
-  Expr forceTerm_;
   int R_;
   Expr pbar_;
   LinearOperator<double> Qprime_;

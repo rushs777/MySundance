@@ -71,9 +71,9 @@ EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
 		/home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
 		/home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
 		/home/sirush/PhDResearch/PMB-ROM/MMSQuadODE.o \
-		/home/sirush/PhDResearch/PMB-ROM/MyNLO.o \
+		/home/sirush/PhDResearch/SourceFiles/MyNLO.o \
 		/home/sirush/PhDResearch/SourceFiles/PMB.o \
-		/home/sirush/PhDResearch/PMB-ROM/velocityROM.o
+		/home/sirush/PhDResearch/SourceFiles/velocityROM.o
 
 
 #EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
@@ -112,7 +112,7 @@ VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
 #--------------------------------------------------------------------------
 # If needed, set extra include and lib macros
 #--------------------------------------------------------------------------
-CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles
+CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles -I/home/sirush/PhDResearch/PMB-ROM
 #CLIENT_EXTRA_INCLUDES =
 
 CLIENT_EXTRA_LIBS = 
