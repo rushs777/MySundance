@@ -19,7 +19,10 @@ MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double
       mesh_(mesh),
       forceIP_(phi.size()),
       MatrixAndTensorInFile_(MatrixAndTensorInFile),
-      quad_(new GaussianQuadrature(quadOrder))
+      quad_(new GaussianQuadrature(quadOrder)),
+      qCache_(),
+      qDiscrete_(),
+      qProj_()
   {
     // NEED TO ADD A NU VALUE
     nu_ = 1.0;
@@ -30,13 +33,29 @@ MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double
     // Define grad operator
     Expr grad = gradient(mesh_.spatialDim());
     Expr nHat = CellNormalExpr(mesh_.spatialDim(), "nHat");
+
+    BasisFamily P2 = new Lagrange(2);
+    DiscreteSpace qSpace(mesh_, List(P2, P2), new EpetraVectorType());
+    qProj_ = L2Projector(qSpace, q_);
+    qCache_[0.0] = qProj_.project();
+    qDiscrete_ = copyDiscreteFunction(qCache_[0.0], "Q(0.0)");
+
+    Expr qToUse;
+    if (true) // change to "if (!true)" to use exact (expensive) q 
+      {
+	qToUse = qDiscrete_;
+      }
+    else
+      {
+	qToUse = q_;
+      }
     
     for(int r = 0; r < phi_.size(); r++)
       {
 	//Expr integrand = -outerProduct(grad,uB_)*phi_[r]*uB_ + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
 	//	Expr integrand = -(uB_*grad)*uB_*phi_[r] + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
-	Expr integrand_interior = -(uB_*grad)*uB_*phi_[r] + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
-	Expr integrand_boundary = nu_*(nHat*( phi_[r]*outerProduct(grad,uB_)  ));
+	Expr integrand_interior = -(uB_*grad)*uB_*phi_[r] + qToUse*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
+	Expr integrand_boundary = nu_*(nHat*( outerProduct(grad,uB_)*phi_[r] ));
 
 	
 	//forceIP_[r] = FunctionalEvaluator(mesh_, Integral(interior_, integrand_interior, quad_));
@@ -45,10 +64,37 @@ MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double
 
   }
 
+void MMSQuadODE::updateQ(const double& t) const
+{
+  /* If we're doing another force calculation at the same time, no need to 
+  * repeat the discretization of q. If we're at a new time, project q onto
+  * the discrete space. */
+
+  int maxSize = 3;
+  if (qCache_.find(t) == qCache_.end())
+    {
+      SUNDANCE_ROOT_MSG2(getVerbosity(), "caching Q for time=" << t);
+      Expr q0 = qProj_.project();
+      qCache_[t] = q0;
+      if (qCache_.size() > maxSize)
+	{
+	  auto drop = qCache_.begin();
+	  SUNDANCE_ROOT_MSG2(getVerbosity(), "dropping cachedQ for time="
+			     << drop->first);
+	  qCache_.erase(qCache_.begin());
+	}
+    }
+  SUNDANCE_ROOT_MSG2(getVerbosity(), "using cached Q for time=" << t);
+  updateDiscreteFunction(qCache_[t], qDiscrete_);
+}
+
 Vector<double> MMSQuadODE::evalForceTerm(const double& t) const
   {
     //SUNDANCE_ROOT_MSG3(getVerbosity(), "start eval force");
     t_.setParameterValue(t);
+
+    /* Update the stored discretized q(t) */
+    updateQ(t);
 
     Vector<double> rtn = space().createMember();
     //SUNDANCE_ROOT_MSG3(getVerbosity(), "vec size: " << 8*space().dim());
