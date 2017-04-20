@@ -1,0 +1,46 @@
+With the boundary integrals explicitly set to 0 for the RHS operator f
+
+Run for nx = 16, nSteps = 16
+||alphaExact - alphaApprox||_2  :	 0.242525
+||alphaExact - alphaApprox||_inf:	 0.123413
+||uExact - uRO||_2  :	 0.255225
+||uExact - uRO||_inf:	 0.126204
+Number of velocity modes kept: 5
+
+Run for nx = 32, nSteps = 32
+||alphaExact - alphaApprox||_2  :	 0.0742852
+||alphaExact - alphaApprox||_inf:	 0.0311165
+||uExact - uRO||_2  :	 0.0762021
+||uExact - uRO||_inf:	 0.0313964
+Number of velocity modes kept: 3
+
+Run for nx = 64, nSteps = 64
+||alphaExact - alphaApprox||_2  :	 0.00105395
+||alphaExact - alphaApprox||_inf:	 0.000178759
+||uExact - uRO||_2  :	 0.00370892
+||uExact - uRO||_inf:	 0.000643408
+Number of velocity modes kept: 2
+
+
+With the boundary integrals calculated
+
+Run for nx = 16, nSteps = 16
+||alphaExact - alphaApprox||_2  :	 0.278551
+||alphaExact - alphaApprox||_inf:	 0.13729
+||uExact - uRO||_2  :	 0.289677
+||uExact - uRO||_inf:	 0.139804
+Number of velocity modes kept: 5
+
+Run for nx = 32, nSteps = 32
+||alphaExact - alphaApprox||_2  :	 0.075015
+||alphaExact - alphaApprox||_inf:	 0.0314368
+||uExact - uRO||_2  :	 0.0769137
+||uExact - uRO||_inf:	 0.0317137
+Number of velocity modes kept: 3
+
+Run for nx = 64, nSteps = 64
+||alphaExact - alphaApprox||_2  :	 0.00105368
+||alphaExact - alphaApprox||_inf:	 0.000178739
+||uExact - uRO||_2  :	 0.00370884
+||uExact - uRO||_inf:	 0.000643402
+Number of velocity modes kept: 2
