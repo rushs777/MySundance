@@ -68,7 +68,8 @@
 #
 EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
 		/home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
-		/home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o
+		/home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
+		/home/sirush/PhDResearch/SourceFiles/MyNLO.o 
 #EXTRA_OBJS = denseSerialMatrixIO.o
 #EXTRA_OBJS = ODERHSBase.o QuadraticODERHSBase.o
 #EXTRA_OBJS =

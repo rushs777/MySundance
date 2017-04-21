@@ -8,6 +8,7 @@
 #include "PlayaNewtonArmijoSolverImpl.hpp"
 #include "PlayaNonlinearSolver.hpp"
 #include "PlayaNonlinearSolverBuilder.hpp"
+#include "MyNLO.hpp"
 
 #include <vector>
 using std::vector;
@@ -64,7 +65,7 @@ public:
  * Which is the result of the Trapezoid Rule applied to a nonlinear ODE.
  * uNext = z + uPrev
  *
- *****************************************************************************************/
+ *****************************************************************************************
 class MyNLO : public NonlinearOperatorBase<double>
 {
 public:
@@ -131,6 +132,7 @@ private:
   double tPrev_;
   double tNext_;
 };
+*/
 
 int main(int argc, char *argv[]) 
 {
@@ -153,8 +155,8 @@ int main(int argc, char *argv[])
       GlobalMPISession session(&argc, &argv);
 
 
-      TestQuadODE f;
-      f.initialize();
+      RCP<TestQuadODE> f = rcp(new TestQuadODE());
+      f->initialize();
       
       string NLParamFile = "playa-newton-armijo.xml";
       ParameterXMLFileReader reader(NLParamFile);
@@ -171,7 +173,7 @@ int main(int argc, char *argv[])
 
       Array<Vector<double> > soln(nSteps+1);
       //Establish u(t_init)
-      soln[0] = f.space().createMember();
+      soln[0] = f->space().createMember();
       soln[0][0] = 1.0;
       soln[0][1] = 0.0;
       soln[0][2] = 0.0;
@@ -179,14 +181,14 @@ int main(int argc, char *argv[])
       
       for(int time = 1; time < soln.length(); time++)
 	{
-	  SUNDANCE_ROOT_MSG1(verbosity, "Nonlinear Solve for time step " + Teuchos::toString(time) + " of " + Teuchos::toString(nSteps));
+	  SUNDANCE_ROOT_MSG2(verbosity, "Nonlinear Solve for time step " + Teuchos::toString(time) + " of " + Teuchos::toString(nSteps));
 	  prob->set_tPrev( (time-1.0)*deltat );
 	  //Solve u(t_{time+1})
 	  SolverState<double> state = nonlinearSolver.solve(F, soln[time]);
 	  TEUCHOS_TEST_FOR_EXCEPTION(state.finalState() != SolveConverged,
 				     runtime_error, "solve failed");
 	  prob->set_uPrev(soln[time]);
-	  if(verbosity>=1)
+	  if(verbosity>=2)
 	    cout <<"Soln[" << time*deltat << "]" << endl << soln[time] << endl;
 	}
       
@@ -196,7 +198,7 @@ int main(int argc, char *argv[])
       cout << "Compare numerical solution to exact solution " << endl;
 
       // Create uExact = {1, t^2,t}
-      Vector<double> uExact = f.space().createMember();
+      Vector<double> uExact = f->space().createMember();
 
       VectorType<double> serialVecType = new SerialVectorType();
       VectorSpace<double> serialVecSpace = serialVecType.createEvenlyPartitionedSpace(MPIComm::self(), nSteps+1);
@@ -208,10 +210,11 @@ int main(int argc, char *argv[])
 	  uExact[1] = (time*deltat)*(time*deltat);
 	  uExact[2] = time*deltat;
 	  error[time] = (uExact-soln[time]).norm2();
-	  cout << "error[" << time << "] = " << error[time] << endl;
+	  SUNDANCE_ROOT_MSG1(verbosity, "error[" + Teuchos::toString(time) + "] = " + Teuchos::toString(error[time]));
 	}
 
-
+      Out::root() << "||uExact - soln||_2  :\t " << error.norm2() << endl;
+      Out::root() << "||uExact - soln||_inf:\t " << error.normInf() << endl;
 
       
     }

@@ -4,7 +4,7 @@
 #include "PlayaSerialVectorType.hpp"
 #include "PlayaDenseSerialMatrix.hpp"
 #include "PlayaSerialEpetraAdapter.hpp" // Allows me to convert between Epetra and Serial Vectors
-#include "MMSQuadODE.hpp" // Need to change if using a different QuadODE
+#include "QuadraticODERHSBase.hpp" // Need to change if using a different QuadODE
 #include "Sundance.hpp"
 
 
@@ -25,7 +25,8 @@
 class MyNLO : public NonlinearOperatorBase<double>
 {
 public:
-  MyNLO(MMSQuadODE f, double h);
+  //MyNLO(MMSQuadODE f, double h);
+  MyNLO(const RCP<QuadraticODERHSBase>& f, double h);
   
   virtual RCP<NonlinearOperatorBase> getRcp() {return rcp(this);}
 
@@ -39,7 +40,8 @@ protected:
   LinearOperator<double> computeJacobianAndFunction(Vector<double>& functionValue) const;
 
 private:
-  MMSQuadODE f_;
+  //  MMSQuadODE f_;
+  RCP<QuadraticODERHSBase> f_;
   Vector<double> uPrev_;
   double h_;
   double tPrev_;
