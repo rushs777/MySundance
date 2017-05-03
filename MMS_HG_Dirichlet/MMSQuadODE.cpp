@@ -36,7 +36,7 @@ MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double
 	//Expr integrand = -outerProduct(grad,uB_)*phi_[r]*uB_ + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
 	//	Expr integrand = -(uB_*grad)*uB_*phi_[r] + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
 	Expr integrand_interior = -(uB_*grad)*uB_*phi_[r] + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
-	Expr integrand_boundary = nHat*((phi_[r]*grad)*uB_);
+	Expr integrand_boundary = nu_*(nHat*((phi_[r]*grad)*uB_));
 	//integrand_boundary = 0.0;
 
 	
@@ -52,7 +52,7 @@ Vector<double> MMSQuadODE::evalForceTerm(const double& t) const
     t_.setParameterValue(t);
 
     Vector<double> rtn = space().createMember();
-    SUNDANCE_ROOT_MSG3(getVerbosity(), "vec size: " << 8*space().dim());
+    //SUNDANCE_ROOT_MSG3(getVerbosity(), "vec size: " << 8*space().dim());
     for(int r = 0; r < phi_.size(); r++)
       {
 	rtn[r] = forceIP_[r].evaluate();
@@ -123,7 +123,7 @@ double MMSQuadODE::A_IP(Expr phi_i, Expr phi_j)
 
     //Expr integrand = -outerProduct(grad,phi_j)*phi_i*uB_ - outerProduct(grad,uB_)*phi_i*phi_j - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
     Expr integrand_interior = -phi_i*((uB_*grad)*phi_j) - phi_i*((phi_j*grad)*uB_) - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
-    Expr integrand_boundary = nHat*((phi_i*grad)*phi_j);
+    Expr integrand_boundary = nu_*(nHat*((phi_i*grad)*phi_j));
     //integrand_boundary = 0.0;
     
     FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, integrand_interior, quad_) + Integral(boundary_, integrand_boundary, quad_));

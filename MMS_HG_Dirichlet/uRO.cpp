@@ -112,7 +112,6 @@ int main(int argc, char *argv[])
 
 
       // Read the snapshots into a matrix
-      //      string outDir = "/home/sirush/PhDResearch/ODETest/Results";
       string outDir = "Results/ForwardProblem/HG_Dirichlet_nx";
       string fileDir = outDir + Teuchos::toString(nx) + "_nt" + Teuchos::toString(nSteps);
       string tag = "st-v";
@@ -213,8 +212,9 @@ int main(int argc, char *argv[])
       string vtkDir = "Results/ROM/uROFluctuations/";
       string vtkfilename = "nx"+Teuchos::toString(nx)+"nt"+Teuchos::toString(nSteps);
       vtkDir = vtkDir + vtkfilename + "/";
-      system( ("mkdir -p " + vtkDir).c_str() ); 
-
+      system( ("mkdir -p " + vtkDir).c_str() );
+      
+      DiscreteSpace scalarDS(mesh, new Lagrange(1), new EpetraVectorType());
       L2Projector projector(ds, uExact);
       //Write uExact for all the time steps
       for(int time=0; time< nSteps+1; time++)
@@ -224,6 +224,14 @@ int main(int argc, char *argv[])
 	  t.setParameterValue(time*deltat);
 	  L2Projector projectorRO(ds, uRO[time]);
 	  L2Projector uErrorProjector(ds, uExact - uRO[time]);
+	  Expr absErr = sqrt( (uExact - uRO[time])*(uExact - uRO[time]));
+	  Expr absU = sqrt(uExact * uExact);
+	  L2Projector uMagProj(scalarDS, absU);
+	  L2Projector absErrorProj(scalarDS, absErr);
+	  L2Projector relErrorProj(scalarDS, absErr / (absU + 1.0));
+	  writer.addField("uMag", new ExprFieldWrapper(uMagProj.project()[0]) );
+	  writer.addField("errAbs", new ExprFieldWrapper(absErrorProj.project()[0]) );
+	  writer.addField("errRel", new ExprFieldWrapper(relErrorProj.project()[0]) );
 	  writer.addField("uExact[0]", new ExprFieldWrapper(projector.project()[0]) );
 	  writer.addField("uExact[1]", new ExprFieldWrapper(projector.project()[1]) );
 	  writer.addField("uRO[0]", new ExprFieldWrapper(projectorRO.project()[0]) );
@@ -233,7 +241,9 @@ int main(int argc, char *argv[])
       	  writer.write();	  
 	}
 
-	
+      timer.stop();
+      cout << "runtime=" << timer.totalElapsedTime() << endl;
+
     }
   catch(std::exception& e)
     {

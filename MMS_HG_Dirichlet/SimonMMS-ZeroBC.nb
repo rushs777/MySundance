@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[   2980264,      49244]
-NotebookOptionsPosition[   2978940,      49198]
-NotebookOutlinePosition[   2979330,      49215]
-CellTagsIndexPosition[   2979287,      49212]
+NotebookDataLength[   2982344,      49313]
+NotebookOptionsPosition[   2980886,      49264]
+NotebookOutlinePosition[   2981276,      49281]
+CellTagsIndexPosition[   2981233,      49278]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -48923,9 +48923,41 @@ Cell[BoxData[{
    RowBox[{"Cos", "[", "x", "]"}], " ", 
    RowBox[{"Cos", "[", "y", "]"}], 
    RowBox[{"Sin", "[", "t", "]"}]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"D", "[", 
+     RowBox[{
+      RowBox[{"p", "[", 
+       RowBox[{"x", ",", "y", ",", "t"}], "]"}], ",", "x"}], "]"}], ",", 
+    RowBox[{"D", "[", 
+     RowBox[{
+      RowBox[{"p", "[", 
+       RowBox[{"x", ",", "y", ",", "t"}], "]"}], ",", "y"}], "]"}]}], "}"}], 
+  ".", 
+  RowBox[{"{", 
+   RowBox[{"1", ",", "0"}], "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{"%", "/.", 
+  RowBox[{"{", 
+   RowBox[{"x", "\[Rule]", "0"}], "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"D", "[", 
+     RowBox[{
+      RowBox[{"p", "[", 
+       RowBox[{"x", ",", "y", ",", "t"}], "]"}], ",", "x"}], "]"}], ",", 
+    RowBox[{"D", "[", 
+     RowBox[{
+      RowBox[{"p", "[", 
+       RowBox[{"x", ",", "y", ",", "t"}], "]"}], ",", "y"}], "]"}]}], "}"}], 
+  ".", 
+  RowBox[{"{", 
+   RowBox[{"0", ",", "1"}], "}"}]}], "\[IndentingNewLine]", 
  RowBox[{"CForm", "[", "%", "]"}]}], "Input",
  CellChangeTimes->{{3.6960863002827177`*^9, 3.696086327074709*^9}, {
-  3.6961635670656137`*^9, 3.696163574964555*^9}}],
+  3.6961635670656137`*^9, 3.696163574964555*^9}, {3.702224583654729*^9, 
+  3.702224629793602*^9}}],
 
 Cell[BoxData[
  FormBox[
@@ -48933,10 +48965,44 @@ Cell[BoxData[
    RowBox[{"sin", "(", "t", ")"}], " ", 
    RowBox[{"cos", "(", "x", ")"}], " ", 
    RowBox[{"cos", "(", "y", ")"}]}], TraditionalForm]], "Output",
- CellChangeTimes->{3.6960863276896353`*^9, 3.6961635758874273`*^9}],
+ CellChangeTimes->{
+  3.6960863276896353`*^9, 3.6961635758874273`*^9, {3.702224608147584*^9, 
+   3.702224630722087*^9}}],
 
-Cell["Cos(x)*Cos(y)*Sin(t)", "Output",
- CellChangeTimes->{3.6960863276896353`*^9, 3.6961635758894367`*^9}]
+Cell[BoxData[
+ FormBox[
+  RowBox[{
+   RowBox[{"sin", "(", "t", ")"}], " ", 
+   RowBox[{"sin", "(", "x", ")"}], " ", 
+   RowBox[{"(", 
+    RowBox[{"-", 
+     RowBox[{"cos", "(", "y", ")"}]}], ")"}]}], TraditionalForm]], "Output",
+ CellChangeTimes->{
+  3.6960863276896353`*^9, 3.6961635758874273`*^9, {3.702224608147584*^9, 
+   3.702224630724103*^9}}],
+
+Cell[BoxData[
+ FormBox["0", TraditionalForm]], "Output",
+ CellChangeTimes->{
+  3.6960863276896353`*^9, 3.6961635758874273`*^9, {3.702224608147584*^9, 
+   3.702224630725696*^9}}],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{
+   RowBox[{"sin", "(", "t", ")"}], " ", 
+   RowBox[{"(", 
+    RowBox[{"-", 
+     RowBox[{"cos", "(", "x", ")"}]}], ")"}], " ", 
+   RowBox[{"sin", "(", "y", ")"}]}], TraditionalForm]], "Output",
+ CellChangeTimes->{
+  3.6960863276896353`*^9, 3.6961635758874273`*^9, {3.702224608147584*^9, 
+   3.702224630727433*^9}}],
+
+Cell["-(Cos(x)*Sin(t)*Sin(y))", "Output",
+ CellChangeTimes->{
+  3.6960863276896353`*^9, 3.6961635758874273`*^9, {3.702224608147584*^9, 
+   3.7022246307288227`*^9}}]
 }, Open  ]],
 
 Cell["Compute residual of the Navier-Stokes operator", "Text",
@@ -49231,20 +49297,23 @@ Cell[2965336, 48810, 1494, 44, 332, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
 Cell[2966867, 48859, 153, 3, 65, "Input"],
-Cell[2967023, 48864, 1409, 41, 365, "Output"]
+Cell[2967023, 48864, 1409, 41, 332, "Output"]
 }, Open  ]],
 Cell[2968447, 48908, 237, 5, 106, "Text"],
 Cell[CellGroupData[{
-Cell[2968709, 48917, 415, 10, 107, "Input"],
-Cell[2969127, 48929, 250, 6, 63, "Output"],
-Cell[2969380, 48937, 106, 1, 63, "Output"]
+Cell[2968709, 48917, 1366, 42, 235, "Input"],
+Cell[2970078, 48961, 303, 8, 63, "Output"],
+Cell[2970384, 48971, 349, 10, 63, "Output"],
+Cell[2970736, 48983, 177, 4, 61, "Output"],
+Cell[2970916, 48989, 349, 10, 63, "Output"],
+Cell[2971268, 49001, 164, 3, 91, "Output"]
 }, Open  ]],
-Cell[2969501, 48941, 128, 1, 64, "Text"],
-Cell[2969632, 48944, 1020, 32, 194, "Input"],
+Cell[2971447, 49007, 128, 1, 64, "Text"],
+Cell[2971578, 49010, 1020, 32, 194, "Input"],
 Cell[CellGroupData[{
-Cell[2970677, 48980, 680, 15, 107, "Input"],
-Cell[2971360, 48997, 6533, 176, 3584, "Output"],
-Cell[2977896, 49175, 1028, 20, 1668, "Output"]
+Cell[2972623, 49046, 680, 15, 107, "Input"],
+Cell[2973306, 49063, 6533, 176, 896, "Output"],
+Cell[2979842, 49241, 1028, 20, 3336, "Output"]
 }, Open  ]]
 }
 ]

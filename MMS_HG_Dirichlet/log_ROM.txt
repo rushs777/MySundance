@@ -44,3 +44,46 @@ Run for nx = 64, nSteps = 64
 ||uExact - uRO||_2  :	 0.00370884
 ||uExact - uRO||_inf:	 0.000643402
 Number of velocity modes kept: 2
+
+
+Run for nx = 128, nSteps = 128
+||alphaExact - alphaApprox||_2  :	 0.000210541
+||alphaExact - alphaApprox||_inf:	 2.76675e-05
+||uExact - uRO||_2  :	 0.000708838
+||uExact - uRO||_inf:	 8.94749e-05
+Number of velocity modes kept: 2
+
+
+
+
+These are runs for the reduced-order pressue with the two boundary integrals omitted
+
+Run for nx = 16, nSteps = 16
+||pExact - pIsh||_2:	 0.138063
+||pExact - pIsh||_inf:	 0.0534587
+||pExact - pRO||_2:	 0.607919
+||pExact - pRO||_inf:	 0.283596
+
+
+Run for nx = 32, nSteps = 32
+||pExact - pIsh||_2:	 0.0566933
+||pExact - pIsh||_inf:	 0.0158568
+||pExact - pRO||_2:	 0.217316
+||pExact - pRO||_inf:	 0.0569352
+Number of modes kept for pressure: 5
+
+
+Run for nx = 64, nSteps = 64
+||pExact - pIsh||_2:	 0.0221285
+||pExact - pIsh||_inf:	 0.00430042
+||pExact - pRO||_2:	 0.0816431
+||pExact - pRO||_inf:	 0.0171409
+Number of modes kept for pressure: 4
+
+
+Run for nx = 128, nSteps = 128
+||pExact - pIsh||_2:	 0.0156546
+||pExact - pIsh||_inf:	 0.00225319
+||pExact - pRO||_2:	 0.105976
+||pExact - pRO||_inf:	 0.0158362
+Number of modes kept for pressure: 3
