@@ -54,6 +54,53 @@ Run for nx = 128, nSteps = 128
 Number of velocity modes kept: 2
 
 
+These are the runs with u * gradu as outerProduct(grad,u)*u
+The cumulative error is now smaller than the largest single point of error previously
+Run for nx = 16, nSteps = 16
+||alphaExact - alphaApprox||_2  :	 0.0941091
+||alphaExact - alphaApprox||_inf:	 0.0381064
+||uExact - uRO||_2  :	 0.1232
+||uExact - uRO||_inf:	 0.0463561
+Number of velocity modes kept: 5
+
+The cumulative error is now smaller than the largest single point of error previously
+Run for nx = 32, nSteps = 32
+||alphaExact - alphaApprox||_2  :	 0.00881195
+||alphaExact - alphaApprox||_inf:	 0.00273783
+||uExact - uRO||_2  :	 0.0191341
+||uExact - uRO||_inf:	 0.0049988
+Number of velocity modes kept: 3
+
+Only the smallest amount of improvement. Why would the behavior switch?
+Run for nx = 64, nSteps = 64
+||alphaExact - alphaApprox||_2  :	 0.0007622
+||alphaExact - alphaApprox||_inf:	 0.000147968
+||uExact - uRO||_2  :	 0.00363679
+||uExact - uRO||_inf:	 0.000639088
+Number of velocity modes kept: 2
+
+Same as the 64 behavior
+Run for nx = 128, nSteps = 128
+||alphaExact - alphaApprox||_2  :	 0.000180089
+||alphaExact - alphaApprox||_inf:	 2.49541e-05
+||uExact - uRO||_2  :	 0.000700397
+||uExact - uRO||_inf:	 8.92381e-05
+Number of velocity modes kept: 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 These are runs for the reduced-order pressue with the two boundary integrals omitted

@@ -26,7 +26,7 @@ class velocityROM
 {
 public:
   /**Constructor*/
-  velocityROM(const string snapshotFilename, string nlParamFile, const DiscreteSpace& ds, Expr u0, Expr forceTerm, Expr t, int nSteps, double deltat, double tolerance = .999, int verbosity = 1);
+  velocityROM(const string snapshotFilename, string nlParamFile, const DiscreteSpace& ds, Expr u0, Expr forceTerm, Expr t, int nSteps, double deltat, double tolerance = .999, int verbosity = 1, int K = 0);
 
   /**initialize will set up the fluctuation matrix Wprime and the fluctuation velocity POD basis functions*/
   void initialize();
@@ -54,6 +54,7 @@ private:
   double deltat_;
   double tol_;
   int verbosity_;
+  int K_;
   int R_;
   Expr ubar_;
   LinearOperator<double> Wprime_;

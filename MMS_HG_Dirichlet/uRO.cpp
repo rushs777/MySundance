@@ -126,7 +126,8 @@ int main(int argc, char *argv[])
       string NLParamFile = "playa-newton-armijo.xml";     
 
       // Attempt to declare a velocityRO object
-      velocityROM ROM(filename, NLParamFile, ds, u0, q, t, nSteps, deltat, tol, verbosity);
+      int K = 0;
+      velocityROM ROM(filename, NLParamFile, ds, u0, q, t, nSteps, deltat, tol, verbosity, K);
       ROM.initialize();
       ROM.generate_alpha();
       Array<Expr> uRO(ROM.get_uRO() );
@@ -239,10 +240,11 @@ int main(int argc, char *argv[])
 	  writer.addField("uError[0]", new ExprFieldWrapper(uErrorProjector.project()[0]) );
 	  writer.addField("uError[1]", new ExprFieldWrapper(uErrorProjector.project()[1]) );
       	  writer.write();	  
-	}
+	  }
 
       timer.stop();
       cout << "runtime=" << timer.totalElapsedTime() << endl;
+
 
     }
   catch(std::exception& e)

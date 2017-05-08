@@ -1,6 +1,6 @@
 #include "velocityROM.hpp"
 
-velocityROM::velocityROM(const string snapshotFilename, string nlParamFile, const DiscreteSpace& ds, Expr u0, Expr forceTerm, Expr t, int nSteps, double deltat, double tolerance, int verbosity)
+velocityROM::velocityROM(const string snapshotFilename, string nlParamFile, const DiscreteSpace& ds, Expr u0, Expr forceTerm, Expr t, int nSteps, double deltat, double tolerance, int verbosity, int K)
   : snapshotFilename_(snapshotFilename),
     nlParamFile_(nlParamFile),
     ds_(ds),
@@ -9,7 +9,8 @@ velocityROM::velocityROM(const string snapshotFilename, string nlParamFile, cons
     t_(t),
     nSteps_(nSteps), deltat_(deltat),
     tol_(tolerance),
-    verbosity_(verbosity)
+    verbosity_(verbosity),
+    K_(K)
 {
   t_.setParameterValue(0.0);
 }
@@ -70,13 +71,13 @@ void velocityROM::initialize()
       // Phi is a DenseSerialMatrix
       Playa::Vector<double> ej = Phi.domain().createMember();
       Playa::Vector<double> phiCoeff = Phi.range().createMember(); // These are the coefficient vectors
-      phi_.resize(R_); // These are the velocity POD basis functions
+      phi_.resize(R_+K_); // These are the velocity POD basis functions
       SUNDANCE_ROOT_MSG2(verbosity_, "Size of phi: " + Teuchos::toString(phi_.size()));
 
       // Get the Expr phi_r(x)
       CellFilter interior = new MaximalCellFilter();
       QuadratureFamily quad = new GaussianQuadrature(6);
-      for(int r = 0; r<R_; r++)
+      for(int r = 0; r<R_+K_; r++)
 	{
 	  ej.zero();
 	  ej[r] = 1.0;
@@ -92,10 +93,10 @@ void velocityROM::initialize()
       alpha_.resize(nSteps_+1);
 
       VectorType<double> R_vecType = new SerialVectorType();
-      VectorSpace<double> R_vecSpace = R_vecType.createEvenlyPartitionedSpace(MPIComm::self(), R_);
+      VectorSpace<double> R_vecSpace = R_vecType.createEvenlyPartitionedSpace(MPIComm::self(), R_+K_);
       alpha_[0] = R_vecSpace.createMember();
       
-      for(int i = 0; i < R_; i++)
+      for(int i = 0; i < R_+K_; i++)
 	{
 	  FunctionalEvaluator IP = FunctionalEvaluator(ds_.mesh(), Integral(interior, (u0_ - ubar_)*phi_[i], quad));
 	  //FunctionalEvaluator IP = FunctionalEvaluator(ds_.mesh(), Integral(interior, u0_*phi_[i], quad));
@@ -109,8 +110,9 @@ void velocityROM::generate_alpha()
 {
   SUNDANCE_ROOT_MSG1(verbosity_, "Creating MMSQuadODE");
   // Create the nonlinear operator for solving our nonlinear ODE
-  MMSQuadODE f(phi_, ubar_, forceTerm_, t_, deltat_, ds_.mesh(), false, verbosity_);
-  f.initialize();
+  //MMSQuadODE f(phi_, ubar_, forceTerm_, t_, deltat_, ds_.mesh(), false, verbosity_);
+  RCP<MMSQuadODE> f = rcp(new MMSQuadODE(phi_, ubar_, forceTerm_, t_, deltat_, ds_.mesh(), false, verbosity_));
+  f->initialize();
 
   SUNDANCE_ROOT_MSG1(verbosity_, "Creating NLO");
   MyNLO* prob = new MyNLO(f, deltat_);
