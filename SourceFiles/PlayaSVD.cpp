@@ -3,7 +3,7 @@
 #include "PlayaVectorType.hpp" // For VectorType, VectorSpace
 #include "PlayaEpetraVectorType.hpp" // For EpetraVectorType
 #include "PlayaSerialVectorType.hpp"
-//#include "Sundance.hpp" // For MaximalCellFilter; mentioned in svd.hpp, so this program knows about it
+
 
 // Not sure about these two
 #include "PlayaLinearOperatorImpl.hpp" // Needed to create an empty LinearOperator object
@@ -62,11 +62,6 @@ namespace Playa
     Mesh mesh = ds.mesh();
     // Filter subtype MaximalCellFilter selects all cells having dimension equal to the spatial dimension of the mesh. 
     Sundance::CellFilter interior = new Sundance::MaximalCellFilter();
-    // BasisFamily used to express our solutions
-    //	Sundance::BasisFamily basis = new Sundance::Lagrange(2); // 2nd order PWQL (Piece-Wise Quadratic Lagrange)
-
-    //    Array<Sundance::BasisFamily> basis; 
-    // Had to use 	basis.push_back(new Sundance::Lagrange(1)); to get a single basis
 
     // Test Functions
     Teuchos::Array<Expr> v;
@@ -91,8 +86,8 @@ namespace Playa
     // Define what you want to integrate
     Sundance::Expr integrand = vlist*ulist;
     Sundance::Expr eqn = Integral(interior,integrand,quad);
-    // Define Empty BC
-    Sundance::Expr bc;// since I want the mass matrix
+    // Define Empty BC since I want the mass matrix
+    Sundance::Expr bc;
     // Define the problem
     Sundance::LinearProblem prob(mesh,eqn,bc,vlist,ulist,vecTypeEpetra);
 
@@ -124,6 +119,8 @@ namespace Playa
     Playa::LinearOperator<double> A = denseMatrixMatrixProduct(W.transpose(), epetraDenseProduct(S,W) ); //denseMatrixMatrixProduct checks the dimensions
     SUNDANCE_ROOT_MSG1(debug, "Getting the dense SVD"); 
     denseSVD(A, Alpha, sigma, Alphat);
+
+    // Kathryn, this is the switch for displaying the result of the orthogonality check
     if(debug >= 2)
       cout << "Here is Alpha.Alpha^t " << endl << denseMatrixMatrixProduct(Alpha,Alphat) << endl;
 
@@ -174,6 +171,7 @@ namespace Playa
 	
       }	
 
+    // This section of code is checking the orthogonality wrt Snorm of phi
     // Set a flag to make sure that all of the phi_r are orthonormal
     //bool orthonormal = true;
     Vector<double> ei = Phi.domain().createMember();	
@@ -181,6 +179,7 @@ namespace Playa
     Vector<double> phi_j = Phi.range().createMember();
 
     Vector<double> Sx = S.range().createMember();
+    // Checks that (phi_i, phi_j ) = "0"
     for(int i = 0; i<PhiPtr->numCols(); i++)
       {
 	ei.zero();
@@ -188,25 +187,27 @@ namespace Playa
 	phi_i.zero(); // Cause of previous error; apply adds out to that matrix multiply
 	Phi.apply(ei,phi_i);
 
-	for(int j = 0; j<PhiPtr->numCols(); j++)
+	for(int j = i+1; j<PhiPtr->numCols(); j++)
 	  {
 	    ei.zero();
 	    ei[j] = 1.0;
 	    phi_j.zero();
 	    Phi.apply(ei,phi_j);
-	    if( fabs( Sip(S,serialToEpetra(phi_i), serialToEpetra(phi_j)) ) < - 1.0 )
+	    if( fabs( Sip(S,serialToEpetra(phi_i), serialToEpetra(phi_j)) ) > 1.0e-1 )
 	      {
 		cout << "(phi[" << i << "], phi[" << j << "])_S = " << Sip(S,serialToEpetra(phi_i), serialToEpetra(phi_j)) << endl;
 		//		orthonormal = false;
 	      }
 	  }
 
+	// Checks that || phi_i ||_s = "1"
 	if( fabs(Snorm(S, serialToEpetra(phi_i) ) -1.0) > 1.0e-10)
 	  {
 	    cout << "phi[" << i << "].norm2() = " << phi_i.norm2() << endl;
 	    //orthonormal = false;
 	  }
 
+	// Code making sure that we are sufficiently solving the orignial equation
 	if(i>-1)
 	  {
 	    Vector<double> Sphi_r = S.range().createMember();
