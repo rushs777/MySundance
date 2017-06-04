@@ -1,0 +1,1539 @@
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+[1]  PCDStepper ctor
+[2]    Fully implicit stepping
+p=0 | [1]  step 0 time=0
+p=0 | [2]    CFL=0.142259
+p=0 | [1]  step 1 time=0
+[2]    step: tCur=0,   dt=0.125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=     60.2236 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=   0.0303204
+[4]        Newton iter #     1 |F|=   0.0303204 |F|/|F0|= 0.000503463
+[5]          Armijo step t=           1 |F|=   2.945e-06
+[4]        Newton iter #     2 |F|=   2.945e-06 |F|/|F0|=  4.8901e-08
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.110324
+p=0 | [1]  step 2 time=0
+[2]    step: tCur=0.125,   dt=0.125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=     1.12988 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  0.00360387
+[4]        Newton iter #     1 |F|=  0.00360387 |F|/|F0|=  0.00318961
+[5]          Armijo step t=           1 |F|= 2.67856e-09
+[4]        Newton iter #     2 |F|= 2.67856e-09 |F|/|F0|= 2.37067e-09
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0927641
+p=0 | [1]  step 3 time=0
+[2]    step: tCur=0.25,   dt=0.125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.758196 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  0.00162124
+[4]        Newton iter #     1 |F|=  0.00162124 |F|/|F0|=  0.00213828
+[5]          Armijo step t=           1 |F|= 6.59513e-10
+[4]        Newton iter #     2 |F|= 6.59513e-10 |F|/|F0|= 8.69845e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.083802
+p=0 | [1]  step 4 time=0
+[2]    step: tCur=0.375,   dt=0.125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.267106 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000204148
+[4]        Newton iter #     1 |F|= 0.000204148 |F|/|F0|= 0.000764294
+[5]          Armijo step t=           1 |F|= 2.37219e-10
+[4]        Newton iter #     2 |F|= 2.37219e-10 |F|/|F0|= 8.88107e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0810861
+p=0 | [1]  step 5 time=0
+[2]    step: tCur=0.5,   dt=0.125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.266417 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=   0.0002057
+[4]        Newton iter #     1 |F|=   0.0002057 |F|/|F0|=   0.0007721
+[5]          Armijo step t=           1 |F|= 2.06093e-10
+[4]        Newton iter #     2 |F|= 2.06093e-10 |F|/|F0|= 7.73575e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0838104
+p=0 | [1]  step 6 time=0
+[2]    step: tCur=0.625,   dt=0.125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=     0.75707 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  0.00162092
+[4]        Newton iter #     1 |F|=  0.00162092 |F|/|F0|=  0.00214104
+[5]          Armijo step t=           1 |F|= 7.49374e-10
+[4]        Newton iter #     2 |F|= 7.49374e-10 |F|/|F0|= 9.89835e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0927655
+p=0 | [1]  step 7 time=0
+[2]    step: tCur=0.75,   dt=0.125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=      1.1293 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  0.00360375
+[4]        Newton iter #     1 |F|=  0.00360375 |F|/|F0|=  0.00319114
+[5]          Armijo step t=           1 |F|= 2.23828e-09
+[4]        Newton iter #     2 |F|= 2.23828e-09 |F|/|F0|= 1.98201e-09
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.110329
+p=0 | [1]  step 8 time=0
+[2]    step: tCur=0.875,   dt=0.125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=     1.33418 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  0.00502483
+[4]        Newton iter #     1 |F|=  0.00502483 |F|/|F0|=  0.00376622
+[5]          Armijo step t=           1 |F|= 3.91216e-09
+[4]        Newton iter #     2 |F|= 3.91216e-09 |F|/|F0|= 2.93225e-09
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.129624
+nx=8 nt=8 uErr=0.00090922 pErr=0.00809749 runtime=4.26574
+
+
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+[1]  PCDStepper ctor
+[2]    Fully implicit stepping
+p=0 | [1]  step 0 time=0
+p=0 | [2]    CFL=0.0711294
+p=0 | [1]  step 1 time=0
+[2]    step: tCur=0,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=      85.119 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  0.00869127
+[4]        Newton iter #     1 |F|=  0.00869127 |F|/|F0|= 0.000102107
+[5]          Armijo step t=           1 |F|= 4.25366e-07
+[4]        Newton iter #     2 |F|= 4.25366e-07 |F|/|F0|= 4.99731e-09
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0628269
+p=0 | [1]  step 2 time=0
+[2]    step: tCur=0.0625,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=     0.37276 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000719811
+[4]        Newton iter #     1 |F|= 0.000719811 |F|/|F0|=  0.00193103
+[5]          Armijo step t=           1 |F|= 3.49819e-10
+[4]        Newton iter #     2 |F|= 3.49819e-10 |F|/|F0|= 9.38457e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0564796
+p=0 | [1]  step 3 time=0
+[2]    step: tCur=0.125,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.343593 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000611771
+[4]        Newton iter #     1 |F|= 0.000611771 |F|/|F0|=  0.00178051
+[5]          Armijo step t=           1 |F|= 2.91073e-10
+[4]        Newton iter #     2 |F|= 2.91073e-10 |F|/|F0|= 8.47146e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.051657
+p=0 | [1]  step 4 time=0
+[2]    step: tCur=0.1875,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.301239 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000470415
+[4]        Newton iter #     1 |F|= 0.000470415 |F|/|F0|=   0.0015616
+[5]          Armijo step t=           1 |F|= 2.62427e-10
+[4]        Newton iter #     2 |F|= 2.62427e-10 |F|/|F0|= 8.71161e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0480443
+p=0 | [1]  step 5 time=0
+[2]    step: tCur=0.25,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=     0.24734 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000317503
+[4]        Newton iter #     1 |F|= 0.000317503 |F|/|F0|=  0.00128367
+[5]          Armijo step t=           1 |F|= 1.90291e-10
+[4]        Newton iter #     2 |F|= 1.90291e-10 |F|/|F0|= 7.69352e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0454161
+p=0 | [1]  step 6 time=0
+[2]    step: tCur=0.3125,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.183992 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000176019
+[4]        Newton iter #     1 |F|= 0.000176019 |F|/|F0|= 0.000956668
+[5]          Armijo step t=           1 |F|= 1.45288e-10
+[4]        Newton iter #     2 |F|= 1.45288e-10 |F|/|F0|= 7.89646e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0436157
+p=0 | [1]  step 7 time=0
+[2]    step: tCur=0.375,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.113696 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 6.76554e-05
+[4]        Newton iter #     1 |F|= 6.76554e-05 |F|/|F0|= 0.000595053
+[5]          Armijo step t=           1 |F|= 7.54938e-11
+[4]        Newton iter #     2 |F|= 7.54938e-11 |F|/|F0|= 6.63994e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.042539
+p=0 | [1]  step 8 time=0
+[2]    step: tCur=0.4375,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.039889 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 8.72785e-06
+[4]        Newton iter #     1 |F|= 8.72785e-06 |F|/|F0|= 0.000218804
+[5]          Armijo step t=           1 |F|= 3.36948e-11
+[4]        Newton iter #     2 |F|= 3.36948e-11 |F|/|F0|= 8.44715e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0421249
+p=0 | [1]  step 9 time=0
+[2]    step: tCur=0.5,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0395745 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 8.46884e-06
+[4]        Newton iter #     1 |F|= 8.46884e-06 |F|/|F0|= 0.000213997
+[5]          Armijo step t=           1 |F|= 3.18894e-11
+[4]        Newton iter #     2 |F|= 3.18894e-11 |F|/|F0|= 8.05806e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0423485
+p=0 | [1]  step 10 time=0
+[2]    step: tCur=0.5625,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.113366 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 6.62871e-05
+[4]        Newton iter #     1 |F|= 6.62871e-05 |F|/|F0|= 0.000584716
+[5]          Armijo step t=           1 |F|= 6.93178e-11
+[4]        Newton iter #     2 |F|= 6.93178e-11 |F|/|F0|=  6.1145e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0432189
+p=0 | [1]  step 11 time=0
+[2]    step: tCur=0.625,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=     0.18367 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000173747
+[4]        Newton iter #     1 |F|= 0.000173747 |F|/|F0|= 0.000945972
+[5]          Armijo step t=           1 |F|= 1.36985e-10
+[4]        Newton iter #     2 |F|= 1.36985e-10 |F|/|F0|= 7.45823e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0447789
+p=0 | [1]  step 12 time=0
+[2]    step: tCur=0.6875,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.247005 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  0.00031444
+[4]        Newton iter #     1 |F|=  0.00031444 |F|/|F0|=  0.00127301
+[5]          Armijo step t=           1 |F|= 1.77454e-10
+[4]        Newton iter #     2 |F|= 1.77454e-10 |F|/|F0|= 7.18423e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0471091
+p=0 | [1]  step 13 time=0
+[2]    step: tCur=0.75,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.300922 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000466787
+[4]        Newton iter #     1 |F|= 0.000466787 |F|/|F0|=  0.00155119
+[5]          Armijo step t=           1 |F|= 2.50832e-10
+[4]        Newton iter #     2 |F|= 2.50832e-10 |F|/|F0|= 8.33545e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0503329
+p=0 | [1]  step 14 time=0
+[2]    step: tCur=0.8125,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.343254 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000607708
+[4]        Newton iter #     1 |F|= 0.000607708 |F|/|F0|=  0.00177043
+[5]          Armijo step t=           1 |F|= 2.77263e-10
+[4]        Newton iter #     2 |F|= 2.77263e-10 |F|/|F0|= 8.07749e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0546266
+p=0 | [1]  step 15 time=0
+[2]    step: tCur=0.875,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=     0.37245 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000715584
+[4]        Newton iter #     1 |F|= 0.000715584 |F|/|F0|=  0.00192129
+[5]          Armijo step t=           1 |F|= 3.34955e-10
+[4]        Newton iter #     2 |F|= 3.34955e-10 |F|/|F0|=  8.9933e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0601235
+p=0 | [1]  step 16 time=0
+[2]    step: tCur=0.9375,   dt=0.0625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=      0.3873 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000774138
+[4]        Newton iter #     1 |F|= 0.000774138 |F|/|F0|=  0.00199881
+[5]          Armijo step t=           1 |F|= 3.30465e-10
+[4]        Newton iter #     2 |F|= 3.30465e-10 |F|/|F0|= 8.53252e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0648006
+nx=16 nt=16 uErr=0.000128133 pErr=0.00258025 runtime=23.1955
+
+
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+[1]  PCDStepper ctor
+[2]    Fully implicit stepping
+p=0 | [1]  step 0 time=0
+p=0 | [2]    CFL=0.0355647
+p=0 | [1]  step 1 time=0
+[2]    step: tCur=0,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=     120.354 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  0.00225126
+[4]        Newton iter #     1 |F|=  0.00225126 |F|/|F0|= 1.87053e-05
+[5]          Armijo step t=           1 |F|= 7.32463e-08
+[4]        Newton iter #     2 |F|= 7.32463e-08 |F|/|F0|= 6.08591e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0333302
+p=0 | [1]  step 2 time=0
+[2]    step: tCur=0.03125,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.106538 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000100147
+[4]        Newton iter #     1 |F|= 0.000100147 |F|/|F0|= 0.000940012
+[5]          Armijo step t=           1 |F|=  5.7062e-11
+[4]        Newton iter #     2 |F|=  5.7062e-11 |F|/|F0|= 5.35604e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.031377
+p=0 | [1]  step 3 time=0
+[2]    step: tCur=0.0625,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.104469 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 9.63014e-05
+[4]        Newton iter #     1 |F|= 9.63014e-05 |F|/|F0|= 0.000921821
+[5]          Armijo step t=           1 |F|= 3.84964e-11
+[4]        Newton iter #     2 |F|= 3.84964e-11 |F|/|F0|= 3.68497e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.029671
+p=0 | [1]  step 4 time=0
+[2]    step: tCur=0.09375,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.101414 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 9.07561e-05
+[4]        Newton iter #     1 |F|= 9.07561e-05 |F|/|F0|= 0.000894905
+[5]          Armijo step t=           1 |F|= 5.19011e-11
+[4]        Newton iter #     2 |F|= 5.19011e-11 |F|/|F0|= 5.11773e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0281824
+p=0 | [1]  step 5 time=0
+[2]    step: tCur=0.125,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0973705 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 8.36758e-05
+[4]        Newton iter #     1 |F|= 8.36758e-05 |F|/|F0|= 0.000859355
+[5]          Armijo step t=           1 |F|= 4.56898e-11
+[4]        Newton iter #     2 |F|= 4.56898e-11 |F|/|F0|= 4.69237e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0268859
+p=0 | [1]  step 6 time=0
+[2]    step: tCur=0.15625,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0924023 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 7.53631e-05
+[4]        Newton iter #     1 |F|= 7.53631e-05 |F|/|F0|= 0.000815598
+[5]          Armijo step t=           1 |F|= 4.30149e-11
+[4]        Newton iter #     2 |F|= 4.30149e-11 |F|/|F0|= 4.65517e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0257596
+p=0 | [1]  step 7 time=0
+[2]    step: tCur=0.1875,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0865369 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 6.61168e-05
+[4]        Newton iter #     1 |F|= 6.61168e-05 |F|/|F0|=  0.00076403
+[5]          Armijo step t=           1 |F|= 4.68612e-11
+[4]        Newton iter #     2 |F|= 4.68612e-11 |F|/|F0|= 5.41518e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0247853
+p=0 | [1]  step 8 time=0
+[2]    step: tCur=0.21875,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.079848 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 5.63049e-05
+[4]        Newton iter #     1 |F|= 5.63049e-05 |F|/|F0|=  0.00070515
+[5]          Armijo step t=           1 |F|= 4.53576e-11
+[4]        Newton iter #     2 |F|= 4.53576e-11 |F|/|F0|=  5.6805e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0239475
+p=0 | [1]  step 9 time=0
+[2]    step: tCur=0.25,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.072386 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 4.62949e-05
+[4]        Newton iter #     1 |F|= 4.62949e-05 |F|/|F0|= 0.000639556
+[5]          Armijo step t=           1 |F|= 4.23072e-11
+[4]        Newton iter #     2 |F|= 4.23072e-11 |F|/|F0|= 5.84467e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0232331
+p=0 | [1]  step 10 time=0
+[2]    step: tCur=0.28125,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0642362 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  3.6477e-05
+[4]        Newton iter #     1 |F|=  3.6477e-05 |F|/|F0|= 0.000567857
+[5]          Armijo step t=           1 |F|= 4.18435e-11
+[4]        Newton iter #     2 |F|= 4.18435e-11 |F|/|F0|=   6.514e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0226313
+p=0 | [1]  step 11 time=0
+[2]    step: tCur=0.3125,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.055467 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 2.72237e-05
+[4]        Newton iter #     1 |F|= 2.72237e-05 |F|/|F0|= 0.000490809
+[5]          Armijo step t=           1 |F|= 3.25507e-11
+[4]        Newton iter #     2 |F|= 3.25507e-11 |F|/|F0|= 5.86848e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0221332
+p=0 | [1]  step 12 time=0
+[2]    step: tCur=0.34375,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0461758 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.88921e-05
+[4]        Newton iter #     1 |F|= 1.88921e-05 |F|/|F0|= 0.000409135
+[5]          Armijo step t=           1 |F|=  3.4777e-11
+[4]        Newton iter #     2 |F|=  3.4777e-11 |F|/|F0|= 7.53144e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0217315
+p=0 | [1]  step 13 time=0
+[2]    step: tCur=0.375,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0364478 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.18003e-05
+[4]        Newton iter #     1 |F|= 1.18003e-05 |F|/|F0|= 0.000323759
+[5]          Armijo step t=           1 |F|= 3.25103e-11
+[4]        Newton iter #     2 |F|= 3.25103e-11 |F|/|F0|= 8.91969e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0214203
+p=0 | [1]  step 14 time=0
+[2]    step: tCur=0.40625,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0263997 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 6.22085e-06
+[4]        Newton iter #     1 |F|= 6.22085e-06 |F|/|F0|= 0.000235641
+[5]          Armijo step t=           1 |F|= 1.19053e-11
+[4]        Newton iter #     2 |F|= 1.19053e-11 |F|/|F0|= 4.50965e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0211954
+p=0 | [1]  step 15 time=0
+[2]    step: tCur=0.4375,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0161686 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  2.3665e-06
+[4]        Newton iter #     1 |F|=  2.3665e-06 |F|/|F0|= 0.000146364
+[5]          Armijo step t=           1 |F|= 8.93396e-12
+[4]        Newton iter #     2 |F|= 8.93396e-12 |F|/|F0|= 5.52551e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0210534
+p=0 | [1]  step 16 time=0
+[2]    step: tCur=0.46875,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00624177 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  3.9836e-07
+[4]        Newton iter #     1 |F|=  3.9836e-07 |F|/|F0|= 6.38216e-05
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0209923
+p=0 | [1]  step 17 time=0
+[2]    step: tCur=0.5,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00615691 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 4.10307e-07
+[4]        Newton iter #     1 |F|= 4.10307e-07 |F|/|F0|= 6.66417e-05
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0210112
+p=0 | [1]  step 18 time=0
+[2]    step: tCur=0.53125,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0160711 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 2.29259e-06
+[4]        Newton iter #     1 |F|= 2.29259e-06 |F|/|F0|= 0.000142653
+[5]          Armijo step t=           1 |F|= 1.33763e-11
+[4]        Newton iter #     2 |F|= 1.33763e-11 |F|/|F0|= 8.32316e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0211101
+p=0 | [1]  step 19 time=0
+[2]    step: tCur=0.5625,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0263008 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 6.07625e-06
+[4]        Newton iter #     1 |F|= 6.07625e-06 |F|/|F0|= 0.000231029
+[5]          Armijo step t=           1 |F|= 1.10351e-11
+[4]        Newton iter #     2 |F|= 1.10351e-11 |F|/|F0|= 4.19574e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0212901
+p=0 | [1]  step 20 time=0
+[2]    step: tCur=0.59375,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0363489 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.15921e-05
+[4]        Newton iter #     1 |F|= 1.15921e-05 |F|/|F0|= 0.000318913
+[5]          Armijo step t=           1 |F|= 1.69108e-11
+[4]        Newton iter #     2 |F|= 1.69108e-11 |F|/|F0|= 4.65236e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0215536
+p=0 | [1]  step 21 time=0
+[2]    step: tCur=0.625,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0460764 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.86245e-05
+[4]        Newton iter #     1 |F|= 1.86245e-05 |F|/|F0|= 0.000404208
+[5]          Armijo step t=           1 |F|= 3.30773e-11
+[4]        Newton iter #     2 |F|= 3.30773e-11 |F|/|F0|= 7.17878e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0219039
+p=0 | [1]  step 22 time=0
+[2]    step: tCur=0.65625,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0553682 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 2.69016e-05
+[4]        Newton iter #     1 |F|= 2.69016e-05 |F|/|F0|= 0.000485867
+[5]          Armijo step t=           1 |F|= 5.19411e-11
+[4]        Newton iter #     2 |F|= 5.19411e-11 |F|/|F0|= 9.38105e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0223456
+p=0 | [1]  step 23 time=0
+[2]    step: tCur=0.6875,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0641367 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 3.61045e-05
+[4]        Newton iter #     1 |F|= 3.61045e-05 |F|/|F0|=  0.00056293
+[5]          Armijo step t=           1 |F|= 5.99206e-11
+[4]        Newton iter #     2 |F|= 5.99206e-11 |F|/|F0|= 9.34265e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0228844
+p=0 | [1]  step 24 time=0
+[2]    step: tCur=0.71875,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0722876 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 4.58788e-05
+[4]        Newton iter #     1 |F|= 4.58788e-05 |F|/|F0|=  0.00063467
+[5]          Armijo step t=           1 |F|= 6.17834e-11
+[4]        Newton iter #     2 |F|= 6.17834e-11 |F|/|F0|=  8.5469e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0235277
+p=0 | [1]  step 25 time=0
+[2]    step: tCur=0.75,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0797483 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 5.58486e-05
+[4]        Newton iter #     1 |F|= 5.58486e-05 |F|/|F0|= 0.000700311
+[5]          Armijo step t=           1 |F|= 3.96819e-11
+[4]        Newton iter #     2 |F|= 3.96819e-11 |F|/|F0|=  4.9759e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0242842
+p=0 | [1]  step 26 time=0
+[2]    step: tCur=0.78125,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0864391 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 6.56304e-05
+[4]        Newton iter #     1 |F|= 6.56304e-05 |F|/|F0|= 0.000759267
+[5]          Armijo step t=           1 |F|= 7.24398e-11
+[4]        Newton iter #     2 |F|= 7.24398e-11 |F|/|F0|= 8.38045e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0251645
+p=0 | [1]  step 27 time=0
+[2]    step: tCur=0.8125,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0923022 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 7.48479e-05
+[4]        Newton iter #     1 |F|= 7.48479e-05 |F|/|F0|=   0.0008109
+[5]          Armijo step t=           1 |F|= 5.71366e-11
+[4]        Newton iter #     2 |F|= 5.71366e-11 |F|/|F0|= 6.19016e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0261678
+p=0 | [1]  step 28 time=0
+[2]    step: tCur=0.84375,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0972738 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 8.31464e-05
+[4]        Newton iter #     1 |F|= 8.31464e-05 |F|/|F0|= 0.000854766
+[5]          Armijo step t=           1 |F|= 8.17894e-11
+[4]        Newton iter #     2 |F|= 8.17894e-11 |F|/|F0|= 8.40816e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0273074
+p=0 | [1]  step 29 time=0
+[2]    step: tCur=0.875,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.101313 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 9.02069e-05
+[4]        Newton iter #     1 |F|= 9.02069e-05 |F|/|F0|= 0.000890377
+[5]          Armijo step t=           1 |F|= 6.85695e-11
+[4]        Newton iter #     2 |F|= 6.85695e-11 |F|/|F0|= 6.76808e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0285921
+p=0 | [1]  step 30 time=0
+[2]    step: tCur=0.90625,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.104374 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 9.57581e-05
+[4]        Newton iter #     1 |F|= 9.57581e-05 |F|/|F0|= 0.000917451
+[5]          Armijo step t=           1 |F|= 8.84169e-11
+[4]        Newton iter #     2 |F|= 8.84169e-11 |F|/|F0|= 8.47116e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0300492
+p=0 | [1]  step 31 time=0
+[2]    step: tCur=0.9375,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.106434 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 9.95863e-05
+[4]        Newton iter #     1 |F|= 9.95863e-05 |F|/|F0|= 0.000935662
+[5]          Armijo step t=           1 |F|= 7.65133e-11
+[4]        Newton iter #     2 |F|= 7.65133e-11 |F|/|F0|= 7.18879e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0316145
+p=0 | [1]  step 32 time=0
+[2]    step: tCur=0.96875,   dt=0.03125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.107466 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000101545
+[4]        Newton iter #     1 |F|= 0.000101545 |F|/|F0|=   0.0009449
+[5]          Armijo step t=           1 |F|= 9.18124e-11
+[4]        Newton iter #     2 |F|= 9.18124e-11 |F|/|F0|= 8.54335e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0323975
+nx=32 nt=32 uErr=1.70554e-05 pErr=0.00166843 runtime=209.836
+
+
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+[1]  PCDStepper ctor
+[2]    Fully implicit stepping
+p=0 | [1]  step 0 time=0
+p=0 | [2]    CFL=0.0177824
+p=0 | [1]  step 1 time=0
+[2]    step: tCur=0,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=     170.191 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000568451
+[4]        Newton iter #     1 |F|= 0.000568451 |F|/|F0|= 3.34007e-06
+[5]          Armijo step t=           1 |F|=  1.3223e-07
+[4]        Newton iter #     2 |F|=  1.3223e-07 |F|/|F0|= 7.76952e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0172018
+p=0 | [1]  step 2 time=0
+[2]    step: tCur=0.015625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0307663 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.28608e-05
+[4]        Newton iter #     1 |F|= 1.28608e-05 |F|/|F0|= 0.000418015
+[5]          Armijo step t=           1 |F|= 1.37717e-11
+[4]        Newton iter #     2 |F|= 1.37717e-11 |F|/|F0|= 4.47625e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0166592
+p=0 | [1]  step 3 time=0
+[2]    step: tCur=0.03125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0306171 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.27399e-05
+[4]        Newton iter #     1 |F|= 1.27399e-05 |F|/|F0|= 0.000416105
+[5]          Armijo step t=           1 |F|= 1.79832e-11
+[4]        Newton iter #     2 |F|= 1.79832e-11 |F|/|F0|= 5.87357e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.016152
+p=0 | [1]  step 4 time=0
+[2]    step: tCur=0.046875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0303959 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.25543e-05
+[4]        Newton iter #     1 |F|= 1.25543e-05 |F|/|F0|= 0.000413027
+[5]          Armijo step t=           1 |F|= 1.87415e-11
+[4]        Newton iter #     2 |F|= 1.87415e-11 |F|/|F0|= 6.16579e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0156781
+p=0 | [1]  step 5 time=0
+[2]    step: tCur=0.0625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0301008 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.23105e-05
+[4]        Newton iter #     1 |F|= 1.23105e-05 |F|/|F0|= 0.000408976
+[5]          Armijo step t=           1 |F|= 2.62184e-11
+[4]        Newton iter #     2 |F|= 2.62184e-11 |F|/|F0|= 8.71021e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0152352
+p=0 | [1]  step 6 time=0
+[2]    step: tCur=0.078125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0297339 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.20115e-05
+[4]        Newton iter #     1 |F|= 1.20115e-05 |F|/|F0|= 0.000403968
+[5]          Armijo step t=           1 |F|= 2.35536e-11
+[4]        Newton iter #     2 |F|= 2.35536e-11 |F|/|F0|= 7.92149e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0148216
+p=0 | [1]  step 7 time=0
+[2]    step: tCur=0.09375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0292951 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.16599e-05
+[4]        Newton iter #     1 |F|= 1.16599e-05 |F|/|F0|= 0.000398017
+[5]          Armijo step t=           1 |F|=  2.1194e-11
+[4]        Newton iter #     2 |F|=  2.1194e-11 |F|/|F0|= 7.23467e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0144353
+p=0 | [1]  step 8 time=0
+[2]    step: tCur=0.109375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0287861 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.12586e-05
+[4]        Newton iter #     1 |F|= 1.12586e-05 |F|/|F0|=  0.00039111
+[5]          Armijo step t=           1 |F|= 1.32195e-11
+[4]        Newton iter #     2 |F|= 1.32195e-11 |F|/|F0|= 4.59232e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0140746
+p=0 | [1]  step 9 time=0
+[2]    step: tCur=0.125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0282078 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.08114e-05
+[4]        Newton iter #     1 |F|= 1.08114e-05 |F|/|F0|= 0.000383278
+[5]          Armijo step t=           1 |F|= 1.63559e-11
+[4]        Newton iter #     2 |F|= 1.63559e-11 |F|/|F0|= 5.79835e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0137381
+p=0 | [1]  step 10 time=0
+[2]    step: tCur=0.140625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0275618 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.03231e-05
+[4]        Newton iter #     1 |F|= 1.03231e-05 |F|/|F0|= 0.000374543
+[5]          Armijo step t=           1 |F|= 1.55146e-11
+[4]        Newton iter #     2 |F|= 1.55146e-11 |F|/|F0|= 5.62904e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0134243
+p=0 | [1]  step 11 time=0
+[2]    step: tCur=0.15625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0268495 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 9.79731e-06
+[4]        Newton iter #     1 |F|= 9.79731e-06 |F|/|F0|= 0.000364898
+[5]          Armijo step t=           1 |F|= 2.30699e-11
+[4]        Newton iter #     2 |F|= 2.30699e-11 |F|/|F0|= 8.59231e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0131318
+p=0 | [1]  step 12 time=0
+[2]    step: tCur=0.171875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0260727 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 9.23962e-06
+[4]        Newton iter #     1 |F|= 9.23962e-06 |F|/|F0|= 0.000354378
+[5]          Armijo step t=           1 |F|= 1.72485e-11
+[4]        Newton iter #     2 |F|= 1.72485e-11 |F|/|F0|= 6.61555e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0128595
+p=0 | [1]  step 13 time=0
+[2]    step: tCur=0.1875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0252332 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  8.6561e-06
+[4]        Newton iter #     1 |F|=  8.6561e-06 |F|/|F0|= 0.000343043
+[5]          Armijo step t=           1 |F|= 1.12855e-11
+[4]        Newton iter #     2 |F|= 1.12855e-11 |F|/|F0|= 4.47248e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0126063
+p=0 | [1]  step 14 time=0
+[2]    step: tCur=0.203125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0243333 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  8.0511e-06
+[4]        Newton iter #     1 |F|=  8.0511e-06 |F|/|F0|= 0.000330868
+[5]          Armijo step t=           1 |F|= 1.95266e-11
+[4]        Newton iter #     2 |F|= 1.95266e-11 |F|/|F0|= 8.02463e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0123711
+p=0 | [1]  step 15 time=0
+[2]    step: tCur=0.21875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0233748 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 7.43047e-06
+[4]        Newton iter #     1 |F|= 7.43047e-06 |F|/|F0|= 0.000317884
+[5]          Armijo step t=           1 |F|= 1.40681e-11
+[4]        Newton iter #     2 |F|= 1.40681e-11 |F|/|F0|= 6.01851e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.012153
+p=0 | [1]  step 16 time=0
+[2]    step: tCur=0.234375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0223604 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 6.80075e-06
+[4]        Newton iter #     1 |F|= 6.80075e-06 |F|/|F0|= 0.000304143
+[5]          Armijo step t=           1 |F|= 2.12667e-11
+[4]        Newton iter #     2 |F|= 2.12667e-11 |F|/|F0|=  9.5109e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0119511
+p=0 | [1]  step 17 time=0
+[2]    step: tCur=0.25,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0212922 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 6.16836e-06
+[4]        Newton iter #     1 |F|= 6.16836e-06 |F|/|F0|= 0.000289701
+[5]          Armijo step t=           1 |F|=  1.6737e-11
+[4]        Newton iter #     2 |F|=  1.6737e-11 |F|/|F0|= 7.86065e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0117647
+p=0 | [1]  step 18 time=0
+[2]    step: tCur=0.265625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0201731 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 5.53525e-06
+[4]        Newton iter #     1 |F|= 5.53525e-06 |F|/|F0|= 0.000274388
+[5]          Armijo step t=           1 |F|=  1.5354e-11
+[4]        Newton iter #     2 |F|=  1.5354e-11 |F|/|F0|= 7.61112e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0115931
+p=0 | [1]  step 19 time=0
+[2]    step: tCur=0.28125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0190056 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 4.91452e-06
+[4]        Newton iter #     1 |F|= 4.91452e-06 |F|/|F0|= 0.000258583
+[5]          Armijo step t=           1 |F|= 9.43199e-12
+[4]        Newton iter #     2 |F|= 9.43199e-12 |F|/|F0|= 4.96274e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0114355
+p=0 | [1]  step 20 time=0
+[2]    step: tCur=0.296875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0177929 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 4.30885e-06
+[4]        Newton iter #     1 |F|= 4.30885e-06 |F|/|F0|= 0.000242167
+[5]          Armijo step t=           1 |F|= 1.63867e-11
+[4]        Newton iter #     2 |F|= 1.63867e-11 |F|/|F0|=  9.2097e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0112915
+p=0 | [1]  step 21 time=0
+[2]    step: tCur=0.3125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0165376 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 3.72405e-06
+[4]        Newton iter #     1 |F|= 3.72405e-06 |F|/|F0|= 0.000225187
+[5]          Armijo step t=           1 |F|= 1.06574e-11
+[4]        Newton iter #     2 |F|= 1.06574e-11 |F|/|F0|= 6.44434e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0111603
+p=0 | [1]  step 22 time=0
+[2]    step: tCur=0.328125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0152432 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 3.16581e-06
+[4]        Newton iter #     1 |F|= 3.16581e-06 |F|/|F0|= 0.000207687
+[5]          Armijo step t=           1 |F|= 6.01289e-12
+[4]        Newton iter #     2 |F|= 6.01289e-12 |F|/|F0|= 3.94463e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0110418
+p=0 | [1]  step 23 time=0
+[2]    step: tCur=0.34375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0139127 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  2.6398e-06
+[4]        Newton iter #     1 |F|=  2.6398e-06 |F|/|F0|=  0.00018974
+[5]          Armijo step t=           1 |F|= 1.08595e-11
+[4]        Newton iter #     2 |F|= 1.08595e-11 |F|/|F0|= 7.80548e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0109352
+p=0 | [1]  step 24 time=0
+[2]    step: tCur=0.359375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0125498 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 2.15031e-06
+[4]        Newton iter #     1 |F|= 2.15031e-06 |F|/|F0|= 0.000171343
+[5]          Armijo step t=           1 |F|= 6.53618e-12
+[4]        Newton iter #     2 |F|= 6.53618e-12 |F|/|F0|= 5.20821e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0108403
+p=0 | [1]  step 25 time=0
+[2]    step: tCur=0.375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0111577 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.70291e-06
+[4]        Newton iter #     1 |F|= 1.70291e-06 |F|/|F0|= 0.000152622
+[5]          Armijo step t=           1 |F|= 9.96443e-12
+[4]        Newton iter #     2 |F|= 9.96443e-12 |F|/|F0|= 8.93051e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0107567
+p=0 | [1]  step 26 time=0
+[2]    step: tCur=0.390625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00974087 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.30193e-06
+[4]        Newton iter #     1 |F|= 1.30193e-06 |F|/|F0|= 0.000133656
+[5]          Armijo step t=           1 |F|= 6.94163e-12
+[4]        Newton iter #     2 |F|= 6.94163e-12 |F|/|F0|= 7.12629e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0106842
+p=0 | [1]  step 27 time=0
+[2]    step: tCur=0.40625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00830314 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 9.51573e-07
+[4]        Newton iter #     1 |F|= 9.51573e-07 |F|/|F0|= 0.000114604
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0106224
+p=0 | [1]  step 28 time=0
+[2]    step: tCur=0.421875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00685009 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 6.56102e-07
+[4]        Newton iter #     1 |F|= 6.56102e-07 |F|/|F0|=   9.578e-05
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0105712
+p=0 | [1]  step 29 time=0
+[2]    step: tCur=0.4375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00538858 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 4.20292e-07
+[4]        Newton iter #     1 |F|= 4.20292e-07 |F|/|F0|= 7.79968e-05
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0105303
+p=0 | [1]  step 30 time=0
+[2]    step: tCur=0.453125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00393153 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 2.51404e-07
+[4]        Newton iter #     1 |F|= 2.51404e-07 |F|/|F0|= 6.39456e-05
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0104997
+p=0 | [1]  step 31 time=0
+[2]    step: tCur=0.46875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00251219 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.59654e-07
+[4]        Newton iter #     1 |F|= 1.59654e-07 |F|/|F0|= 6.35518e-05
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0104791
+p=0 | [1]  step 32 time=0
+[2]    step: tCur=0.484375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00130021 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.36045e-07
+[4]        Newton iter #     1 |F|= 1.36045e-07 |F|/|F0|= 0.000104633
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0104686
+p=0 | [1]  step 33 time=0
+[2]    step: tCur=0.5,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00127923 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.36566e-07
+[4]        Newton iter #     1 |F|= 1.36566e-07 |F|/|F0|= 0.000106756
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.010468
+p=0 | [1]  step 34 time=0
+[2]    step: tCur=0.515625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00248015 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.59023e-07
+[4]        Newton iter #     1 |F|= 1.59023e-07 |F|/|F0|= 6.41183e-05
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0104774
+p=0 | [1]  step 35 time=0
+[2]    step: tCur=0.53125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00389738 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 2.45591e-07
+[4]        Newton iter #     1 |F|= 2.45591e-07 |F|/|F0|= 6.30144e-05
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0104968
+p=0 | [1]  step 36 time=0
+[2]    step: tCur=0.546875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00535389 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 4.09307e-07
+[4]        Newton iter #     1 |F|= 4.09307e-07 |F|/|F0|= 7.64505e-05
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0105262
+p=0 | [1]  step 37 time=0
+[2]    step: tCur=0.5625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00681515 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 6.40363e-07
+[4]        Newton iter #     1 |F|= 6.40363e-07 |F|/|F0|= 9.39616e-05
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0105658
+p=0 | [1]  step 38 time=0
+[2]    step: tCur=0.578125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00826805 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 9.31528e-07
+[4]        Newton iter #     1 |F|= 9.31528e-07 |F|/|F0|= 0.000112666
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0106156
+p=0 | [1]  step 39 time=0
+[2]    step: tCur=0.59375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00970575 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.27776e-06
+[4]        Newton iter #     1 |F|= 1.27776e-06 |F|/|F0|=  0.00013165
+[5]          Armijo step t=           1 |F|= 7.74749e-12
+[4]        Newton iter #     2 |F|= 7.74749e-12 |F|/|F0|= 7.98238e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0106757
+p=0 | [1]  step 40 time=0
+[2]    step: tCur=0.609375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0111225 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.67487e-06
+[4]        Newton iter #     1 |F|= 1.67487e-06 |F|/|F0|= 0.000150583
+[5]          Armijo step t=           1 |F|= 7.70741e-12
+[4]        Newton iter #     2 |F|= 7.70741e-12 |F|/|F0|= 6.92955e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0107465
+p=0 | [1]  step 41 time=0
+[2]    step: tCur=0.625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0125146 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 2.11849e-06
+[4]        Newton iter #     1 |F|= 2.11849e-06 |F|/|F0|= 0.000169281
+[5]          Armijo step t=           1 |F|= 8.70969e-12
+[4]        Newton iter #     2 |F|= 8.70969e-12 |F|/|F0|=  6.9596e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0108281
+p=0 | [1]  step 42 time=0
+[2]    step: tCur=0.640625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0138775 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 2.60417e-06
+[4]        Newton iter #     1 |F|= 2.60417e-06 |F|/|F0|= 0.000187655
+[5]          Armijo step t=           1 |F|= 1.01549e-11
+[4]        Newton iter #     2 |F|= 1.01549e-11 |F|/|F0|= 7.31756e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0109209
+p=0 | [1]  step 43 time=0
+[2]    step: tCur=0.65625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0152081 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 3.12706e-06
+[4]        Newton iter #     1 |F|= 3.12706e-06 |F|/|F0|= 0.000205618
+[5]          Armijo step t=           1 |F|= 1.43119e-11
+[4]        Newton iter #     2 |F|= 1.43119e-11 |F|/|F0|=  9.4107e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0110249
+p=0 | [1]  step 44 time=0
+[2]    step: tCur=0.671875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0165024 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 3.68158e-06
+[4]        Newton iter #     1 |F|= 3.68158e-06 |F|/|F0|= 0.000223094
+[5]          Armijo step t=           1 |F|= 1.20757e-11
+[4]        Newton iter #     2 |F|= 1.20757e-11 |F|/|F0|= 7.31755e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0111408
+p=0 | [1]  step 45 time=0
+[2]    step: tCur=0.6875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0177578 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 4.26336e-06
+[4]        Newton iter #     1 |F|= 4.26336e-06 |F|/|F0|= 0.000240084
+[5]          Armijo step t=           1 |F|= 1.54865e-11
+[4]        Newton iter #     2 |F|= 1.54865e-11 |F|/|F0|= 8.72096e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0112687
+p=0 | [1]  step 46 time=0
+[2]    step: tCur=0.703125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0189704 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 4.86608e-06
+[4]        Newton iter #     1 |F|= 4.86608e-06 |F|/|F0|= 0.000256508
+[5]          Armijo step t=           1 |F|= 1.51126e-11
+[4]        Newton iter #     2 |F|= 1.51126e-11 |F|/|F0|= 7.96639e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0114092
+p=0 | [1]  step 47 time=0
+[2]    step: tCur=0.71875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0201381 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 5.48401e-06
+[4]        Newton iter #     1 |F|= 5.48401e-06 |F|/|F0|= 0.000272321
+[5]          Armijo step t=           1 |F|= 1.60731e-11
+[4]        Newton iter #     2 |F|= 1.60731e-11 |F|/|F0|= 7.98145e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0115626
+p=0 | [1]  step 48 time=0
+[2]    step: tCur=0.734375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.021257 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  6.1112e-06
+[4]        Newton iter #     1 |F|=  6.1112e-06 |F|/|F0|= 0.000287491
+[5]          Armijo step t=           1 |F|= 1.83008e-11
+[4]        Newton iter #     2 |F|= 1.83008e-11 |F|/|F0|= 8.60928e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0117297
+p=0 | [1]  step 49 time=0
+[2]    step: tCur=0.75,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0223254 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 6.74156e-06
+[4]        Newton iter #     1 |F|= 6.74156e-06 |F|/|F0|= 0.000301969
+[5]          Armijo step t=           1 |F|= 1.83992e-11
+[4]        Newton iter #     2 |F|= 1.83992e-11 |F|/|F0|= 8.24137e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0119108
+p=0 | [1]  step 50 time=0
+[2]    step: tCur=0.765625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0233397 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 7.37164e-06
+[4]        Newton iter #     1 |F|= 7.37164e-06 |F|/|F0|= 0.000315841
+[5]          Armijo step t=           1 |F|= 1.99381e-11
+[4]        Newton iter #     2 |F|= 1.99381e-11 |F|/|F0|= 8.54256e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0121067
+p=0 | [1]  step 51 time=0
+[2]    step: tCur=0.78125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0242984 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  7.9897e-06
+[4]        Newton iter #     1 |F|=  7.9897e-06 |F|/|F0|= 0.000328816
+[5]          Armijo step t=           1 |F|=  1.8246e-11
+[4]        Newton iter #     2 |F|=  1.8246e-11 |F|/|F0|= 7.50913e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.012318
+p=0 | [1]  step 52 time=0
+[2]    step: tCur=0.796875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0251982 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 8.59333e-06
+[4]        Newton iter #     1 |F|= 8.59333e-06 |F|/|F0|=  0.00034103
+[5]          Armijo step t=           1 |F|= 1.98406e-11
+[4]        Newton iter #     2 |F|= 1.98406e-11 |F|/|F0|=  7.8738e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0125454
+p=0 | [1]  step 53 time=0
+[2]    step: tCur=0.8125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0260378 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 9.17622e-06
+[4]        Newton iter #     1 |F|= 9.17622e-06 |F|/|F0|= 0.000352419
+[5]          Armijo step t=           1 |F|=  1.9311e-11
+[4]        Newton iter #     2 |F|=  1.9311e-11 |F|/|F0|= 7.41652e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0127898
+p=0 | [1]  step 54 time=0
+[2]    step: tCur=0.828125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0268144 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  9.7328e-06
+[4]        Newton iter #     1 |F|=  9.7328e-06 |F|/|F0|= 0.000362969
+[5]          Armijo step t=           1 |F|= 2.22966e-11
+[4]        Newton iter #     2 |F|= 2.22966e-11 |F|/|F0|= 8.31513e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0130504
+p=0 | [1]  step 55 time=0
+[2]    step: tCur=0.84375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.027527 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.02571e-05
+[4]        Newton iter #     1 |F|= 1.02571e-05 |F|/|F0|= 0.000372621
+[5]          Armijo step t=           1 |F|= 2.08905e-11
+[4]        Newton iter #     2 |F|= 2.08905e-11 |F|/|F0|= 7.58911e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0133294
+p=0 | [1]  step 56 time=0
+[2]    step: tCur=0.859375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0281728 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.07442e-05
+[4]        Newton iter #     1 |F|= 1.07442e-05 |F|/|F0|= 0.000381367
+[5]          Armijo step t=           1 |F|= 2.21109e-11
+[4]        Newton iter #     2 |F|= 2.21109e-11 |F|/|F0|= 7.84831e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.013628
+p=0 | [1]  step 57 time=0
+[2]    step: tCur=0.875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0287513 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.11903e-05
+[4]        Newton iter #     1 |F|= 1.11903e-05 |F|/|F0|= 0.000389209
+[5]          Armijo step t=           1 |F|= 2.23654e-11
+[4]        Newton iter #     2 |F|= 2.23654e-11 |F|/|F0|=  7.7789e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0139473
+p=0 | [1]  step 58 time=0
+[2]    step: tCur=0.890625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0292602 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.15906e-05
+[4]        Newton iter #     1 |F|= 1.15906e-05 |F|/|F0|= 0.000396121
+[5]          Armijo step t=           1 |F|= 2.56717e-11
+[4]        Newton iter #     2 |F|= 2.56717e-11 |F|/|F0|= 8.77361e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0142876
+p=0 | [1]  step 59 time=0
+[2]    step: tCur=0.90625,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0296991 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.19415e-05
+[4]        Newton iter #     1 |F|= 1.19415e-05 |F|/|F0|= 0.000402083
+[5]          Armijo step t=           1 |F|= 2.36017e-11
+[4]        Newton iter #     2 |F|= 2.36017e-11 |F|/|F0|= 7.94696e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0146473
+p=0 | [1]  step 60 time=0
+[2]    step: tCur=0.921875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.030066 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.22397e-05
+[4]        Newton iter #     1 |F|= 1.22397e-05 |F|/|F0|= 0.000407093
+[5]          Armijo step t=           1 |F|= 2.35248e-11
+[4]        Newton iter #     2 |F|= 2.35248e-11 |F|/|F0|= 7.82438e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0150221
+p=0 | [1]  step 61 time=0
+[2]    step: tCur=0.9375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0303611 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|=  1.2482e-05
+[4]        Newton iter #     1 |F|=  1.2482e-05 |F|/|F0|= 0.000411119
+[5]          Armijo step t=           1 |F|= 2.27687e-11
+[4]        Newton iter #     2 |F|= 2.27687e-11 |F|/|F0|= 7.49931e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0154115
+p=0 | [1]  step 62 time=0
+[2]    step: tCur=0.953125,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0305826 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.26661e-05
+[4]        Newton iter #     1 |F|= 1.26661e-05 |F|/|F0|= 0.000414159
+[5]          Armijo step t=           1 |F|= 2.34091e-11
+[4]        Newton iter #     2 |F|= 2.34091e-11 |F|/|F0|= 7.65438e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0158023
+p=0 | [1]  step 63 time=0
+[2]    step: tCur=0.96875,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=    0.030731 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.27907e-05
+[4]        Newton iter #     1 |F|= 1.27907e-05 |F|/|F0|= 0.000416214
+[5]          Armijo step t=           1 |F|= 2.43044e-11
+[4]        Newton iter #     2 |F|= 2.43044e-11 |F|/|F0|= 7.90875e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0161117
+p=0 | [1]  step 64 time=0
+[2]    step: tCur=0.984375,   dt=0.015625
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=   0.0308049 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.28545e-05
+[4]        Newton iter #     1 |F|= 1.28545e-05 |F|/|F0|= 0.000417287
+[5]          Armijo step t=           1 |F|= 2.46672e-11
+[4]        Newton iter #     2 |F|= 2.46672e-11 |F|/|F0|= 8.00756e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0161982
+nx=64 nt=64 uErr=2.73217e-06 pErr=0.0132049 runtime=2258.18
+
+
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+[1]  PCDStepper ctor
+[2]    Fully implicit stepping
+p=0 | [1]  step 0 time=0
+p=0 | [2]    CFL=0.00889118
+p=0 | [1]  step 1 time=0
+[2]    step: tCur=0,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=     240.676 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 0.000142436
+[4]        Newton iter #     1 |F|= 0.000142436 |F|/|F0|= 5.91817e-07
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00874368
+p=0 | [1]  step 2 time=0
+[2]    step: tCur=0.0078125,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00959393 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.62286e-06
+[4]        Newton iter #     1 |F|= 1.62286e-06 |F|/|F0|= 0.000169154
+[5]          Armijo step t=           1 |F|= 4.90709e-12
+[4]        Newton iter #     2 |F|= 4.90709e-12 |F|/|F0|= 5.11478e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00860083
+p=0 | [1]  step 3 time=0
+[2]    step: tCur=0.015625,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00958435 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.61842e-06
+[4]        Newton iter #     1 |F|= 1.61842e-06 |F|/|F0|= 0.000168861
+[5]          Armijo step t=           1 |F|= 6.92462e-12
+[4]        Newton iter #     2 |F|= 6.92462e-12 |F|/|F0|= 7.22493e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00846277
+p=0 | [1]  step 4 time=0
+[2]    step: tCur=0.0234375,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00956775 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.61517e-06
+[4]        Newton iter #     1 |F|= 1.61517e-06 |F|/|F0|= 0.000168814
+[5]          Armijo step t=           1 |F|= 5.96715e-12
+[4]        Newton iter #     2 |F|= 5.96715e-12 |F|/|F0|= 6.23673e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00832928
+p=0 | [1]  step 5 time=0
+[2]    step: tCur=0.03125,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00954288 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.60607e-06
+[4]        Newton iter #     1 |F|= 1.60607e-06 |F|/|F0|= 0.000168301
+[5]          Armijo step t=           1 |F|= 9.31096e-12
+[4]        Newton iter #     2 |F|= 9.31096e-12 |F|/|F0|= 9.75697e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00820031
+p=0 | [1]  step 6 time=0
+[2]    step: tCur=0.0390625,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00951566 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.59796e-06
+[4]        Newton iter #     1 |F|= 1.59796e-06 |F|/|F0|= 0.000167929
+[5]          Armijo step t=           1 |F|= 7.27855e-12
+[4]        Newton iter #     2 |F|= 7.27855e-12 |F|/|F0|= 7.64902e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00807558
+p=0 | [1]  step 7 time=0
+[2]    step: tCur=0.046875,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00947989 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.58606e-06
+[4]        Newton iter #     1 |F|= 1.58606e-06 |F|/|F0|= 0.000167308
+[5]          Armijo step t=           1 |F|= 4.02777e-12
+[4]        Newton iter #     2 |F|= 4.02777e-12 |F|/|F0|= 4.24875e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00795506
+p=0 | [1]  step 8 time=0
+[2]    step: tCur=0.0546875,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00944072 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.57358e-06
+[4]        Newton iter #     1 |F|= 1.57358e-06 |F|/|F0|=  0.00016668
+[5]          Armijo step t=           1 |F|= 7.68652e-12
+[4]        Newton iter #     2 |F|= 7.68652e-12 |F|/|F0|= 8.14188e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00783852
+p=0 | [1]  step 9 time=0
+[2]    step: tCur=0.0625,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00939408 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.55833e-06
+[4]        Newton iter #     1 |F|= 1.55833e-06 |F|/|F0|= 0.000165884
+[5]          Armijo step t=           1 |F|= 4.17955e-12
+[4]        Newton iter #     2 |F|= 4.17955e-12 |F|/|F0|= 4.44914e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00772591
+p=0 | [1]  step 10 time=0
+[2]    step: tCur=0.0703125,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00934329 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.54193e-06
+[4]        Newton iter #     1 |F|= 1.54193e-06 |F|/|F0|=  0.00016503
+[5]          Armijo step t=           1 |F|= 8.35658e-12
+[4]        Newton iter #     2 |F|= 8.35658e-12 |F|/|F0|= 8.94394e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00761703
+p=0 | [1]  step 11 time=0
+[2]    step: tCur=0.078125,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00928561 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.52316e-06
+[4]        Newton iter #     1 |F|= 1.52316e-06 |F|/|F0|= 0.000164034
+[5]          Armijo step t=           1 |F|= 4.39275e-12
+[4]        Newton iter #     2 |F|= 4.39275e-12 |F|/|F0|=  4.7307e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00751184
+p=0 | [1]  step 12 time=0
+[2]    step: tCur=0.0859375,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00922352 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.50316e-06
+[4]        Newton iter #     1 |F|= 1.50316e-06 |F|/|F0|=  0.00016297
+[5]          Armijo step t=           1 |F|= 3.57449e-12
+[4]        Newton iter #     2 |F|= 3.57449e-12 |F|/|F0|= 3.87541e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00741014
+p=0 | [1]  step 13 time=0
+[2]    step: tCur=0.09375,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00915483 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.48118e-06
+[4]        Newton iter #     1 |F|= 1.48118e-06 |F|/|F0|= 0.000161793
+[5]          Armijo step t=           1 |F|= 5.04322e-12
+[4]        Newton iter #     2 |F|= 5.04322e-12 |F|/|F0|= 5.50881e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.0073119
+p=0 | [1]  step 14 time=0
+[2]    step: tCur=0.101562,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00908164 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.45793e-06
+[4]        Newton iter #     1 |F|= 1.45793e-06 |F|/|F0|= 0.000160536
+[5]          Armijo step t=           1 |F|= 4.27634e-12
+[4]        Newton iter #     2 |F|= 4.27634e-12 |F|/|F0|= 4.70877e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00721693
+p=0 | [1]  step 15 time=0
+[2]    step: tCur=0.109375,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00900206 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.43284e-06
+[4]        Newton iter #     1 |F|= 1.43284e-06 |F|/|F0|= 0.000159168
+[5]          Armijo step t=           1 |F|= 5.85485e-12
+[4]        Newton iter #     2 |F|= 5.85485e-12 |F|/|F0|=  6.5039e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00712521
+p=0 | [1]  step 16 time=0
+[2]    step: tCur=0.117188,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00891799 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.40654e-06
+[4]        Newton iter #     1 |F|= 1.40654e-06 |F|/|F0|= 0.000157719
+[5]          Armijo step t=           1 |F|= 5.10234e-12
+[4]        Newton iter #     2 |F|= 5.10234e-12 |F|/|F0|=  5.7214e-10
+[4]        converged!
+[4]       done Playa::NewtonArmijoSolver::solve()
+p=0 | [2]    CFL=0.00703656
+p=0 | [1]  step 17 time=0
+[2]    step: tCur=0.125,   dt=0.0078125
+[3]       begin Playa::NewtonArmijoSolver::solve()
+[4]        Newton iter #     0 |F|=  0.00882768 |F|/|F0|=           1
+[5]          Armijo step t=           1 |F|= 1.37863e-06
+[4]        Newton iter #     1 |F|= 1.37863e-06 |F|/|F0|= 0.000156171

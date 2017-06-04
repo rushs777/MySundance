@@ -1,0 +1,22 @@
+This is with R=1
+nx=8 nt=8 uErr=0.00090922 pErr=0.00809749 runtime=4.26574
+nx=16 nt=16 uErr=0.000128133 pErr=0.00258025 runtime=23.1955
+nx=32 nt=32 uErr=1.70554e-05 pErr=0.00166843 runtime=209.836
+nx=64 nt=64 uErr=2.73217e-06 pErr=0.0132049 runtime=2258.18
+nx=128 nt=128 uErr=3.38504e-06 pErr=0.0631768 runtime=19776.5
+
+This is with R=0 (Stokes)
+nx=8 nt=8 uErr=0.00186758 pErr=0.0151439 runtime=4.9596
+
+
+
+nx=8 nt=8 uErr=0.00186758 pErr=0.0151439 runtime=4.18899
+nx=16 nt=16 uErr=0.00167032 pErr=0.0132781 runtime=21.5061
+nx=32 nt=32 uErr=0.00166508 pErr=0.0133241 runtime=199.314
+nx=64 nt=64 uErr=0.00166499 pErr=0.0199876 runtime=2169.94
+nx=128 nt=128 uErr=0.00166514 pErr=0.298105 runtime=19158.5
+
+
+R=2, Nu=0.5
+nx=8 nt=8 uErr=0.0462201 pErr=0.0226917 runtime=4.67927
+nx=16 nt=16 uErr=0.0468054 pErr=0.0196753 runtime=24.0461
