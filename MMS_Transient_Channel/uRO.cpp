@@ -420,7 +420,7 @@ int main(int argc, char *argv[])
 	{
 	  FieldWriter writer = new VTKWriter(vtkDir+vtkfilename+"step"+Teuchos::toString(time));
 	  writer.addMesh(mesh);
-	  t.setParameterValue(time*deltat);
+	  t.setParameterValue(tInit+time*deltat);
 	  L2Projector projectorRO(velocityDS, uRO[time]);
 	  L2Projector uErrorProjector(velocityDS, uExact - uRO[time]);
 	  Expr absErr = sqrt( (uExact - uRO[time])*(uExact - uRO[time]));

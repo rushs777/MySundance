@@ -58,7 +58,7 @@ Expr qExFunc(const Expr& t)
 {
   Expr x = new CoordExpr(0);
   Expr y = new CoordExpr(1);
-  double R = 0.0;
+  double R = 1.0;
 
   return List((-(Power(Pi,2)*
          (-1 + Power(x,2))*
@@ -300,7 +300,7 @@ int main(int argc, char** argv)
 
       /* Create the FlowState object */
 
-      RCP<ProblemDescription> prob = rcp(new ProblemDescription(mesh,Stokes));
+      RCP<ProblemDescription> prob = rcp(new ProblemDescription(mesh,NavierStokes));
       prob->addCondition(BodyForce, interior, StateDependentFunction(qExFunc));
       
       // Create no slip Boundary Conditions on top and bottom
@@ -316,8 +316,9 @@ int main(int argc, char** argv)
       prob->setNuEff(1.0); // What is NuEff? Kinematic viscosity needs to be 1
       
 
-      PCDControlParams pcdParams;
+      PCDControlParams pcdParams; // tol = 1.0e-9
       NewtonControlParams newtonParams;
+      newtonParams.tol = 1.0e-8;
 
       SteppingType method = FullyImplicit;
       //SteppingType method = SemiImplicit;
@@ -330,8 +331,8 @@ int main(int argc, char** argv)
       
       state->initialize(tCur, dt, uExFunc, pExFunc);
 
-      string outDir = "Results/Stokes/";
-	    //string outDir = "Results/";
+      //string outDir = "Results/ForwardProblem/Stokes/";
+      string outDir = "Results/ForwardProblem/R=1";
    //   system( ("mkdir -p " + outDir).c_str() ); Done in DefaultOutputManager constructor
       string filename = outDir + "forward_problem_TransientChannel_nx" + Teuchos::toString(nx)
 	+ "-nt-" + Teuchos::toString(nSteps);
