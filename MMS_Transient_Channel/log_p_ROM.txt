@@ -1,0 +1,63 @@
+R=1
+tol=.999
+forward simulation run with default tolerances
+
+nt = 8	 nx = 8
+||2norm of the error in u at all timesteps||_2  :	 0.0458876
+||2norm of the error in u at all timesteps||_inf :	 0.0229315
+||2norm of the error in p at all timesteps||_2 :	 0.0696281
+||2norm of the error in p at all timesteps||_inf :	 0.0349599
+Number of modes kept for pressure: 5
+runtime=7.09813
+
+Comparing pExact(t_n) to pIsh(t_n)
+||pExact - pIsh||_2:	 0.012196
+||pExact - pIsh||_inf:	 0.00406534
+
+*************************************************************
+
+nt = 16	 nx = 16
+||2norm of the error in u at all timesteps||_2  :	 0.00971006
+||2norm of the error in u at all timesteps||_inf :	 0.00342926
+||2norm of the error in p at all timesteps||_2 :	 0.00668048
+||2norm of the error in p at all timesteps||_inf :	 0.00231817
+Number of modes kept for pressure: 5
+runtime=20.3121
+
+Comparing pExact(t_n) to pIsh(t_n)
+||pExact - pIsh||_2:	 0.00539818
+||pExact - pIsh||_inf:	 0.00130925
+
+
+*************************************************************
+
+nt = 32	 nx = 32
+||2norm of the error in u at all timesteps||_2  :	 0.00184967
+||2norm of the error in u at all timesteps||_inf :	 0.000461974
+||2norm of the error in p at all timesteps||_2 :	 0.00085807
+||2norm of the error in p at all timesteps||_inf :	 0.000216163
+Number of modes kept for pressure: 6
+runtime=99.7545
+
+Comparing pExact(t_n) to pIsh(t_n)
+||pExact - pIsh||_2:	 0.00211735
+||pExact - pIsh||_inf:	 0.000368583
+
+
+*************************************************************
+
+nt = 64	 nx = 64
+||2norm of the error in u at all timesteps||_2  :	 0.00033385
+||2norm of the error in u at all timesteps||_inf :	 5.89658e-05
+||2norm of the error in p at all timesteps||_2 :	 4.88014e-05
+||2norm of the error in p at all timesteps||_inf :	 7.2022e-06
+Number of modes kept for pressure: 5
+runtime=517.031
+
+
+Comparing pExact(t_n) to pIsh(t_n)
+||pExact - pIsh||_2:	 0.0155932
+||pExact - pIsh||_inf:	 0.0019341
+
+
+*************************************************************
