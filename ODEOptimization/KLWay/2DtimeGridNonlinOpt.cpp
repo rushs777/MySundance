@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
       cout << "Here is T[0][1]: " << T[0][1] << endl;
 
       // Define xTarget and  b(t) from the MMS
+      Expr xExact = List(0.31303528526455643*Power(E,t), 0.4873723853752939/Power(E,t));
       Expr b = List( - 0.9747447707505879/Power(E,t) - 0.31303528526455643*Power(E,t)*(0. + 0.31303528526455643*Power(E,t)) - (0.4873723853752939* (0.4873723853752939/Power(E,t) + 1.2521411410582257*Power(E,t)))/Power(E,t), -2.4368619268764697/Power(E,t) - 0.9391058557936693*Power(E,t) -  0.31303528526455643* Power(E,t)* (0.4873723853752939/Power(E,t) + 0.9391058557936693*Power(E,t)) - (0.4873723853752939*(1.9494895415011757/Power(E,t) + 1.8782117115873387*Power(E,t)))/Power(E,t));
       Expr xTarget = List(t, 1.0/3.0);
 
@@ -86,15 +87,17 @@ int main(int argc, char *argv[])
       Expr stateBC = EssentialBC(left, lambdaHat*(x-alpha), quad);
 
       /* adjoint eqn & bcs, derived by hand */
-      Expr DerivT = List( List( (T[0]*x + Tt[0]*x)[0], (T[0]*x + Tt[0]*x)[1] ),
+      Expr TransposeDerivT = List( List( (T[0]*x + Tt[0]*x)[0], (T[0]*x + Tt[0]*x)[1] ),
 			  List( (T[1]*x + Tt[1]*x)[0], (T[1]*x + Tt[1]*x)[1] ));
-      Expr adjointEqn = Integral(interior, xHat*(x-xTarget) - xHat*(dt*lambda+At*lambda - DerivT*lambda), quad);
+      //      Expr adjointEqn = Integral(interior, xHat*(x-xTarget) - xHat*(dt*lambda+At*lambda + TransposeDerivT*lambda), quad);
+      Expr adjointEqn = Integral(interior, xHat*(x-xTarget) - xHat*(dt*lambda+At*lambda) - lambda*(T*xHat*x + T*x*xHat), quad);
       Expr adjointBC = EssentialBC(right, xHat*lambda, quad);
 
       /* design eqn & bcs */
       /* See the note in timeGridOpt.cpp on the hack used in the design equation*/
       double eps = 1.0e-4;
-      Expr designEqn = Integral(interior, alphaHat*(eps*t*t*alpha), quad);
+      Expr R = t*t;
+      Expr designEqn = Integral(interior, alphaHat*(eps*R*alpha), quad);
       Expr designBC = EssentialBC(left, -alphaHat*lambda, quad);
 
       Expr eqn = stateEqn + adjointEqn + designEqn;
@@ -102,16 +105,21 @@ int main(int argc, char *argv[])
 
       cout << "Finished setting up equations " << endl;
       
-      DiscreteSpace ds(mesh, List(bas, bas, bas), vecType);
+      DiscreteSpace ds(mesh, List(bas, bas, bas, bas, bas, bas), vecType);
+      cout << "Finished discrete space set up" << endl;
       Expr U0 = new DiscreteFunction(ds, 0.0);
+      cout << "Created U0 " << endl;
       
       NonlinearProblem NLP(mesh, eqn, bc, List(lambdaHat, xHat, alphaHat),
 			   List(x, lambda, alpha), U0, vecType);
+      cout << "Set up the NLP" << endl;
       
       NonlinearSolver<double> solver 
 	= NonlinearSolverBuilder::createSolver("playa-newton-amesos.xml");
+      cout << "Created the nonlinear solver" << endl;
 
       SolverState<double> state = NLP.solve(solver);
+      cout << "solved the NLP" << endl;
     
       TEUCHOS_TEST_FOR_EXCEPTION(state.finalState() != SolveConverged,
 				 std::runtime_error,
@@ -124,13 +132,19 @@ int main(int argc, char *argv[])
       
       FieldWriter writer = new DSVWriter("2DNonlin-opt.dat");
       writer.addMesh(mesh);
-      writer.addField("x", new ExprFieldWrapper(U0[0]));
-      writer.addField("lambda", new ExprFieldWrapper(U0[1]));
-      writer.addField("alpha", new ExprFieldWrapper(U0[2]));
+      writer.addField("x[0]", new ExprFieldWrapper(U0[0]));
+      writer.addField("x[1]", new ExprFieldWrapper(U0[1]));
+      writer.addField("lambda[0]", new ExprFieldWrapper(U0[2]));
+      writer.addField("lambda[1]", new ExprFieldWrapper(U0[3]));
+      writer.addField("alpha[0]", new ExprFieldWrapper(U0[4]));
+      writer.addField("alpha[1]", new ExprFieldWrapper(U0[5]));
       //writer.addField("f", new ExprFieldWrapper(f_discrete));
       writer.write();
       
-
+      // Check the value of xApprox against xExact
+      Expr xApprox = List(U0[0],U0[1]);
+      double error = L2Norm(mesh, interior, xExact - xApprox, quad);
+      cout << "L2Norm(xExact - xApprox): " << error << endl;
       
     }
   catch(std::exception& ex)

@@ -82,6 +82,12 @@ int main(int argc, char *argv[])
       writer.addField("lambda", new ExprFieldWrapper(soln[1]));
       writer.addField("alpha", new ExprFieldWrapper(soln[2]));
       writer.write();
+
+      // Check the value of xApprox against xExact
+      Expr xApprox = soln[0];
+      Expr xExact = (2.0/(exp(2.0)-1.0))*exp(t);
+      double error = L2Norm(mesh, interior, xExact - xApprox, quad);
+      cout << "L2Norm(xExact - xApprox): " << error << endl;
       
 
       

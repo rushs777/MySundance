@@ -1,7 +1,5 @@
 #include "Sundance.hpp"
 #include "PlayaAmesosSolver.hpp"
-#include "PlayaDenseSerialMatrix.hpp"
-#include "PlayaSerialVectorType.hpp"
 
 // Local Files
 #include "MathematicaConverter.hpp"
@@ -41,10 +39,11 @@ int main(int argc, char *argv[])
       //Expr b = List( -0.9747447707505879/Power(E,t),
       //		     -2.4368619268764697/Power(E,t) - 0.9391058557936693*Power(E,t));
       //      Expr xTarget = List(t, 1.0/3.0);
+
       Expr xTarget = List(0.5+t, 3*(1.0-t));
+      Expr xExact = List(0.5819767038198629*Power(E,t), 2.5527543832268718/Power(E,t));
       Expr b = List(0. - 5.105508766453743/Power(E,t),
-   -12.763771916134356/Power(E,t) - 
-		    1.7459301114595882*Power(E,t));
+		    -12.763771916134356/Power(E,t) - 1.7459301114595882*Power(E,t));
 
       // Define the mesh
       MeshType meshType = new BasicSimplicialMeshType();
@@ -79,7 +78,7 @@ int main(int argc, char *argv[])
       cout << "Did stateEqn BC" << endl;
 
       /* adjoint equation & BCs, derived by hand */
-      Expr adjointEqn = Integral(interior, xHat*(x-xTarget) - xHat*(dt*lambda+At*lambda), quad);
+      Expr adjointEqn = Integral(interior, xHat*(x-xTarget - dt*lambda - At*lambda), quad);
       //Expr adjointEqn = Integral(interior, xHat*(x-xTarget) + xHat*(dt*lambda+At*lambda), quad);
       cout << "Did adjointEqn" << endl;
       Expr adjointBC = EssentialBC(right, xHat*lambda, quad);
@@ -99,7 +98,9 @@ int main(int argc, char *argv[])
        */
       /* Design eqn and BCs, derived by hand */
       double eps = 1.0e-4;
-      Expr designEqn = Integral(interior, alphaHat*(eps*t*t*alpha), quad);
+      //      Expr designEqn = Integral(interior, alphaHat*(eps*R*alpha), quad);
+      Expr R = t*t;
+      Expr designEqn = Integral(interior, alphaHat*(eps*R*alpha + 0.5*eps*eps*alphaHat), quad);
       cout << "Did designEqn" << endl;
       Expr designBC = EssentialBC(left, -alphaHat*lambda, quad);
       //Expr designBC = EssentialBC(left, alphaHat*lambda, quad);
@@ -110,7 +111,10 @@ int main(int argc, char *argv[])
 
       cout << "Defining the linear problem" << endl;
       LinearProblem LP(mesh, eqn, bc, List(lambdaHat, xHat, alphaHat),
-		       List(x, lambda, alpha), epetraVecType);
+      		       List(x, lambda, alpha), epetraVecType);
+      //LinearProblem LP(mesh, eqn, bc, List(lambdaHat, xHat, alphaHat),
+      //		       List(x, lambda, alpha), epetraVecType);
+      
       cout << "Linear problem defined" << endl;
 
       ParameterList params;
@@ -130,6 +134,10 @@ int main(int argc, char *argv[])
       writer.addField("alpha[1]", new ExprFieldWrapper(soln[5]));
       writer.write();
 
+      // Check the value of xApprox against xExact
+      Expr xApprox = List(soln[0],soln[1]);
+      double error = L2Norm(mesh, interior, xExact - xApprox, quad);
+      cout << "L2Norm(xExact - xApprox): " << error << endl;
 
 
 
