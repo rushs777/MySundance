@@ -20,6 +20,9 @@ int main(int argc, char *argv[])
       int nx = 128;
       Sundance::setOption("nx", nx, "Number of elements along each axis");
 
+      double gamma = 0.1;
+      Sundance::setOption("gamma", gamma, "perturbation to target");
+
       int quadOrder = 2;
       Sundance::setOption("quadOrder", quadOrder, "Order for the Gaussian Quadrature rule");
 
@@ -31,19 +34,18 @@ int main(int argc, char *argv[])
       Expr dt = new Derivative(0);
       Expr t = new CoordExpr(0);
 
-      // Create the matrix A = {{1,2},{3,4}}
-      Expr A = List(List(1.0, 2.0), List(3.0, 4.0));
-      Expr At = List(List(1.0, 3.0), List(2.0, 4.0));
+      // Create the matrix A = {{-2,1},{2,-2}}
+      Expr A = List(List(-1.,0.),List(-1.,-2.));
+      Expr At = List(List(-1.,-1.),List(0.,-2.));
 
-      // Define xTarget and  b(t) from the MMS
-      //Expr b = List( -0.9747447707505879/Power(E,t),
-      //		     -2.4368619268764697/Power(E,t) - 0.9391058557936693*Power(E,t));
-      //      Expr xTarget = List(t, 1.0/3.0);
-
-      Expr xTarget = List(0.5+t, 3*(1.0-t));
-      Expr xExact = List(0.5819767038198629*Power(E,t), 2.5527543832268718/Power(E,t));
-      Expr b = List(0. - 5.105508766453743/Power(E,t),
-		    -12.763771916134356/Power(E,t) - 1.7459301114595882*Power(E,t));
+      // Define b(t) from the MMS
+      Expr b = List((2*t)/Power(E,t), Power(E,-2*t) + (0.5 + Power(t,2))/Power(E,t));
+      Expr xTarget = List((0.5 + Power(t,2))/Power(E,t) + (-0.5 + t)*t*gamma,
+			  (0.3333333333333333 + t)/Power(E,2*t) + 
+			  ((-0.75 + t)*gamma)/5.);
+      Array<double> alphaExact = Teuchos::tuple(
+						0.49999999999999994 + 0.05503059750329588*gamma,
+						0.3333333333333333 - 0.1272325603758784*gamma);
 
       // Define the mesh
       MeshType meshType = new BasicSimplicialMeshType();
@@ -59,7 +61,7 @@ int main(int argc, char *argv[])
       // The basis for the discrete space is tied to the dimension of the mesh
       // Even though x \n R^2, t \in R, and thus bas is 1D
       BasisFamily bas = new Lagrange(1);
-      Expr x = List(new UnknownFunction(bas), new UnknownFunction(bas));
+      Expr x = List(new UnknownFunction(bas, "x1"), new UnknownFunction(bas, "x2"));
       Expr lambda = List(new UnknownFunction(bas), new UnknownFunction(bas));
       Expr alpha = List(new UnknownFunction(bas), new UnknownFunction(bas));
 
@@ -71,58 +73,31 @@ int main(int argc, char *argv[])
 
 
       /* state equation & BCs */
-      Expr stateEqn = Integral(interior, lambdaHat*(dt*x - A*x - b), quad);
-      //Expr stateEqn = Integral(interior, lambdaHat*(-dt*x + A*x + b), quad);
-      cout << "Did stateEqn" << endl;
+      Expr stateEqn = Integral(interior, lambdaHat*(dt*x - (A*x) - b), quad);
       Expr stateBC = EssentialBC(left, lambdaHat*(x-alpha), quad);
-      cout << "Did stateEqn BC" << endl;
 
       /* adjoint equation & BCs, derived by hand */
-      Expr adjointEqn = Integral(interior, xHat*(x-xTarget - dt*lambda - At*lambda), quad);
-      //Expr adjointEqn = Integral(interior, xHat*(x-xTarget) + xHat*(dt*lambda+At*lambda), quad);
-      cout << "Did adjointEqn" << endl;
+      Expr adjointEqn = Integral(interior, xHat*(x-xTarget) -  xHat*(dt*lambda+(At*lambda)), quad);
       Expr adjointBC = EssentialBC(right, xHat*lambda, quad);
-      cout << "Did adjointBC" << endl;
-      
-      /* Here's the hack: the design variable is only defined at an initial point. We
-       * extend it to the entire time interval. To give an equation for alpha, let 
-       * n be a positive integer and add
-       * Integrate[eps/2 pow(t,n)*alpha*alpha, {t,0,1}] 
-       * to the objective function. The factor
-       * of pow(t,n)  is so that the value of alpha(0) doesn't change the value of 
-       * the integral for alpha in L^2.. However, since alpha is discretized with PWLL,
-       * there is a small O(h^2) contribution to the integral from this extra integral.
-       * Since O(h^2) is the same order as the discretization error in the solution, and 
-       * since we can multiply the "hack" term by an arbitrarily small epsilon, the
-       * hack doesn't harm accuracy. 
-       */
-      /* Design eqn and BCs, derived by hand */
-      double eps = 1.0e-4;
-      //      Expr designEqn = Integral(interior, alphaHat*(eps*R*alpha), quad);
-      Expr R = t*t;
-      Expr designEqn = Integral(interior, alphaHat*(eps*R*alpha + 0.5*eps*eps*alphaHat), quad);
-      cout << "Did designEqn" << endl;
-      Expr designBC = EssentialBC(left, -alphaHat*lambda, quad);
-      //Expr designBC = EssentialBC(left, alphaHat*lambda, quad);
-      cout << "Did designBC" << endl;
 
+
+      /* design equation and BC */
+      /* -- the (alpha')*(alphaHat') term enforces constancy of alpha in time */
+      Expr designEqn = Integral(interior, (dt*alpha)*(dt*alphaHat), quad);
+      Expr designBC = EssentialBC(left, alphaHat*lambda, quad);
+
+      /* Combine the equations and BCs to form the KKT system  */
       Expr eqn = stateEqn + adjointEqn + designEqn;
       Expr bc = stateBC + adjointBC + designBC;
 
-      cout << "Defining the linear problem" << endl;
+      /* create the LP */
       LinearProblem LP(mesh, eqn, bc, List(lambdaHat, xHat, alphaHat),
-      		       List(x, lambda, alpha), epetraVecType);
-      //LinearProblem LP(mesh, eqn, bc, List(lambdaHat, xHat, alphaHat),
-      //		       List(x, lambda, alpha), epetraVecType);
-      
-      cout << "Linear problem defined" << endl;
+		       List(x, lambda, alpha), epetraVecType);
 
       ParameterList params;
       LinearSolver<double> solver = new AmesosSolver(params);
-
-      cout << "Right before solve" << endl;
+	  
       Expr soln = LP.solve(solver);
-      cout << "Right after solve" << endl;
 
       FieldWriter writer = new DSVWriter("2DLinearOpt.dat");
       writer.addMesh(mesh);
@@ -133,16 +108,21 @@ int main(int argc, char *argv[])
       writer.addField("alpha[0]", new ExprFieldWrapper(soln[4]));
       writer.addField("alpha[1]", new ExprFieldWrapper(soln[5]));
       writer.write();
-
-      // Check the value of xApprox against xExact
-      Expr xApprox = List(soln[0],soln[1]);
-      double error = L2Norm(mesh, interior, xExact - xApprox, quad);
-      cout << "L2Norm(xExact - xApprox): " << error << endl;
-
-
-
+   
       
-      
+      Array<double> alphaNum = Teuchos::tuple(
+					      L2Norm(mesh, left, soln[0], quad),
+					      L2Norm(mesh, left, soln[1], quad)
+					      );
+      for (int j=0; j<2; j++)
+	{
+	  Tabs tab1;
+	  Out::os() << tab1 << "Alpha[" << j << "]: exact="
+		    << alphaExact[j]
+		    << ", numerical " << alphaNum[j]
+		    << ", error=" << fabs(alphaExact[j] - alphaNum[j])
+		    << endl;
+	}
     }
   catch(std::exception& ex)
     {
