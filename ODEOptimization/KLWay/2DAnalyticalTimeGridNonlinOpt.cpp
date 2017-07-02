@@ -39,6 +39,11 @@ int main(int argc, char *argv[])
       Expr xTarget = List(1/(2.*Power(E,t)) + ((-0.5 + t)*gamma)/4.,
 			  Power(E,-0.5 + 1/(2.*Power(E,t)) + t)/3. + 
 			  (1 + t)*gamma);
+      Expr b = List(0.0,0.0);
+
+      Expr A = List( List(-1.0,0.0), List(0.0,1.0) );
+      Expr At = A; //A is symmetric
+      Expr T = List( List( List(0.0,0.0), List(0.0,0.0) ), List( List(0.0,-1.0), List(0.0,0.0) ) );
       
       /* "exact solution" produced by Mathematica's FindMinimum. Accurate to
        * about 1.0e-6. */
@@ -81,18 +86,21 @@ int main(int argc, char *argv[])
       QuadratureFamily quad = new GaussianQuadrature(quadOrder);
 
 
+
       /* state equation & BCs */
-      Expr stateEqn = Integral(interior,
+      /*Expr stateEqn = Integral(interior,
 			       lambdaHat[0]*(dt*x[0] + x[0])
 			       + lambdaHat[1]*(dt*x[1] - x[1] + x[0]*x[1])
-			       , quad);
+			       , quad);*/
+      Expr stateEqn = Integral(interior, lambdaHat*(dt*x - A*x - T*x*x -b), quad);
       Expr stateBC = EssentialBC(left, lambdaHat*(x-alpha), quad);
 
       /* adjoint equation & BCs, derived by hand */
-      Expr adjointEqn = Integral(interior, xHat*(x-xTarget) 
+      /*Expr adjointEqn = Integral(interior, xHat*(x-xTarget) 
 				 - xHat[0]*(dt*lambda[0] - lambda[0] - lambda[1]*x[1])
 				 - xHat[1]*(dt*lambda[1] + lambda[1] - lambda[1]*x[0]),
-				 quad);
+				 quad);*/
+      Expr adjointEqn = Integral(interior, xHat*(x-xTarget) - xHat*(dt*lambda+At*lambda) - lambda*(T*xHat*x + T*x*xHat), quad);
       Expr adjointBC = EssentialBC(right, xHat*lambda, quad);
 
       /* design equation and BC */
