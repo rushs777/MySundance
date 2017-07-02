@@ -1,7 +1,5 @@
 #include "Sundance.hpp"
 #include "PlayaAmesosSolver.hpp"
-#include "PlayaDenseSerialMatrix.hpp"
-#include "PlayaSerialVectorType.hpp"
 
 // Local Files
 #include "MathematicaConverter.hpp"
@@ -82,6 +80,7 @@ int main(int argc, char *argv[])
       Expr adjointEqn = Integral(interior, xHat*(x-xTarget) -  xHat*(dt*lambda+(At*lambda)), quad);
       Expr adjointBC = EssentialBC(right, xHat*lambda, quad);
 
+
       /* design equation and BC */
       /* -- the (alpha')*(alphaHat') term enforces constancy of alpha in time */
       Expr designEqn = Integral(interior, (dt*alpha)*(dt*alphaHat), quad);
@@ -100,7 +99,7 @@ int main(int argc, char *argv[])
 	  
       Expr soln = LP.solve(solver);
 
-      FieldWriter writer = new DSVWriter("2DLinearOpt-.dat");
+      FieldWriter writer = new DSVWriter("2DLinearOpt.dat");
       writer.addMesh(mesh);
       writer.addField("x[0]", new ExprFieldWrapper(soln[0]));
       writer.addField("x[1]", new ExprFieldWrapper(soln[1]));
@@ -109,7 +108,7 @@ int main(int argc, char *argv[])
       writer.addField("alpha[0]", new ExprFieldWrapper(soln[4]));
       writer.addField("alpha[1]", new ExprFieldWrapper(soln[5]));
       writer.write();
-      
+   
       
       Array<double> alphaNum = Teuchos::tuple(
 					      L2Norm(mesh, left, soln[0], quad),

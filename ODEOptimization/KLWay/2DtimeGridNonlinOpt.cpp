@@ -82,6 +82,7 @@ int main(int argc, char *argv[])
       CellFilter left = verts.coordSubset(0,0.0);
       CellFilter right = verts.coordSubset(0,1.0);
 
+
       // The basis for the discrete space is tied to the dimension of the mesh
       // Even though x \n R^2, t \in R, and thus bas is 1D
       BasisFamily bas = new Lagrange(1);
@@ -149,6 +150,7 @@ int main(int argc, char *argv[])
 
       SolverState<double> state = NLP.solve(solver);
       
+
       TEUCHOS_TEST_FOR_EXCEPTION(state.finalState() != SolveConverged,
                                  std::runtime_error,
                                  "Nonlinear solve failed to converge: message="
@@ -164,7 +166,6 @@ int main(int argc, char *argv[])
       writer.addField("alpha[0]", new ExprFieldWrapper(U0[4]));
       writer.addField("alpha[1]", new ExprFieldWrapper(U0[5]));
       writer.write();
-      
       
       Array<double> alphaNum = Teuchos::tuple(
 					      L2Norm(mesh, left, U0[0], quad),
