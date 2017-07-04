@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 
 
       /* state equation & BCs */
-      Expr stateEqn = Integral(interior, lambdaHat*(dt*x - (A*x) - b), quad);
+      /*Expr stateEqn = Integral(interior, lambdaHat*(dt*x - (A*x) - b), quad);
       for (int i=0; i<2; i++)
 	{
 	  for (int j=0; j<2; j++)
@@ -114,11 +114,12 @@ int main(int argc, char *argv[])
 						-lambdaHat[i]*T[i][j][k]*x[j]*x[k], quad);
 		}
 	    }
-	}
+	    }*/
+      Expr stateEqn = Integral(interior, lambdaHat*(dt*x - A*x - T*x*x -b), quad);
       Expr stateBC = EssentialBC(left, lambdaHat*(x-alpha), quad);
 
       /* adjoint equation & BCs, derived by hand */
-      Expr adjointEqn = Integral(interior, xHat*(x-xTarget) -  xHat*(dt*lambda+(At*lambda)), quad);
+      /*Expr adjointEqn = Integral(interior, xHat*(x-xTarget) -  xHat*(dt*lambda+(At*lambda)), quad);
       for (int i=0; i<2; i++)
 	{
 	  for (int j=0; j<2; j++)
@@ -129,7 +130,8 @@ int main(int argc, char *argv[])
 						     lambda[i]*(T[i][j][k]+T[i][k][j])*x[j]*xHat[k], quad);
 		}
 	    }
-	}
+	    }*/
+      Expr adjointEqn = Integral(interior, xHat*(x-xTarget) - xHat*(dt*lambda+At*lambda) - lambda*(T*xHat*x + T*x*xHat), quad);
       Expr adjointBC = EssentialBC(right, xHat*lambda, quad);
 
       /* design equation and BC */
