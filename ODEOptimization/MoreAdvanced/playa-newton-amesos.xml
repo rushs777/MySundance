@@ -1,0 +1,13 @@
+<!-- nonlinear solver -->
+<ParameterList>
+<ParameterList name="Nonlinear Solver">
+  <ParameterList name="NewtonArmijoSolver">
+    <Parameter name="Tau Relative"      type="double" value="1.0e-10"/>
+    <Parameter name="Tau Absolute"      type="double" value="1.0e-10"/>
+    <Parameter name="Verbosity"         type="int" value="3"/>
+    <Parameter name="Linear Solver"     type="string" value="amesos.xml"/>
+    <Parameter name="Max Iterations"    type="int" value="100"/>
+    <Parameter name="Max Backtracks"    type="int" value="25"/>
+  </ParameterList>
+</ParameterList>
+</ParameterList>
