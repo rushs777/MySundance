@@ -5,6 +5,12 @@
 #include "VientoSnapshotIO.hpp"
 #include "denseSerialMatrixIO.hpp"
 
+
+#include "integralOperator.hpp"
+#include "ODECO.hpp"
+#include "KKT_Transient_Channel.hpp"
+#include "sensorData.hpp"
+
 // Local Files
 #include "MathematicaConverter.hpp"
 
@@ -29,39 +35,6 @@ CellFilter getPoint(Point P)
 }
 
 
-/**
- * integralOperator is a class that reflects what values the Lidar sensor returns
- * This is integration over the spatial domain only
- */
-class integralOperator
-{
-public:
-  /** Constructor */
-  integralOperator(const Mesh spatialMesh, const Expr sampleDir, const QuadratureFamily quad);
-
-  /** staticDetect returns the "true" value for the wind's velocity at node_i */
-  double staticDetect(const CellFilter sensorLocation, const Expr function);
-
-private:
-  Mesh mesh_;
-  Expr sampleDir_;
-  QuadratureFamily quad_;
-};
-
-
-integralOperator::integralOperator(const Mesh mesh, const Expr sampleDir, const QuadratureFamily quad) :
-  mesh_(mesh), sampleDir_(sampleDir), quad_(quad)
-{}
-
-double integralOperator::staticDetect(const CellFilter sensorLocation, const Expr function)
-{
-  FunctionalEvaluator pointIntegral(mesh_, Integral(sensorLocation, sampleDir_*function, quad_));
-  return pointIntegral.evaluate();
-}
-
-
-
-
 
     
 int main(int argc, char *argv[]) 
@@ -83,11 +56,14 @@ int main(int argc, char *argv[])
       int quadOrder = 2;
       Sundance::setOption("quadOrder", quadOrder, "Order for the Gaussian Quadrature rule");
 
-      int Ru = 2;
-      Sundance::setOption("Ru", Ru, "Number of POD basis functions");
+      // int Ru = 2;
+      // Sundance::setOption("Ru", Ru, "Number of POD basis functions");
 
       double tFinal = 1.0;
       Sundance::setOption("tFinal",tFinal,"Final time value");
+
+      int meshVerb = 0;
+      Sundance::setOption("meshVerb",meshVerb,"Mesh verbosity level");
 
       // Probably will return eta to its previous location once we determine a good value
       double eta = 0.05;
@@ -106,7 +82,7 @@ int main(int argc, char *argv[])
       double xmax = 1.0;
       double ymin = 0.0;
       double ymax = 1.0;
-      MeshSource spatialMesher = new Sundance::PartitionedRectangleMesher(xmin,xmax,nx,1,ymin,ymax,nx,1,spatialMeshType,0);
+      MeshSource spatialMesher = new Sundance::PartitionedRectangleMesher(xmin,xmax,nx,1,ymin,ymax,nx,1,spatialMeshType,meshVerb);
       Mesh spatialMesh = spatialMesher.getMesh();
 
             // Define the time mesh
@@ -133,18 +109,28 @@ int main(int argc, char *argv[])
       b_reader >> basisOrder;
       int numOfElements; // This is Ru
       b_reader >> numOfElements;
-      Ru = numOfElements;
+      int Ru = numOfElements;
       int numOfVectors; // equal to nSteps+1
       b_reader >> numOfVectors;
       string alias;
       b_reader >> alias;
 
-      BasisFamily b_bas = new Lagrange(basisOrder);
-      Array<BasisFamily> b_basArray(numOfElements);
-      for(int i = 0; i < numOfElements; i++)
-	b_basArray[i] = b_bas;
-      DiscreteSpace b_DS(timeMesh, b_basArray, epetraVecType);
-      Expr b = new DiscreteFunction(b_DS, 0.0, alias);
+      TEUCHOS_TEST_FOR_EXCEPTION(basisOrder != 1, std::runtime_error, "The order of the basis functions for time-dependent only functions is not Lagrange(1)");
+
+      BasisFamily time_basis = new Lagrange(basisOrder);
+      Array<BasisFamily> time_basisArray(Ru);
+      for(int i = 0; i < Ru; i++)
+	time_basisArray[i] = time_basis;
+      DiscreteSpace time_DS(timeMesh, time_basisArray, epetraVecType);
+      Expr b = new DiscreteFunction(time_DS, 0.0, alias);
+      
+
+      // BasisFamily b_bas = new Lagrange(basisOrder);
+      // Array<BasisFamily> b_basArray(numOfElements);
+      // for(int i = 0; i < numOfElements; i++)
+      // 	b_basArray[i] = b_bas;
+      // DiscreteSpace b_DS(timeMesh, b_basArray, epetraVecType);
+      // Expr b = new DiscreteFunction(b_DS, 0.0, alias);
 
       // The get() here must somehow link to the DiscreteFunction's actual vector (shallow)
       Vector<double> b_Vec = getDiscreteFunctionVector(b);
@@ -164,7 +150,7 @@ int main(int argc, char *argv[])
 
       // Define t and its derivative
       Expr dt = new Derivative(0);
-      Expr t = new CoordExpr(0);
+      //Expr t = new CoordExpr(0);
 
       /* Currently not using serial vectors anywhere
       Playa::VectorType<double> serialVecType = new Playa::SerialVectorType();
@@ -254,12 +240,18 @@ int main(int argc, char *argv[])
       alphaROM_reader >> numOfVectors;
       alphaROM_reader >> alias;
 
-      BasisFamily alphaROM_basis = new Lagrange(basisOrder);
-      Array<BasisFamily> alphaROM_basArray(numOfElements);
-      for(int i = 0; i < numOfElements; i++)
-	alphaROM_basArray[i] = alphaROM_basis;
-      DiscreteSpace alphaROM_DS(timeMesh, alphaROM_basArray, epetraVecType);
-      Expr alphaROM = new DiscreteFunction(alphaROM_DS, 0.0, alias);
+
+      TEUCHOS_TEST_FOR_EXCEPTION(basisOrder != 1, std::runtime_error, "The order of the basis functions for alphaROM  is not Lagrange(1)");
+      TEUCHOS_TEST_FOR_EXCEPTION(numOfElements != Ru, std::runtime_error, "The value for Ru for alphaROM does not match that for b");
+
+      Expr alphaROM = new DiscreteFunction(time_DS, 0.0, alias);
+
+      // BasisFamily alphaROM_basis = new Lagrange(basisOrder);
+      // Array<BasisFamily> alphaROM_basArray(numOfElements);
+      // for(int i = 0; i < numOfElements; i++)
+      // 	alphaROM_basArray[i] = alphaROM_basis;
+      // DiscreteSpace alphaROM_DS(timeMesh, alphaROM_basArray, epetraVecType);
+      // Expr alphaROM = new DiscreteFunction(alphaROM_DS, 0.0, alias);
 
       // The get() links to the DiscreteFunction's actual vector (shallow)
       Vector<double> alphaROM_Vec = getDiscreteFunctionVector(alphaROM);
@@ -274,17 +266,17 @@ int main(int argc, char *argv[])
       // Create an array that holds the * position values of the sensors
       Array<double> positionValues = tuple(0.2, 0.4, 0.6, 0.8);
       Array<Point> positionArray;
-      positionArray.resize(pow(positionValues.length(),2));
+      // spatialDim() returns n for nD
+      positionArray.resize(pow(positionValues.length(),spatialMesh.spatialDim() ));
       int Ns = positionArray.length(); // Number of sensors
       // Assigns values for (x1,y1) through (x1,yN), then goes to x2 and so forth
       for(int i=0; i<positionValues.length(); i++)
 	for(int j=0; j<positionValues.length(); j++)
 	  {
-	    positionArray[j+positionValues.length()*i].resize(2);
+	    positionArray[j+positionValues.length()*i].resize(spatialMesh.spatialDim() );
 	    positionArray[j+positionValues.length()*i][0] = positionValues[i];
-	    positionArray[j+positionValues.length()*i][1] = positionValues[j];
+	    positionArray[j+positionValues.length()*i][1] = positionValues[j];	  
 	  }
-      
 
       // Create the east unit vector
       double eastAngle = 0.0;
@@ -294,6 +286,28 @@ int main(int argc, char *argv[])
       string snapshotDataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/ForwardProblem/R=1forward_problem_TransientChannel_nx" + Teuchos::toString(nx) + "-nt-" + Teuchos::toString(nSteps) + "/";
       string filenamePrefix = "st-v";
       string snapshotFilenamePrefix = snapshotDataDir + filenamePrefix;
+
+
+      // Starting here is in sensorData
+      /* 
+       * This check ensures that the sensor locations are a subset of the spatial mesh vertices
+       */
+      int numOfVertices = spatialMesh.numCells(0);
+      for(int i = 0; i < Ns; i++)
+	{
+	  bool flag = false;
+	  for(int j = 0; j < numOfVertices; j++)
+	    {
+	      if(positionArray[i][0] == spatialMesh.nodePosition(j)[0] &&
+		 positionArray[i][1] == spatialMesh.nodePosition(j)[1] )
+		{
+		  flag = true;
+		  break;
+		}
+	    }
+	  TEUCHOS_TEST_FOR_EXCEPTION(!flag, std::runtime_error, "sensor locations are not a subset of spatial mesh vertices");	    
+	}
+
 
       // this gets uForward(t_i=timeStep,x) for t_i = 0:tFinal
       Array<Expr> velocityDF;
@@ -310,8 +324,8 @@ int main(int argc, char *argv[])
       integralOperator S(spatialMesh, eastVec, quad);
 
       // Create the DiscreteSpace for vi
-      BasisFamily v_bas = new Lagrange(1);
-      DiscreteSpace v_DS(timeMesh, v_bas, epetraVecType);
+      //BasisFamily v_bas = new Lagrange(1);
+      DiscreteSpace v_DS(timeMesh, time_basis, epetraVecType);
 
       
       // This takes the values from the forward simulation and stores them as the measurement
@@ -324,8 +338,6 @@ int main(int argc, char *argv[])
 	  
 	  for(int j = 0; j < nSteps+1; j++) // Get the measurement values for vstar[i](t_j)
 	    {
-	      //FunctionalEvaluator pointIntegral(spatialMesh, Integral(pointFilter, eastVec*velocityDF[j], quad)); // velocityDF is indexed by time
-	      //values[j] = pointIntegral.evaluate();
 	      values[j] = S.staticDetect(pointFilter, velocityDF[j]);
       	      //cout << "The value of the integral eastVec*velocityDF over the point " << positionArray[i] << " at time step " << j << "  is " << values[j] << endl;	      
 	    }
@@ -333,7 +345,7 @@ int main(int argc, char *argv[])
 	  vstar.append(vi);
 	}
 
-     
+      // Here ends the sensorData file
 
 
 
@@ -353,33 +365,37 @@ int main(int argc, char *argv[])
 
 
 
-      // timeBasis is used to express time-dependent only functions
-      BasisFamily timeBasis = new Lagrange(1);  // move this up to replace the BasisFamily for b(t)
 
       // Form the KKT system
       // State Variable: alpha
       // Adjoint Variable: lambda
       // Design Variable: p
+
+      // From here is in in KKTBase
       Expr alpha, lambda, p;
       for(int i=0; i<Ru; i++)
       	{
-      	  alpha.append(new UnknownFunction(timeBasis, "alpha_"+Teuchos::toString(i)));
-      	  lambda.append(new UnknownFunction(timeBasis, "lambda"));
-      	  p.append(new UnknownFunction(timeBasis, "p"));
+      	  alpha.append(new UnknownFunction(time_basis, "alpha_"+Teuchos::toString(i)));
+      	  lambda.append(new UnknownFunction(time_basis, "lambda"));
+      	  p.append(new UnknownFunction(time_basis, "p"));
       	}
       
       Expr alphaHat, lambdaHat, pHat;
       for(int i=0; i<Ru; i++)
       	{
-      	  alphaHat.append(new TestFunction(timeBasis));
-      	  lambdaHat.append(new TestFunction(timeBasis));
-      	  pHat.append(new TestFunction(timeBasis));
+      	  alphaHat.append(new TestFunction(time_basis));
+      	  lambdaHat.append(new TestFunction(time_basis));
+      	  pHat.append(new TestFunction(time_basis));
       	}
 
-      Array<BasisFamily> timeBasisArray(3*Ru);
-      for (int i=0; i<timeBasisArray.size(); i++)
-	timeBasisArray[i]=timeBasis;
-      DiscreteSpace ODECO_DS(timeMesh, timeBasisArray, epetraVecType);
+      Array<BasisFamily> ODECO_basisArray(3*Ru);
+      for (int i=0; i<ODECO_basisArray.size(); i++)
+	ODECO_basisArray[i]=time_basis;
+      DiscreteSpace ODECO_DS(timeMesh, ODECO_basisArray, epetraVecType);
+      // To here is in KKTBase
+
+
+      
       Expr U0 = new DiscreteFunction(ODECO_DS, 0.0);
 
 

@@ -66,7 +66,9 @@
 # 
 #--------------------------------------------------------------------------
 #
-EXTRA_OBJS = 
+EXTRA_OBJS = /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/integralOperator.o \
+	     /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/KKTBase.o \
+	     /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/KKT_Transient_Channel.o
 
 
 # ***
@@ -101,7 +103,8 @@ VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
 #--------------------------------------------------------------------------
 # If needed, set extra include and lib macros
 #--------------------------------------------------------------------------
-CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles
+CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles -I/home/sirush/PhDResearch/ODEOptimization/MoreAdvanced
+
 
 CLIENT_EXTRA_LIBS = 
 
