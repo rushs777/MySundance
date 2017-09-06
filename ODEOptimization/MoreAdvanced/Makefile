@@ -68,7 +68,10 @@
 #
 EXTRA_OBJS = /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/integralOperator.o \
 	     /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/KKTBase.o \
-	     /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/KKT_Transient_Channel.o
+	     /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/KKT_Transient_Channel.o\
+	     /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/sensorData.o \
+	     /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o
+
 
 
 # ***

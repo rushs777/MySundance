@@ -41,7 +41,7 @@ private:
   string ROM_base_dir_;
   string matrixAndTensorDir_;
   Mesh spatialMesh_;
-  Mesh timeMesh;
+  Mesh timeMesh_;
   VectorType<double> epetraVecType_;
   int Ru_;
   BasisFamily time_basis_;

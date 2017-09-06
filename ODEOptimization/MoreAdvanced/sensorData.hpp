@@ -17,18 +17,23 @@ class sensorData
 {
 public:
   /** Constructor */
-  sensorData(Array<Point> sensorLocations, Mesh spatialMesh, DiscreteSpace time_D, string snapshotFilenamePrefix, int nSteps, Expr sampleDir, int quadOrder);
+  sensorData(Array<Point> sensorLocations, Mesh spatialMesh, Mesh timeMesh, string snapshotFilenamePrefix, int nSteps, Expr sampleDir, int quadOrder);
 
   void create_vstar();
 
   Expr get_vstar();
+
+  integralOperator get_S();
+
+  Array<Point> get_locations();
+
 
     
   
 private:
   Array<Point> allSensorLocations_;
   Mesh spatialMesh_;
-  DiscreteSpace time_DS_;
+  Mesh timeMesh_;
   string snapshotFilenamePrefix_;
   int nSteps_;
   Expr sampleDir_;
@@ -38,5 +43,19 @@ private:
 };
 
 
+
+/**
+ * getPoint(Point P) returns a CellFilter that will return the cell containing
+ * the P(x,y) point
+ */
+inline CellFilter getPoint(Point P)
+{
+  CellFilter vertices = new DimensionalCellFilter(0);
+  CellFilter xPos = vertices.coordSubset(0, P[0]);
+  CellFilter yPos = vertices.coordSubset(1, P[1]);
+  CellFilter vertex = xPos.intersection(yPos);
+
+  return vertex;
+}
 
 #endif

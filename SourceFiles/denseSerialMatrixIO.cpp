@@ -1,5 +1,5 @@
 #include "denseSerialMatrixIO.hpp"
-/** */
+
 void writeDenseSerialMatrix(const RCP<DenseSerialMatrix>& A, string filename)
 {
 /* A needs to be a pointer to the underlying DenseSerialMatirx of a LinearOperator
@@ -12,7 +12,7 @@ ofstream os(filename);
 			os << A->getElement(i,j) << endl;
 }
 
-/** */
+
 void readDenseSerialMatrix(RCP<DenseSerialMatrix>& A, string filename)
 {
 ifstream is(filename, std::ios::in);
@@ -29,3 +29,22 @@ ifstream is(filename, std::ios::in);
 }
 
 
+void readListExprMatrix(Expr &A, int N, string filename)
+{
+  ifstream is(filename, std::ios::in);
+  TEUCHOS_TEST_FOR_EXCEPTION(!is, std::runtime_error, "could not open file " << filename << " for reading");
+
+  // The information is written to file by denseSerialMatrixIO::writeDenseSerialMatrix which
+  // is done row-wise
+  double value;
+  for(int i = 0; i < N; i++)
+    {
+      Expr row;
+      for(int j = 0; j < N; j++)
+	{
+	  is >> value;
+	  row.append(value);
+	}
+      A.append(row);
+    }
+}
