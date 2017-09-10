@@ -121,13 +121,13 @@ void PMB::generate_beta()
       //      std::cout << "Here is q(t_m) " << forceTerm_ << std::endl;
 
       // Build c(t_m)
-      for(int r = 0; r < R_; r++)
+      for(int i = 0; i < R_; i++)
 	{
-	  //Expr integrand_boundary = nHat*(psi_[r]*(grad*pbar_)) + nHat*( psi_[r] * ((uRO_[time]*grad)*uRO_[time]) );
-	  Expr integrand_boundary = nHat*( psi_[r] * ((uRO_[time]*grad)*uRO_[time]) );
+	  //Expr integrand_boundary = nHat*(psi_[i]*(grad*pbar_)) + nHat*( psi_[i] * ((uRO_[time]*grad)*uRO_[time]) );
+	  Expr integrand_boundary = nHat*( psi_[i] * ((uRO_[time]*grad)*uRO_[time]) );
 	  FunctionalEvaluator integral_boundary = FunctionalEvaluator(ds_.mesh(), Integral(boundary, integrand_boundary, quad) );
 	  
-	  c[r] = -1.0*L2IP(grad*pbar_, grad*psi_[r]) - L2IP( (uRO_[time]*grad)*uRO_[time] , grad*psi_[r]) - L2IP(div(forceTerm_), psi_[r]) + integral_boundary.evaluate();
+	  c[i] = -1.0*L2IP(grad*pbar_, grad*psi_[i]) - L2IP( (uRO_[time]*grad)*uRO_[time] , grad*psi_[i]) - L2IP(div(forceTerm_), psi_[i]) + integral_boundary.evaluate();
 	}
       SUNDANCE_ROOT_MSG1(verbosity_, "Solving for time step " + Teuchos::toString(time) + " of " + Teuchos::toString(M_-1));
       SolverState<double> state = solver.solve(A,c,beta_[time]);

@@ -10,6 +10,7 @@ inline Expr Sin(const Expr& x) {return sin(x);}
 inline Expr Csc(const Expr& x) {return (1.0/sin(x));}
 inline Expr Power(const Expr& x, const double& p) {return pow(x,p);}
 inline Expr Power(const double& x, const Expr& p) {return exp(p*log(x));}
+inline Expr Power(const double& x, const double& p) {return pow(x,p);}
 const double E = exp(1.0);
 inline Expr Sqrt(const Expr& x) {return sqrt(x);}
 inline double Sqrt(const double& x) {return sqrt(x);}

@@ -5,7 +5,6 @@
 #include "PlayaSerialEpetraAdapter.hpp"
 #include "PlayaSerialVectorType.hpp"
 #include "PlayaDenseSerialMatrix.hpp"
-#include "PlayaDenseLUSolver.hpp"
 
 #include "VientoSnapshotIO.hpp" //For snapshotToMatrix
 #include "PlayaSVD.hpp"
@@ -34,6 +33,9 @@ public:
   /**get_phi will return the fluctuation velocity POD basis functions*/
   Array<Expr> get_phi() {return phi_;}
 
+  /**get_uB will return the time mean for the velocity*/
+  Expr get_uB() {return ubar_;}
+
   /**generate_alpha will calculate alpha(t_m) for m=0:nSteps*/
   void generate_alpha();
 
@@ -42,6 +44,12 @@ public:
 
   /**Make the reduced-order pressure term from ubar_, alpha_, and phi_*/
   Array<Expr> get_uRO();
+
+  /** Writes the time-dependent vector from the ODE constraint to filename */
+  void write_b(const string filename);
+
+  /** Writes the time-dependent coefficient function alpha to filename */
+  void write_alpha(const string filename);
 
 private:
   string snapshotFilename_;

@@ -10,7 +10,10 @@
 #include "VientoSnapshotIO.hpp" //For snapshotToMatrix
 #include "PlayaSVD.hpp"
 
-/**The class PMB generates the pressure based off of pressure POD modes*/
+/**
+ *The class PMB generates the pressure based off of pressure POD modes
+ *Code is assuming tInit = 0.0
+ */
 class PMB
 {
 public:

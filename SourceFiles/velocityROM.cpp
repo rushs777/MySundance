@@ -45,7 +45,7 @@ void velocityROM::initialize()
       Playa::Vector<double> sigma;
 
 
-      // W' and mesh need to be defined
+      // W' and the DiscreteSpace ds_ need to be defined
       SUNDANCE_ROOT_MSG1(verbosity_, "Entering POD for velocity");
       POD(Wprime_,sigma,U,Phi,ds_,verbosity_);
       SUNDANCE_ROOT_MSG2(verbosity_, "POD finished for velocity");
@@ -149,6 +149,53 @@ void velocityROM::generate_alpha()
       prob->set_uPrev(alpha_[time]);
     }
 
+}
+
+void velocityROM::write_b(const string filename)
+{
+  RCP<MMSQuadODE> f = rcp(new MMSQuadODE(phi_, ubar_, forceTerm_, t_, deltat_, ds_.mesh(), false, verbosity_));
+  f->initialize();
+
+  // Assumes that tInit = 0.0
+  double tInit = 0.0;
+  std::ofstream writer(filename);
+  writer << "1" << endl;
+  writer << R_ << endl;
+  writer << nSteps_ + 1 << endl;
+  writer << "b" << endl;
+  Vector<double> b_ti = alpha_[0].copy();
+
+  for(int i = 0; i < nSteps_+1; i++)
+    {
+      
+      b_ti = f->evalForceTerm(tInit + i*deltat_);
+      for(int r = 0; r < R_; r++)
+	{
+	  writer << b_ti[r] << endl;
+	}
+    }
+  
+}
+
+void velocityROM::write_alpha(const string filename)
+{
+  // Assumes that tInit = 0.0
+  double tInit = 0.0;
+  std::ofstream writer(filename);
+  int lagrangeBasis = 1;
+  writer << lagrangeBasis << endl;
+  writer << R_ << endl; // Number of components for each time step
+  writer << nSteps_ + 1 << endl;
+  string alias = "alphaROM";
+  writer << alias << endl;
+
+  for(int timeStep = 0; timeStep < nSteps_ + 1; timeStep++)
+    {
+      for(int r = 0; r < R_; r++)
+	{
+	  writer << alpha_[timeStep][r] << endl;
+	}
+    }
 }
 
 
