@@ -5,13 +5,17 @@
 #include "sensorData.hpp"
 
 /**
- * This derived class models the KKT system arising from a Transient Channel Problem
+ * This derived class models the KKT system arising from 
+ * a Transient Channel Problem
  */
 class KKT_Transient_Channel : public KKTBase
 {
 public:
   /** Constructor */
-  KKT_Transient_Channel(string ROM_base_dir, Mesh spatialMesh, Mesh timeMesh, sensorData dataClass, double tFinal, int quadOrder, int verbosity=0);
+  KKT_Transient_Channel(string ROM_base_dir, Mesh spatialMesh,
+			Mesh timeMesh, sensorData dataClass,
+			double tFinal, int quadOrder,
+			int verbosity=0);
 
 
 
@@ -22,8 +26,8 @@ public:
   Expr solve(string solverXML, double eta_design, double eta_reg);
 
   /** 
-   * In the instance where the parameter space only has one seleciton of values,
-   * compare alphaOPT to alphaROM
+   * In the instance where the parameter space only has one
+   * seleciton of values, compare alphaOPT to alphaROM
    */
   double errorCheck(Expr alphaOPT);
   
