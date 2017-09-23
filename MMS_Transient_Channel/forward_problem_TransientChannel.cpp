@@ -332,18 +332,19 @@ int main(int argc, char** argv)
       state->initialize(tCur, dt, uExFunc, pExFunc);
 
       //string outDir = "Results/ForwardProblem/Stokes/";
-      string outDir = "Results/ForwardProblem/R=1";
+      string outDir = "Results/ForwardProblem/Re1/nx" +  Teuchos::toString(nx)
+	+ "nt" + Teuchos::toString(nSteps);
    //   system( ("mkdir -p " + outDir).c_str() ); Done in DefaultOutputManager constructor
-      string filename = outDir + "forward_problem_TransientChannel_nx" + Teuchos::toString(nx)
-	+ "-nt-" + Teuchos::toString(nSteps);
+      //  string filename = outDir + "forward_problem_Transient_Channel_nx" + Teuchos::toString(nx)
+	+ "nt" + Teuchos::toString(nSteps);
 
-      system( ("rm -fr " + filename).c_str() );
+      system( ("rm -fr " + outDir).c_str() );
 
       ErrorChecker check(state, uExFunc, pExFunc);
 
 //Added by me to write out the snapshots
       RCP<DefaultOutputManager> output
-	= rcp(new DefaultOutputManager(filename, "st", new ExodusWriterFactory()));
+	= rcp(new DefaultOutputManager(outDir, "st", new ExodusWriterFactory()));
 
       // Same logic as VientoUniformStepController.cpp; I have taken it
       //out so I can utilize ErrorChecker
@@ -357,10 +358,13 @@ int main(int argc, char** argv)
 	    }
 	  Tabs tab2;
 	  SUNDANCE_MSG1(verb, tab2<< "CFL=" << state->minHOverV() );
-	  FieldWriter w = new VTKWriter(filename + "/" + "step"+ Teuchos::toString(i));
+	  //	  FieldWriter w = new VTKWriter(filename + "/" + "step"+ Teuchos::toString(i));
+	  FieldWriter w = new VTKWriter(outDir + "/" + "step"+ Teuchos::toString(i));
 	  check.write(w);
 	  output->write(i, stepper.state(), 1);
 	}
+
+     
 
       timer.stop();
       Out::root() << "nx=" << nx << " nt=" << nSteps << " uErr=" << check.uErrL2()

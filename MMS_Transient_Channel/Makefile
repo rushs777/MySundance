@@ -76,7 +76,8 @@
 		../SourceFiles/velocityROM.o \
 		../DenseMatrixMatrixProduct/PlayaDenseMatrixMatrixProduct.o
 
-EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
+# The whole shebang
+#EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
 		/home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
 		/home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
 		/home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
@@ -84,6 +85,28 @@ EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
 		/home/sirush/PhDResearch/SourceFiles/PMB.o \
 		/home/sirush/PhDResearch/SourceFiles/velocityROM.o \
 		/home/sirush/PhDResearch/MMS_Transient_Channel/MMSQuadODE.o
+
+# Turn this on for POD_Generator.cpp
+#EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/POD_SVD.o \
+	     /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
+
+# Turn this on for stage_KKT_required_files.cpp
+#EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/POD_SVD.o \
+	     /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
+	     /home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
+	     /home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
+	     /home/sirush/PhDResearch/SourceFiles/NSEProjectedODE.o
+
+# Turn this on for uRO.cpp
+EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
+	     /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
+	     /home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
+	     /home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
+	     /home/sirush/PhDResearch/SourceFiles/MyNLO.o \
+	     /home/sirush/PhDResearch/SourceFiles/PMB.o \
+	     /home/sirush/PhDResearch/SourceFiles/velocityROM.o \
+	     /home/sirush/PhDResearch/SourceFiles/NSEProjectedODE.o
+
 
 
 #EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \

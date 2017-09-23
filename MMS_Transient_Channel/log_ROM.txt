@@ -1,46 +1,94 @@
+These runs were conducted on 9/18/17 as part of the rebuild of the code after
+spliting out the POD code
+
+Important Parameters:
 Reynold's Number = 1
 tol = .999
 
-This runs are conducted with the convection operator as an outerProduct
-
 Run for nx = 8, nSteps = 8
-||2norm of the error in alpha at all timesteps||_2  :	 0.0226777
-||2norm of the error in alpha at all timesteps||_inf:	 0.0113671
+||2norm of the error in alpha at all timesteps||_2  :	 0.0240416
+||2norm of the error in alpha at all timesteps||_inf:	 0.0120272
 Number of velocity modes kept: 2
-||2norm of the error in u at all timesteps||_2  :	 0.045188
-||2norm of the error in u at all timesteps||_inf:	 0.0225923
-Writing results to file
-runtime=0.840288
+||2norm of the error in u at all timesteps||_2  :	 0.0458876
+||2norm of the error in u at all timesteps||_inf:	 0.0229315
+runtime=0.723335
 
 Run for nx = 16, nSteps = 16
-||2norm of the error in alpha at all timesteps||_2  :	 0.00456373
-||2norm of the error in alpha at all timesteps||_inf:	 0.0016144
+||2norm of the error in alpha at all timesteps||_2  :	 0.00408342
+||2norm of the error in alpha at all timesteps||_inf:	 0.00143847
 Number of velocity modes kept: 2
-||2norm of the error in u at all timesteps||_2  :	 0.00992162
-||2norm of the error in u at all timesteps||_inf:	 0.00350669
-Writing results to file
-runtime=2.81982
+||2norm of the error in u at all timesteps||_2  :	 0.00971006
+||2norm of the error in u at all timesteps||_inf:	 0.00342926
+runtime=2.57578
+
+Run for nx = 25, nSteps = 25
+||2norm of the error in alpha at all timesteps||_2  :	 0.00113693
+||2norm of the error in alpha at all timesteps||_inf:	 0.000319521
+Number of velocity modes kept: 2
+||2norm of the error in u at all timesteps||_2  :	 0.00336943
+||2norm of the error in u at all timesteps||_inf:	 0.000950288
+runtime=8.19146
+
 
 Run for nx = 32, nSteps = 32
-||2norm of the error in alpha at all timesteps||_2  :	 0.00381299
-||2norm of the error in alpha at all timesteps||_inf:	 0.000952231
+||2norm of the error in alpha at all timesteps||_2  :	 0.000559252
+||2norm of the error in alpha at all timesteps||_inf:	 0.000138991
 Number of velocity modes kept: 2
-||2norm of the error in u at all timesteps||_2  :	 0.00420089
-||2norm of the error in u at all timesteps||_inf:	 0.00104921
-Writing results to file
-runtime=14.8508
+||2norm of the error in u at all timesteps||_2  :	 0.00184967
+||2norm of the error in u at all timesteps||_inf:	 0.000461974
+runtime=14.1708
+
+
+Run for nx = 50, nSteps = 50
+||2norm of the error in alpha at all timesteps||_2  :	 0.000157323
+||2norm of the error in alpha at all timesteps||_inf:	 3.12435e-05
+Number of velocity modes kept: 2
+||2norm of the error in u at all timesteps||_2  :	 0.000616137
+||2norm of the error in u at all timesteps||_inf:	 0.000123118
+runtime=54.1473
+
 
 Run for nx = 64, nSteps = 64
-||2norm of the error in alpha at all timesteps||_2  :	 0.0052283
-||2norm of the error in alpha at all timesteps||_inf:	 0.000922949
+||2norm of the error in alpha at all timesteps||_2  :	 7.90787e-05
+||2norm of the error in alpha at all timesteps||_inf:	 1.38713e-05
 Number of velocity modes kept: 2
-||2norm of the error in u at all timesteps||_2  :	 0.00523835
-||2norm of the error in u at all timesteps||_inf:	 0.000924726
-Writing results to file
-runtime=111.749
+||2norm of the error in u at all timesteps||_2  :	 0.000333839
+||2norm of the error in u at all timesteps||_inf:	 5.89636e-05
+runtime=97.2827
 
 
-with the convection operator as specified by KL
+Run for nx = 100, nSteps = 100
+||2norm of the error in alpha at all timesteps||_2  :	 2.34348e-05
+||2norm of the error in alpha at all timesteps||_inf:	 3.28457e-06
+Number of velocity modes kept: 2
+||2norm of the error in u at all timesteps||_2  :	 0.000109805
+||2norm of the error in u at all timesteps||_inf:	 1.5515e-05
+runtime=397.614
+
+
+Run for nx = 128, nSteps = 128
+||2norm of the error in alpha at all timesteps||_2  :	 1.21319e-05
+||2norm of the error in alpha at all timesteps||_inf:	 1.50164e-06
+Number of velocity modes kept: 2
+||2norm of the error in u at all timesteps||_2  :	 5.92935e-05
+||2norm of the error in u at all timesteps||_inf:	 7.4046e-06
+runtime=767.318
+
+
+
+
+
+
+
+
+
+
+OLD
+
+Reynold's Number = 1
+tol = .999
+
+with the convection operator as specified by KL (right)
 
 Run for nx = 8, nSteps = 8
 ||2norm of the error in alpha at all timesteps||_2  :	 0.0240416
@@ -88,6 +136,47 @@ Number of velocity modes kept: 2
 ||2norm of the error in u at all timesteps||_inf:	 7.7501e-06
 Writing results to file
 runtime=816.418
+
+
+
+
+This runs are conducted with the convection operator as an outerProduct (wrong)
+
+Run for nx = 8, nSteps = 8
+||2norm of the error in alpha at all timesteps||_2  :	 0.0226777
+||2norm of the error in alpha at all timesteps||_inf:	 0.0113671
+Number of velocity modes kept: 2
+||2norm of the error in u at all timesteps||_2  :	 0.045188
+||2norm of the error in u at all timesteps||_inf:	 0.0225923
+Writing results to file
+runtime=0.840288
+
+Run for nx = 16, nSteps = 16
+||2norm of the error in alpha at all timesteps||_2  :	 0.00456373
+||2norm of the error in alpha at all timesteps||_inf:	 0.0016144
+Number of velocity modes kept: 2
+||2norm of the error in u at all timesteps||_2  :	 0.00992162
+||2norm of the error in u at all timesteps||_inf:	 0.00350669
+Writing results to file
+runtime=2.81982
+
+Run for nx = 32, nSteps = 32
+||2norm of the error in alpha at all timesteps||_2  :	 0.00381299
+||2norm of the error in alpha at all timesteps||_inf:	 0.000952231
+Number of velocity modes kept: 2
+||2norm of the error in u at all timesteps||_2  :	 0.00420089
+||2norm of the error in u at all timesteps||_inf:	 0.00104921
+Writing results to file
+runtime=14.8508
+
+Run for nx = 64, nSteps = 64
+||2norm of the error in alpha at all timesteps||_2  :	 0.0052283
+||2norm of the error in alpha at all timesteps||_inf:	 0.000922949
+Number of velocity modes kept: 2
+||2norm of the error in u at all timesteps||_2  :	 0.00523835
+||2norm of the error in u at all timesteps||_inf:	 0.000924726
+Writing results to file
+runtime=111.749
 
 
 
