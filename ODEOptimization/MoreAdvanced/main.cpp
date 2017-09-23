@@ -35,12 +35,17 @@ using std::vector;
 // }
 
 
+// Resume by cleaning up this file; and get results to be outputted.
 
     
 int main(int argc, char *argv[]) 
 {
   try
     {
+      Time timer("total");
+      timer.start();
+      
+      
       int verbosity = 0;      
       Sundance::setOption("verbosity", verbosity, "verbosity level");
       
@@ -58,6 +63,8 @@ int main(int argc, char *argv[])
 
       // int Ru = 2;
       // Sundance::setOption("Ru", Ru, "Number of POD basis functions");
+      double tol = 0.999;
+      Sundance::setOption("tol",tol,"The tolerance used in the RIC to select the number of reduced-order basis functions to keep");
 
       double tFinal = 1.0;
       Sundance::setOption("tFinal",tFinal,"Final time value");
@@ -76,8 +83,11 @@ int main(int argc, char *argv[])
 
       Sundance::init(&argc, &argv);
 
-      // State the location of the necessary ROM files
-      string ROM_base_dir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/ROM/uRO/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps);
+      // State the location of the directory holds alphaROM
+      string ROM_base_dir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/ROM/uRO/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/";
+
+      // State the location of the POD files (phi, b, A, and T)
+      string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/POD/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/tol" + std::to_string(tol) + "/";
 
       // Create the spatial mesh
       MeshType spatialMeshType = new Sundance::BasicSimplicialMeshType();
@@ -124,7 +134,7 @@ int main(int argc, char *argv[])
      
 
       // Define the KKT object for this test problem (Transient Channel)
-      KKT_Transient_Channel KKT_System(ROM_base_dir, spatialMesh, timeMesh, sensorObj, tFinal, quadOrder, verbosity);
+      KKT_Transient_Channel KKT_System(POD_DataDir, spatialMesh, timeMesh, sensorObj, tFinal, nSteps, quadOrder, verbosity);
       KKT_System.initialize();
 
       // Solve the KKT system
@@ -135,13 +145,14 @@ int main(int argc, char *argv[])
       for(int r=1; r < 2; r++)
       	alphaOPT.append(soln[r]);
 
-      double alphaError = KKT_System.errorCheck(alphaOPT);
-
+      double alphaError = KKT_System.errorCheck(ROM_base_dir, alphaOPT);
+      cout << "Run for nx = " << nx << ", nSteps = " << nSteps << ", and tol = " << tol << endl;
       cout << "||alphaROM - alphaOPT||_2 = " << alphaError << endl;
 
 
 
-      
+      timer.stop();
+      Out::root() << "runtime = " << timer.totalElapsedTime() << endl << endl;
 
       /* The solve for alpha values will be the first Ru components of U0
        We need to now build the approximation to the velocity uOpt
