@@ -1,7 +1,7 @@
 #include "velocityROM.hpp"
 
-velocityROM::velocityROM(const string snapshotFilename, string nlParamFile, const DiscreteSpace& ds, Expr u0, Expr forceTerm, Expr t, int nSteps, double deltat, double tolerance, int verbosity, int K)
-  : snapshotFilename_(snapshotFilename),
+velocityROM::velocityROM(const string POD_base_dir, string nlParamFile, const DiscreteSpace& ds, Expr u0, Expr forceTerm, Expr t, int nSteps, double deltat, double tolerance, int verbosity)
+  : POD_base_dir_(POD_base_dir),
     nlParamFile_(nlParamFile),
     ds_(ds),
     u0_(u0),
@@ -9,109 +9,67 @@ velocityROM::velocityROM(const string snapshotFilename, string nlParamFile, cons
     t_(t),
     nSteps_(nSteps), deltat_(deltat),
     tol_(tolerance),
-    verbosity_(verbosity),
-    K_(K)
+    verbosity_(verbosity)
 {
   t_.setParameterValue(0.0);
 }
 
-void velocityROM::initialize()
+void velocityROM::initialize(const string snapshotFilePrefix)
 {
-  Wprime_ = snapshotToMatrix(snapshotFilename_, nSteps_, ds_.mesh());
-  SUNDANCE_ROOT_MSG2(verbosity_, "Size of W: " << Wprime_.range().dim() << " by " << Wprime_.domain().dim());
+  // At this point, the matrix is really W
+  LinearOperator<double> W = snapshotToMatrix(snapshotFilePrefix, nSteps_, ds_.mesh());
+  SUNDANCE_ROOT_MSG2(verbosity_, "Size of W: " << W.range().dim() << " by " << W.domain().dim());
 
-  // Calculate ubar(x)
-  Vector<double> ubarVec = Wprime_.range().createMember();
-  Vector<double> ones = Wprime_.domain().createMember();
-  ones.setToConstant(1.0);
-  Wprime_.apply(ones, ubarVec);
-  ubarVec *= (1.0/ (nSteps_+1.0) );
-  ubar_ = new DiscreteFunction(ds_, serialToEpetra(ubarVec));
+  // calculate uB_(x)
+  uB_ = timeMeanFunctionGenerator(W,ds_);
 
-  // Make W be W'
-  RCP<DenseSerialMatrix> WPtr = DenseSerialMatrix::getConcretePtr(Wprime_);
-  double Wij;
-  for(int j = 0; j < Wprime_.domain().dim(); j++)
+
+  // Read in the POD from file
+  SUNDANCE_ROOT_MSG1(verbosity_, "Reading in the reduced-order basis for velocity");
+  string POD_basis_fileprefix = POD_base_dir_ + "/POD_basis";
+
+  R_ = 10000;
+  for(int r = 0; r < R_; r++)
     {
-      for(int i = 0; i<Wprime_.range().dim(); i++)
+      try
 	{
-	  Wij = WPtr->getElement(i,j);
-	  WPtr->setElement(i,j,Wij-ubarVec[i]);
-	}  
+	  phi_.push_back( readSnap(POD_basis_fileprefix, r, ds_.mesh() ) );
+	}
+      catch (std::runtime_error& e)
+	{
+	  R_ = r;
+	}
     }
-      // Perform the POD of the matrix W'
-      Playa::LinearOperator<double> U;
-      Playa::LinearOperator<double> Phi;
-      Playa::Vector<double> sigma;
+  
+  SUNDANCE_ROOT_MSG1(verbosity_, "Found " << R_ << " reduced-order basis functions for the given resoultion"); 
 
 
-      // W' and the DiscreteSpace ds_ need to be defined
-      SUNDANCE_ROOT_MSG1(verbosity_, "Entering POD for velocity");
-      POD(Wprime_,sigma,U,Phi,ds_,verbosity_);
-      SUNDANCE_ROOT_MSG2(verbosity_, "POD finished for velocity");
+  // Generate alpha[0] based off of u0_ and uB_
+  // (u0_ - uB_, phi[i]) = alpha[0][i]
+  CellFilter interior = new MaximalCellFilter();
+  QuadratureFamily quad = new GaussianQuadrature(6);
+  
+  alpha_.resize(nSteps_+1);
 
-      Vector<double> lambda = sigma.copy();
-      for(int count = 0; count < sigma.dim(); count++)
-	lambda[count] = sqrt(lambda[count]);
-
-      double lambdaTotal = lambda.norm1();
-      double lambdaSum = 0.0;
-      for(int i = 0; i<lambda.dim(); i++)
-	{
-	  lambdaSum += lambda[i];
-	  if(lambdaSum/lambdaTotal >= tol_)
-	    {
-	      // R is the number of modes to keep
-	      R_ = i + 1;
-	      SUNDANCE_ROOT_MSG2(verbosity_, "Number of modes kept: " + Teuchos::toString(R_));
-	      break;
-	    }
-	}
-
-      // Phi is a DenseSerialMatrix
-      Playa::Vector<double> ej = Phi.domain().createMember();
-      Playa::Vector<double> phiCoeff = Phi.range().createMember(); // These are the coefficient vectors
-      phi_.resize(R_+K_); // These are the velocity POD basis functions
-      SUNDANCE_ROOT_MSG2(verbosity_, "Size of phi: " + Teuchos::toString(phi_.size()));
-
-      // Get the Expr phi_r(x)
-      CellFilter interior = new MaximalCellFilter();
-      QuadratureFamily quad = new GaussianQuadrature(6);
-      for(int r = 0; r<R_+K_; r++)
-	{
-	  ej.zero();
-	  ej[r] = 1.0;
-	  phiCoeff.zero();
-	  Phi.apply(ej,phiCoeff);
-	  phi_[r] = new DiscreteFunction(ds_, serialToEpetra(phiCoeff)); //DiscreteFunction requires Epetra vectors
-	  TEUCHOS_TEST_FOR_EXCEPTION( fabs(L2Norm(ds_.mesh(), interior, phi_[r], quad) - 1.0) >= 1.0e-6,
-				     runtime_error, "||phi["+Teuchos::toString(r)+"]|| = " + Teuchos::toString(L2Norm(ds_.mesh(), interior, phi_[r], quad)) + " != 1");
-	}
-
-      // Generate alpha[0] based off of u0_ and ubar_
-      // (u0_ - ubar_, phi[i]) = alpha[0][i]
-      alpha_.resize(nSteps_+1);
-
-      VectorType<double> R_vecType = new SerialVectorType();
-      VectorSpace<double> R_vecSpace = R_vecType.createEvenlyPartitionedSpace(MPIComm::self(), R_+K_);
-      alpha_[0] = R_vecSpace.createMember();
+  VectorType<double> R_vecType = new SerialVectorType();
+  VectorSpace<double> R_vecSpace = R_vecType.createEvenlyPartitionedSpace(MPIComm::self(), R_);
+  alpha_[0] = R_vecSpace.createMember();
       
-      for(int i = 0; i < R_+K_; i++)
-	{
-	  FunctionalEvaluator IP = FunctionalEvaluator(ds_.mesh(), Integral(interior, (u0_ - ubar_)*phi_[i], quad));
-	  //FunctionalEvaluator IP = FunctionalEvaluator(ds_.mesh(), Integral(interior, u0_*phi_[i], quad));
-	  alpha_[0][i] = IP.evaluate();
-	}
+  for(int i = 0; i < R_; i++)
+    {
+      FunctionalEvaluator IP = FunctionalEvaluator(ds_.mesh(), Integral(interior, (u0_ - uB_)*phi_[i], quad));
+      alpha_[0][i] = IP.evaluate();
+    }
 
 }
 
-
+// Resume by getting uRO working for this new initialization
 void velocityROM::generate_alpha()
 {
-  SUNDANCE_ROOT_MSG1(verbosity_, "Creating MMSQuadODE");
+  SUNDANCE_ROOT_MSG1(verbosity_, "Creating NSEProjectedODE");
   // Create the nonlinear operator for solving our nonlinear ODE
-  //MMSQuadODE f(phi_, ubar_, forceTerm_, t_, deltat_, ds_.mesh(), false, verbosity_);
-  RCP<MMSQuadODE> f = rcp(new MMSQuadODE(phi_, ubar_, forceTerm_, t_, deltat_, ds_.mesh(), false, verbosity_));
+  //NSEProjectedODE f(phi_, ubar_, forceTerm_, t_, deltat_, ds_.mesh(), false, verbosity_);
+  RCP<NSEProjectedODE> f = rcp(new NSEProjectedODE(phi_, uB_, forceTerm_, t_, deltat_, ds_.mesh(), false, verbosity_));
   f->initialize();
 
   SUNDANCE_ROOT_MSG1(verbosity_, "Creating NLO");
@@ -121,7 +79,7 @@ void velocityROM::generate_alpha()
     F.setVerb(verbosity_);
 
 
-  SUNDANCE_ROOT_MSG1(verbosity_, "Creating solver");
+  SUNDANCE_ROOT_MSG1(verbosity_, "Creating solver.......");
   // create the Newton-Armijo solver
   ParameterXMLFileReader reader(nlParamFile_);
   ParameterList params = reader.getParameters();
@@ -133,7 +91,7 @@ void velocityROM::generate_alpha()
 
 
   // Establish alpha_(t_init)
-  SUNDANCE_ROOT_MSG1(verbosity_, "Running nonlinear solves...");
+  SUNDANCE_ROOT_MSG1(verbosity_, "Running nonlinear solves.......");
   prob->set_uPrev(alpha_[0]);
   for(int time = 1; time < alpha_.length(); time++)
     {
@@ -153,27 +111,29 @@ void velocityROM::generate_alpha()
 
 void velocityROM::write_b(const string filename)
 {
-  RCP<MMSQuadODE> f = rcp(new MMSQuadODE(phi_, ubar_, forceTerm_, t_, deltat_, ds_.mesh(), false, verbosity_));
+  RCP<NSEProjectedODE> f = rcp(new NSEProjectedODE(phi_, uB_, forceTerm_, t_, deltat_, ds_.mesh(), false, verbosity_));
   f->initialize();
 
-  // Assumes that tInit = 0.0
-  double tInit = 0.0;
-  std::ofstream writer(filename);
-  writer << "1" << endl;
-  writer << R_ << endl;
-  writer << nSteps_ + 1 << endl;
-  writer << "b" << endl;
-  Vector<double> b_ti = alpha_[0].copy();
+  // // Assumes that tInit = 0.0
+  // double tInit = 0.0;
+  // std::ofstream writer(filename);
+  // writer << "1" << endl;
+  // writer << R_ << endl;
+  // writer << nSteps_ + 1 << endl;
+  // writer << "b" << endl;
+  // Vector<double> b_ti = alpha_[0].copy();
 
-  for(int i = 0; i < nSteps_+1; i++)
-    {
+  // for(int i = 0; i < nSteps_+1; i++)
+  //   {
       
-      b_ti = f->evalForceTerm(tInit + i*deltat_);
-      for(int r = 0; r < R_; r++)
-	{
-	  writer << b_ti[r] << endl;
-	}
-    }
+  //     b_ti = f->evalForceTerm(tInit + i*deltat_);
+  //     for(int r = 0; r < R_; r++)
+  // 	{
+  // 	  writer << b_ti[r] << endl;
+  // 	}
+  //   }
+
+  f->write_b(nSteps_);
   
 }
 
@@ -201,7 +161,7 @@ void velocityROM::write_alpha(const string filename)
 
 Array<Expr> velocityROM::get_uRO()
 {
-  Array<Expr> uRO(nSteps_+1, ubar_);
+  Array<Expr> uRO(nSteps_+1, uB_);
   for(int time = 0; time < nSteps_+1; time++)
     {
       for(int r = 0; r < R_; r++)
@@ -210,4 +170,85 @@ Array<Expr> velocityROM::get_uRO()
 	}
     }
   return uRO;
+}
+
+
+Vector<double> velocityROM::alphaErrorCheck(Expr uExact)
+{
+  // For the purposes of comparison, start calculating alpha "exactly"    
+  VectorType<double> timeVecType = new SerialVectorType();
+  VectorSpace<double> timeVecSpace = timeVecType.createEvenlyPartitionedSpace(MPIComm::self(), nSteps_+1.0);
+
+  // Based off the value for Ru, create an appropriate VectorSpace<double>
+  VectorType<double> R_vecType = new SerialVectorType();
+  VectorSpace<double> R_vecSpace = R_vecType.createEvenlyPartitionedSpace(MPIComm::self(), R_);
+
+
+  // Find the exact alphas
+  Array<Vector<double> > alphaEx(nSteps_+1);
+  for(int count = 0; count<alphaEx.length(); count++)
+    alphaEx[count] = R_vecSpace.createMember();
+
+  //Needed for the integral
+  CellFilter interior = new MaximalCellFilter();
+  QuadratureFamily quad = new GaussianQuadrature(6);
+
+
+  //Find the alphaEx with the formula alphaEx_r(t_m) = (uExact(t_m,x,y), phi_[r] )
+  double tInit = 0.0;
+  for(int tIndex=0; tIndex < alphaEx.length(); tIndex++)
+    {
+      t_.setParameterValue(tInit+tIndex*deltat_);
+      for(int r=0; r<R_; r++)
+	{
+	  FunctionalEvaluator ExactEvaluator = FunctionalEvaluator(ds_.mesh(), Integral(interior, (uExact-uB_)*phi_[r], quad));
+	  alphaEx[tIndex][r] = ExactEvaluator.evaluate();
+	}
+    }
+
+  // Note alphaROM is called alpha_
+  Vector<double> alphaError = timeVecSpace.createMember();
+  for(int i=0; i < alpha_.length(); i++)
+    {
+      alphaError[i] = (alphaEx[i] - alpha_[i]).norm2();
+      if(verbosity_>=2)
+	cout << "Error for alpha(t=" << i << "): " << alphaError[i] << endl;
+
+      if(verbosity_>=3)
+	{
+	  cout << "Exact alpha(t=" << i << "): " << endl << alphaEx[i] << endl;	
+	  cout << "Approximate alpha(t=" << i << "): " << endl << alpha_[i] << endl << endl;
+	}
+    }
+
+  return alphaError;
+  
+}
+
+
+Vector<double> velocityROM::velocityErrorCheck(Expr uExact)
+{
+  // For the purposes of comparison, start calculating alpha "exactly"    
+  VectorType<double> timeVecType = new SerialVectorType();
+  VectorSpace<double> timeVecSpace = timeVecType.createEvenlyPartitionedSpace(MPIComm::self(), nSteps_+1.0);
+
+  //Needed for the integral
+  CellFilter interior = new MaximalCellFilter();
+  QuadratureFamily quad = new GaussianQuadrature(6);
+
+  Vector<double> velocityError = timeVecSpace.createMember();
+  Array<Expr> uRO = get_uRO();
+
+  double tInit = 0.0;
+  for(int time = 0; time < nSteps_+1; time++)
+    {
+      t_.setParameterValue(tInit+time*deltat_);
+      velocityError[time] = L2Norm(ds_.mesh(), interior, uExact - uRO[time], quad);
+      double uExactNorm = L2Norm(ds_.mesh(), interior, uExact, quad);
+      /* print the relative error */
+      SUNDANCE_ROOT_MSG2(verbosity_, "Relative Error for uRO at time " << t_.getParameterValue()
+			 << " = " << velocityError[time]/uExactNorm);
+    }
+
+  return velocityError;
 }
