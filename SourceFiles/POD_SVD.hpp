@@ -1,6 +1,9 @@
 #ifndef POD_SVD_HPP
 #define POD_SVD_HPP
 
+#include "VientoSnapshotIO.hpp" // For writesnap
+
+
 // Code
 #include "PlayaLinearOperatorDecl.hpp"// For LinearOperator
 #include "Sundance.hpp"
@@ -70,9 +73,10 @@ public:
 
   /*
    * get_basis_functions - return the reduced order basis functions produced by
-   * calculateBasisFunctions
+   * calculateBasisFunctions whose relative information content meets the value of tol.
+   * Also writes them to fileDir as POD_basis[i]
    */
-  Array<Expr> get_basis_functions() {return phi_;}
+  Array<Expr> get_basis_functions(double tol, string fileDir);
   
 
 

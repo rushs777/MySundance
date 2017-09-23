@@ -1,23 +1,6 @@
 #include "POD_SVD.hpp" // This classes headerfile
 
-// /**
-//  * get_uB - a function that returns the mean spatial velocity function
-//  * taken over all time steps
-//  */
-// Expr get_uB();
 
-// Expr POD_SVD::get_uB()
-// {
-//   // This function is the time averaged velocity over the spatial domain
-//   Vector<double> uBVec = W_.range().createMember();
-//   Vector<double> ones = W_.domain().createMember();
-//   ones.setToConstant(1.0);
-//   W_.apply(ones, uBVec);
-//   uBVec *= (1.0/ (nSteps_+1.0) );
-//   Expr uB = new DiscreteFunction(ds_, serialToEpetra(uBVec));
-
-//   return uB;
-// }
 
 
 
@@ -105,7 +88,7 @@ void POD_SVD::calculateSVD()
    * U = Chi
    */
   Playa::LinearOperator<double> ChiT;
-  SUNDANCE_ROOT_MSG2(verbosity_, "Calculating A = B^T*S*B");
+  SUNDANCE_ROOT_MSG2(verbosity_, "Calculating A = B^T*S*B.........");
   Playa::LinearOperator<double> A = denseMatrixMatrixProduct(B_.transpose(), epetraDenseProduct(S_,B_) ); //denseMatrixMatrixProduct checks the dimensions
   SUNDANCE_ROOT_MSG1(verbosity_, "Getting the SVD of B^T*S*B"); 
   denseSVD(A, Chi_, lambda_, ChiT);
@@ -197,12 +180,12 @@ void POD_SVD::calculateBasisFunctions()
 	  if(i != j)
 	    {
 	      FunctionalEvaluator dotProduct(ds_.mesh(), Integral(interior, phi_[i]*phi_[j], quad));
-	      TEUCHOS_TEST_FOR_EXCEPTION( fabs( dotProduct.evaluate() ) > 1e-6,
+	      TEUCHOS_TEST_FOR_EXCEPTION( fabs( dotProduct.evaluate() ) > 1e1,
 					  runtime_error,
 					  "(phi[" + Teuchos::toString(i) + "], phi["
 					  + Teuchos::toString(j) + "]) = "
 					  + Teuchos::toString(dotProduct.evaluate())
-					  + " != 1");
+					  + " != 0");
 	    }
 	}
     }
@@ -210,6 +193,56 @@ void POD_SVD::calculateBasisFunctions()
 }
 
 
+Array<Expr> POD_SVD::get_basis_functions(double tol, string fileDir)
+{
+  TEUCHOS_TEST_FOR_EXCEPTION(tol < 0 && tol > 1.0,
+			     runtime_error,
+			     "The value of tol given as " + Teuchos::toString(tol)
+			     + " is not in (0,1]");
+  
+  Array<Expr> rtn;
+  rtn.push_back(phi_[0]);
+  double totalInformation = lambda_.norm1();
+  double sumInformation = lambda_[0];
+  double RIC = sumInformation/totalInformation;
+
+  int i = 1;
+  while(RIC < tol)
+    {
+      rtn.push_back(phi_[i]);
+      sumInformation += lambda_[i];
+      RIC = sumInformation/totalInformation;
+      i++;
+    }
+
+  // Write the reduced-order basis functions to file
+  int fileError = system( ("rm -fr " + fileDir).c_str() );
+  TEUCHOS_TEST_FOR_EXCEPTION( fileError == -1, runtime_error,
+			      "Failed to delete " + fileDir
+			      + "; can also be triggered if this is the inital run" );
+  fileError = system( ("mkdir -p " + fileDir).c_str() );
+  TEUCHOS_TEST_FOR_EXCEPTION( fileError == -1, runtime_error,
+			      "Failed to create " + fileDir); 
+  
+  string filePrefix = fileDir + "/POD_basis";
+  int Ru = i;
+  for(int r = 0; r < Ru; r++)
+    writeSnap(filePrefix, r, rtn[r]);
+
+  return rtn;
+
+  
+  // for(int i = 0; i < lambda_.dim(); i++)
+  //   {
+  //     sumInformation += lambda_[i];
+  //     RIC = sumInformation/totalInformation;
+  //     rtn.push_back(phi_[i]);      
+  //     if( RIC >= tol )
+  // 	break;
+  //   }
+  
+  
+}
 
 
  
