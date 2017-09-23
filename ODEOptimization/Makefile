@@ -86,10 +86,11 @@
 		/home/sirush/PhDResearch/MMS_Transient_Channel/MMSQuadODE.o
 
 
-#EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
-		PMB.o
+EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
+		/home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
+		/home/sirush/PhDResearch/SourceFiles/MyNLO.o
 
-EXTRA_OBJS =
+#EXTRA_OBJS =
 
 # ***
 # *** End copy section
@@ -125,8 +126,8 @@ VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
 # If needed, set extra include and lib macros
 #--------------------------------------------------------------------------
 #CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles -I/home/sirush/PhDResearch/MMS_Transient_Channel
-#CLIENT_EXTRA_INCLUDES = -I../SourceFiles -I../MMS_Inflow -I../DenseMatrixMatrixProduct
-CLIENT_EXTRA_INCLUDES =
+CLIENT_EXTRA_INCLUDES = -I../SourceFiles
+#CLIENT_EXTRA_INCLUDES =
 
 CLIENT_EXTRA_LIBS = 
 

@@ -34,7 +34,8 @@ int main(int argc, char *argv[])
       Expr t = new Sundance::Parameter(tInit);
       Expr tPrev = new Sundance::Parameter(tInit);
 
-      double alpha = 6.0;
+      Expr alpha = new Sundance::Parameter(0.0);
+      //double alpha = 6.0;
       Expr xExact = alpha*exp(t);
 
       // Build the time mesh
