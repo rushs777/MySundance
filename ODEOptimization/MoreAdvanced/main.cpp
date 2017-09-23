@@ -42,8 +42,11 @@ int main(int argc, char *argv[])
 {
   try
     {
-      Time timer("total");
-      timer.start();
+      Time timerTotal("total");
+      timerTotal.start();
+
+      Time timerKKT("KKT");
+      timerKKT.start();
       
       
       int verbosity = 0;      
@@ -61,10 +64,11 @@ int main(int argc, char *argv[])
       int quadOrder = 2;
       Sundance::setOption("quadOrder", quadOrder, "Order for the Gaussian Quadrature rule");
 
-      // int Ru = 2;
-      // Sundance::setOption("Ru", Ru, "Number of POD basis functions");
       double tol = 0.999;
       Sundance::setOption("tol",tol,"The tolerance used in the RIC to select the number of reduced-order basis functions to keep");
+
+      int precision = 3;
+      Sundance::setOption("precision",precision,"Number of significant digits to keep in a filename using tol");  
 
       double tFinal = 1.0;
       Sundance::setOption("tFinal",tFinal,"Final time value");
@@ -72,13 +76,10 @@ int main(int argc, char *argv[])
       int meshVerb = 0;
       Sundance::setOption("meshVerb",meshVerb,"Mesh verbosity level");
 
-      double eta = 0.05;
-      Sundance::setOption("eta",eta,"constant parameter on the regularization term");
-
-      double eta_design = 0.001;
+      double eta_design = 10.0;
       Sundance::setOption("eta_design",eta_design,"Value for the constant term in the design equation");
       
-      double eta_reg = 10.0;
+      double eta_reg = 0.001;
       Sundance::setOption("eta_reg",eta_reg,"Value for the constant term in the regularization term");
 
       Sundance::init(&argc, &argv);
@@ -87,7 +88,10 @@ int main(int argc, char *argv[])
       string ROM_base_dir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/ROM/uRO/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/";
 
       // State the location of the POD files (phi, b, A, and T)
-      string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/POD/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/tol" + std::to_string(tol) + "/";
+      string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/POD/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/tol";
+      std::ostringstream tolFileValue;
+      tolFileValue << std::setprecision(precision) << tol;
+      POD_DataDir = POD_DataDir + tolFileValue.str() + "/";
 
       // Create the spatial mesh
       MeshType spatialMeshType = new Sundance::BasicSimplicialMeshType();
@@ -145,14 +149,27 @@ int main(int argc, char *argv[])
       for(int r=1; r < 2; r++)
       	alphaOPT.append(soln[r]);
 
-      double alphaError = KKT_System.errorCheck(ROM_base_dir, alphaOPT);
+      timerKKT.stop();
+
+
+      // Check alphaOPT against alphaExact
+      Time timerErrorCheck("KKT");
+      timerErrorCheck.start();
+      Expr x = new CoordExpr(0,"x");
+      Expr y = new CoordExpr(1,"y");
+      Expr t = new Sundance::Parameter(0.0);
+      Expr uExact = List(1 - (Pi*(-1 + Power(x,2))*(8*Sin((Pi*t)/2.)*Power(Sin(Pi*x),2)*Sin(4*Pi*y) +45*Sin(Pi*t)*Power(Sin(2*Pi*x),2)*Sin(6*Pi*y)))/200.,(4*Sin((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) + x*Sin(Pi*x))*Power(Sin(2*Pi*y),2) +15*Sin(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) + x*Sin(2*Pi*x))*Power(Sin(3*Pi*y),2))/100.);
+      double alphaError = KKT_System.errorCheck(alphaOPT,uExact,t);
       cout << "Run for nx = " << nx << ", nSteps = " << nSteps << ", and tol = " << tol << endl;
-      cout << "||alphaROM - alphaOPT||_2 = " << alphaError << endl;
+      cout << "||alphaExact - alphaOPT||_2 = " << alphaError << endl;
 
 
-
-      timer.stop();
-      Out::root() << "runtime = " << timer.totalElapsedTime() << endl << endl;
+      timerErrorCheck.stop();
+      
+      timerTotal.stop();
+      Out::root() << "KKT Runtime = " << timerKKT.totalElapsedTime() << endl;
+      Out::root() << "ErrorCheck Runtime = " << timerErrorCheck.totalElapsedTime() << endl;
+      Out::root() << "Total Runtime = " << timerTotal.totalElapsedTime() << endl;
 
       /* The solve for alpha values will be the first Ru components of U0
        We need to now build the approximation to the velocity uOpt

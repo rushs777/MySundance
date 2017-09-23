@@ -4,6 +4,8 @@
 #include "KKTBase.hpp"
 #include "sensorData.hpp"
 
+#include "MathematicaConverter.hpp"
+
 /**
  * This derived class models the KKT system arising from 
  * a Transient Channel Problem
@@ -12,9 +14,9 @@ class KKT_Transient_Channel : public KKTBase
 {
 public:
   /** Constructor */
-  KKT_Transient_Channel(string ROM_base_dir, Mesh spatialMesh,
-			Mesh timeMesh, sensorData dataClass,
-			double tFinal, int quadOrder,
+  KKT_Transient_Channel(string POD_DataDir, 
+			Mesh spatialMesh, Mesh timeMesh, sensorData dataClass,
+			double tFinal, int nSteps, int quadOrder,
 			int verbosity=0);
 
 
@@ -29,7 +31,7 @@ public:
    * In the instance where the parameter space only has one
    * seleciton of values, compare alphaOPT to alphaROM
    */
-  double errorCheck(Expr alphaOPT);
+  double errorCheck(Expr alphaOPT, Expr uExact, Expr t);
   
 
 

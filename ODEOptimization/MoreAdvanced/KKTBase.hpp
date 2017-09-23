@@ -6,21 +6,23 @@
 #include "PlayaDenseSerialMatrix.hpp"
 #include "VientoSnapshotIO.hpp" // for readSnap
 #include "denseSerialMatrixIO.hpp"
+#include "POD_SVD.hpp"
 
 
 // Local Includes
-#include "MathematicaConverter.hpp"
+//#include "MathematicaConverter.hpp"
 
 
 /**
  * KKTBase is a base class for solving the KKT system of equations.
+ * The state, adjoint, and design equations are specified in derived classes.
  * It assumes the time basis is Lagrange(1).
  */
 class KKTBase
 {
 public:
   /** Constructor */
-  KKTBase(string ROM_base_dir, Mesh spatialMesh, Mesh timeMesh, double tFinal, int verbosity=0);
+  KKTBase(string POD_DataDir, Mesh spatialMesh, Mesh timeMesh, double tFinal, int nSteps, int verbosity=0);
 
   /** Initialize will read in from file the values for necessary matrices, tensor, and vector-valued functions */
   void initialize();
@@ -40,37 +42,53 @@ protected:
    * Dimension of each variable: Ru_
    * The test function form of the variables are fooHat
    */
+  // Initialized in the constructor
+  string POD_DataDir_;
+  Mesh spatialMesh_;
+  Mesh timeMesh_;
+  double tFinal_;
+  int nSteps_;
+  int verbosity_;
+  Expr dt_;
+  CellFilter interior_;
+
+  // Initialized in initialize()
+  VectorType<double> epetraVecType_;
+
+  // Initialized in initialize_b()
+  BasisFamily time_basis_;
+  Expr b_;
+  //  DiscreteSpace time_DS_; Currently not used anywhere else, and so not a clas variable
+
+  // Initialized in initialize_phi()
+  int Ru_;
+  Array<Expr> phi_;
+
+  // Initialized in initialize_uB()
+  Expr uB_;
+
+  // Initialized in initialize_A_and_T()
+  Expr A_;
+  Expr At_;
+  Expr T_;
+  
+  // Initialized in initialize_vars()
   Expr alpha_;
   Expr lambda_;
   Expr p_;
   Expr alphaHat_;
   Expr lambdaHat_;
   Expr pHat_;
-  int Ru_;
-  Expr dt_;
+
+  // Initialized in derived classes
   Expr stateEqn_;
   Expr stateBC_;
   Expr adjointEqn_;
   Expr adjointBC_;
   Expr designEqn_;
   Expr designBC_;
-  CellFilter interior_;
 
 
-  string ROM_base_dir_;
-  Mesh spatialMesh_;
-  Mesh timeMesh_;
-  double tFinal_;
-  VectorType<double> epetraVecType_;
-  BasisFamily time_basis_;
-  //  DiscreteSpace time_DS_;
-  Expr b_;
-  Array<Expr> phi_;
-  Expr uB_;
-  Expr A_;
-  Expr At_;
-  Expr T_;
-  int verbosity_;
 
   /** Establish the state equation and it's boundary condition. 
       Must be done by hand for each problem type */

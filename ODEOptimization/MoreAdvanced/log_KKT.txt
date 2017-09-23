@@ -1,0 +1,53 @@
+Runs commenced on 9/23/17
+
+Re=1
+tol=0.999
+
+Run for nx = 25, nSteps = 25, and tol = 0.999
+||alphaROM - alphaOPT||_2 = 0.000232477
+runtime = 0.048729
+
+Run for nx = 50, nSteps = 50, and tol = 0.999
+||alphaROM - alphaOPT||_2 = 0.000147275
+runtime = 0.086156
+
+Note: the change in comparison methods makes the code take much longer
+Run for nx = 25, nSteps = 25, and tol = 0.999
+||alphaExact - alphaOPT||_2 = 0.000324726
+runtime = 1.45022
+
+Run for nx = 50, nSteps = 50, and tol = 0.999
+||alphaExact - alphaOPT||_2 = 0.000148914
+runtime = 8.1038
+
+Run for nx = 100, nSteps = 100, and tol = 0.999
+||alphaExact - alphaOPT||_2 = 0.0680256
+runtime = 56.7113
+
+
+KL made a mistake when he suggested the values for the design and regularization constants. The new values are eta_design = 10.0 and eta_reg = 0.001
+
+Run for nx = 25, nSteps = 25, and tol = 0.999
+||alphaExact - alphaOPT||_2 = 0.000324726
+KKT Runtime = 0.049444
+ErrorCheck Runtime = 1.39773
+Total Runtime = 1.44718
+
+Run for nx = 50, nSteps = 50, and tol = 0.999
+||alphaExact - alphaOPT||_2 = 0.000148914
+KKT Runtime = 0.087649
+ErrorCheck Runtime = 8.01006
+Total Runtime = 8.09772
+
+
+Run for nx = 100, nSteps = 100, and tol = 0.999
+||alphaExact - alphaOPT||_2 = 0.0680256
+KKT Runtime = 0.234813
+ErrorCheck Runtime = 56.4057
+Total Runtime = 56.6405
+
+
+
+
+
+

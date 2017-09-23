@@ -104,6 +104,8 @@ int main(int argc, char *argv[])
 	  cout << "The value of the integral eastVec*velocityDF over the point " << positionArray[i] << " is " << valueArray[i] << endl;
 	}
 	*/
+
+      /* This works for setting the i^{th} mesasurement value to i */
       for(int i = 0; i < numberOfReadings; i++)
 	{
 	  valueArray[i] = i;
@@ -128,37 +130,7 @@ int main(int argc, char *argv[])
 	cout << "What happens if I integrate over all the measurement locations: " << all.evaluate() << endl;
       
 
-	/*
-      Array<BasisFamily> bas = List(new Lagrange(2), new Lagrange(2));
-      DiscreteSpace ds(mesh,bas,vecType);
-      L2Projector projector(ds,test1);
-      Expr df_test1 = projector.project();
-      Vector<double> test1Vec = getDiscreteFunctionVector(df_test1);
 
-      cout << "test1: " << test1 << endl;
-      cout << "test1 evaluated on the mesh: " << endl << df_test1 << endl;
-      cout << "Vector of values: " << endl << test1Vec << endl;
-
-      //DiscreteSpace ds = getDiscreteSpace(test1);
-      string outDir = "Results/test/";
-      string filename = outDir + "DF";
-      int tag = 0;
-      system( ("mkdir -p " + outDir).c_str() );
-      writeSnap(filename,tag,df_test1);
-
-      cout << "Attempting to read back test1" << endl;
-      Expr test2 = readSnap(filename,tag,mesh);
-
-      cout << "Value of test2: " << test2 << endl;
-
-      cout << "getDiscreteFunctionVector(test2): " << endl << getDiscreteFunctionVector(test2) << endl;
-
-      cout << "What happens if I say test1 - test2 ? " << endl << test1 - test2 << endl;
-
-      CellFilter interior = new MaximalCellFilter();
-      QuadratureFamily quad = new GaussianQuadrature(6);
-      cout << "L2Norm of the difference: " << L2Norm(mesh, interior, test1-test2, quad) << endl;
-	*/
     }
   catch(std::exception& e)
     {

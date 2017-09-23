@@ -1,11 +1,12 @@
 #include "KKTBase.hpp"
 
 
-KKTBase::KKTBase(string ROM_base_dir, Mesh spatialMesh, Mesh timeMesh, double tFinal, int verbosity)
-  :  ROM_base_dir_(ROM_base_dir),
+KKTBase::KKTBase(string POD_DataDir, Mesh spatialMesh, Mesh timeMesh, double tFinal, int nSteps, int verbosity)
+  :  POD_DataDir_(POD_DataDir),
      spatialMesh_(spatialMesh),
      timeMesh_(timeMesh),
      tFinal_(tFinal),
+     nSteps_(nSteps),
      verbosity_(verbosity)
 {
   dt_ = new Derivative(0);
@@ -44,7 +45,7 @@ void KKTBase::initialize()
 
 void KKTBase::initialize_b()
 {
-  string b_filename = ROM_base_dir_ + "/b.txt";
+  string b_filename = POD_DataDir_ + "/b.txt";
 
   // Read in the preamble information for b(t) from the ROM code
   std::ifstream b_reader(b_filename, std::ios::in);
@@ -81,44 +82,37 @@ void KKTBase::initialize_b()
 
 void KKTBase::initialize_phi()
 {
-  string POD_basis_fileprefix = ROM_base_dir_ + "/POD_basis";
+  // Read in the POD from file
+  SUNDANCE_ROOT_MSG1(verbosity_, "Reading in the reduced-order basis for velocity");
+  string POD_basis_fileprefix = POD_DataDir_ + "POD_basis";
 
-  phi_.resize(Ru_);
-  for(int i = 0; i < Ru_; i++)
+  Ru_ = 10000;
+  for(int r = 0; r < Ru_; r++)
     {
-      phi_[i] = readSnap(POD_basis_fileprefix, i, spatialMesh_);
+      try
+	{
+	  phi_.push_back( readSnap(POD_basis_fileprefix, r, spatialMesh_ ) );
+	}
+      catch (std::runtime_error& e)
+	{
+	  Ru_ = r;
+	}
     }
+  
+  SUNDANCE_ROOT_MSG1(verbosity_, "Found " << Ru_ << " reduced-order basis functions for the given resoultion and tolerance"); 
 }
 
 
 void KKTBase::initialize_uB()
 {
-  string uB_fileprefix = ROM_base_dir_ + "/uB";
+  string uB_fileprefix = POD_DataDir_ + "uB";
   uB_ = readSnap(uB_fileprefix,0,spatialMesh_);
 }
 
 
 void KKTBase::initialize_A_and_T()
 {
-  string matrixFilename = ROM_base_dir_ + "/A.txt";
-
-  // ifstream is(matrixFilename, std::ios::in);
-  // TEUCHOS_TEST_FOR_EXCEPTION(!is, std::runtime_error, "could not open file " << matrixFilename << " for reading");
-
-  // // The information is written to file by denseSerialMatrixIO::writeDenseSerialMatrix
-  // // which does it row-wise
-  // // Add this code to denseSerialMatrixIO.cpp
-  // double value;
-  // for(int i = 0; i < Ru_; i++)
-  //   {
-  //     Expr row;
-  //     for(int j = 0; j < Ru_; j++)
-  // 	{
-  // 	  is >> value;
-  // 	  row.append(value);
-  // 	}
-  //     A_.append(row);
-  //   }
+  string matrixFilename = POD_DataDir_ + "A.txt";
 
   readListExprMatrix(A_, Ru_, matrixFilename);
 
@@ -138,29 +132,11 @@ void KKTBase::initialize_A_and_T()
 
   SUNDANCE_ROOT_MSG2(verbosity_, "At: " << endl << At_ << endl);
 
-  //double value;
   for(int k = 0; k < Ru_; k++)
     {
-      // cout << "Starting the loop for k = " << k << endl;
-      string tensorFilename = ROM_base_dir_ + "/T[" + Teuchos::toString(k) + "].txt";
-      // ifstream isTensor(tensorFilename, std::ios::in);
-      // TEUCHOS_TEST_FOR_EXCEPTION(!isTensor, std::runtime_error, "could not open file " << tensorFilename << " for reading");
-
+      string tensorFilename = POD_DataDir_ + "T[" + Teuchos::toString(k) + "].txt";
       Expr Tk;
-	  
-      // for(int i = 0; i < Ru_; i++)
-      // 	{
-      // 	  Expr row;
-      // 	  for(int j = 0; j < Ru_; j++)
-      // 	    {
-      // 	      isTensor >> value;
-      // 	      row.append(value);
-      // 	    }
-      // 	  Tk.append(row);
-      // 	}
-
       readListExprMatrix(Tk, Ru_, tensorFilename);
-      
       SUNDANCE_ROOT_MSG2(verbosity_, "T[" << k << "]: " << endl << Tk << endl);
       T_.append(Tk);
     }
