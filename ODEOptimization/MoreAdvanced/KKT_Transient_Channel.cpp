@@ -161,7 +161,7 @@ double KKT_Transient_Channel::errorCheck(Expr alphaOPT, Expr uExact, Expr t)
     ipVec[count] = Ru_vecSpace.createMember();
 
   //Needed for the integral
-  QuadratureFamily quad = new GaussianQuadrature(6);
+  //QuadratureFamily quad = new GaussianQuadrature(2);
 
   //Find the vectors with the formula alphaEx_r(t_m) = (uExact(t_m,x,y) - uB, phi_[r] )
   double tInit = 0.0;
@@ -171,7 +171,7 @@ double KKT_Transient_Channel::errorCheck(Expr alphaOPT, Expr uExact, Expr t)
       t.setParameterValue(tInit+tIndex*deltat);
       for(int r=0; r<Ru_; r++)
 	{
-	  FunctionalEvaluator ExactEvaluator = FunctionalEvaluator(spatialMesh_, Integral(interior_, (uExact-uB_)*phi_[r], quad));
+	  FunctionalEvaluator ExactEvaluator = FunctionalEvaluator(spatialMesh_, Integral(interior_, (uExact-uB_)*phi_[r], quad_));
 	  ipVec[tIndex][r] = ExactEvaluator.evaluate();
 	}
     }
@@ -194,26 +194,6 @@ double KKT_Transient_Channel::errorCheck(Expr alphaOPT, Expr uExact, Expr t)
   // Compare alphaROM and alphaOPT
   double alphaError = L2Norm(timeMesh_, interior_, alphaExact-alphaOPT, quad);
   return alphaError;
-
-  //alphaExact_Vec.space().numLocalElements()
-  
-  // VectorType<double> timeVecType = new SerialVectorType();
-  // VectorSpace<double> timeVecSpace = timeVecType.createEvenlyPartitionedSpace(MPIComm::self(), nSteps_+1.0);
-  // Vector<double> alphaError = timeVecSpace.createMember();  
-  // for(int i=0; i < alphaOPT.length(); i++)
-  //   {
-  //     alphaError[i] = (alphaEx[i] - alphaOPT[i]).norm2();
-  //     if(verbosity_>=2)
-  // 	cout << "Error for alpha(t=" << i << "): " << alphaError[i] << endl;
-
-  //     if(verbosity_>=3)
-  // 	{
-  // 	  cout << "Exact alpha(t=" << i << "): " << endl << alphaEx[i] << endl;	
-  // 	  cout << "KKT alpha(t=" << i << "): " << endl << alphaOPT[i] << endl << endl;
-  // 	}
-  //   }
-
-
 
   // Legacy: double KKT_Transient_Channel::errorCheck(string ROM_base_dir, Expr alphaOPT)
   // Read in alphaROM(t) from the ROM code 

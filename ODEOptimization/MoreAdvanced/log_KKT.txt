@@ -27,27 +27,46 @@ runtime = 56.7113
 
 KL made a mistake when he suggested the values for the design and regularization constants. The new values are eta_design = 10.0 and eta_reg = 0.001
 
+
 Run for nx = 25, nSteps = 25, and tol = 0.999
 ||alphaExact - alphaOPT||_2 = 0.000324726
-KKT Runtime = 0.049444
-ErrorCheck Runtime = 1.39773
-Total Runtime = 1.44718
+KKT Runtime = 0.094064
+ErrorCheck Runtime = 1.34758
+Total Runtime = 1.44165
+
+
 
 Run for nx = 50, nSteps = 50, and tol = 0.999
 ||alphaExact - alphaOPT||_2 = 0.000148914
-KKT Runtime = 0.087649
-ErrorCheck Runtime = 8.01006
-Total Runtime = 8.09772
-
+KKT Runtime = 0.149713
+ErrorCheck Runtime = 7.9101
+Total Runtime = 8.05982
 
 Run for nx = 100, nSteps = 100, and tol = 0.999
-||alphaExact - alphaOPT||_2 = 0.0680256
-KKT Runtime = 0.234813
-ErrorCheck Runtime = 56.4057
-Total Runtime = 56.6405
+||alphaExact - alphaOPT||_2 = 9.32967e-05
+KKT Runtime = 0.294748
+ErrorCheck Runtime = 55.1915
+Total Runtime = 55.4862
 
 
+Changed the quadOrder on the check from 6 to 2
+Run for nx = 25, nSteps = 25, and tol = 0.999
+||alphaExact - alphaOPT||_2 = 0.000334722
+KKT Runtime = 0.092213
+ErrorCheck Runtime = 0.722317
+Total Runtime = 0.814531
 
+Run for nx = 50, nSteps = 50, and tol = 0.999
+||alphaExact - alphaOPT||_2 = 0.000148731
+KKT Runtime = 0.154127
+ErrorCheck Runtime = 2.94406
+Total Runtime = 3.09819
+
+Run for nx = 100, nSteps = 100, and tol = 0.999
+||alphaExact - alphaOPT||_2 = 9.32767e-05
+KKT Runtime = 0.303545
+ErrorCheck Runtime = 17.0313
+Total Runtime = 17.3349
 
 
 

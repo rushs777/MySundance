@@ -45,7 +45,7 @@ void KKTBase::initialize()
 
 void KKTBase::initialize_b()
 {
-  string b_filename = POD_DataDir_ + "/b.txt";
+  string b_filename = POD_DataDir_ + "b.txt";
 
   // Read in the preamble information for b(t) from the ROM code
   std::ifstream b_reader(b_filename, std::ios::in);
