@@ -26,8 +26,8 @@ MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double
   {
     // NEED TO ADD A NU VALUE
     nu_ = 1.0;
-    t_.setParameterValue(0.0);
-    tNext_ = new Sundance::Parameter(deltat_);
+    //t_.setParameterValue(0.0); // eliminate this line and the next
+    //tNext_ = new Sundance::Parameter(deltat_);
     
     // mesh.spatialDim() returns n for nD
     // Define grad operator
@@ -103,10 +103,8 @@ Vector<double> MMSQuadODE::evalForceTerm(const double& t) const
     for(int r = 0; r < phi_.size(); r++)
       {
 	rtn[r] = forceIP_[r].evaluate();
-      }
+      }    
     
-    //SUNDANCE_ROOT_MSG3(getVerbosity(), "end eval force");
-    //std::cout << "Here is the value of (vf, phi) " << std::endl << rtn << std::endl;
     return rtn;
   }
 

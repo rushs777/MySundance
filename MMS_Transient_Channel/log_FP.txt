@@ -1,3 +1,23 @@
+From a run on 9/3 with R = and tau tolerance = 10^-8
+nx=25 nt=25 uErr=3.51259e-05 pErr=0.00114564 runtime=100.178
+nx=50 nt=50 uErr=4.80959e-06 pErr=0.00795132 runtime=996.03
+nx=100 nt=100 uErr=1.92147e-06 pErr=0.0407255 runtime=12136.3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 This is with R=1
 
 Current Viento Version
