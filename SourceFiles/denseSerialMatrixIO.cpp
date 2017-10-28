@@ -98,3 +98,42 @@ LinearOperator<double> generateFluctuationMatrix(const LinearOperator<double> A)
 
   return rtnMtx;
 }
+
+
+LinearOperator<double> matrixAssembly(const Array<RCP<DenseSerialMatrix>> library)
+{
+  // number of rows (range) will be the same
+  // Will have to assume SerialVectorType()
+  Playa::VectorType<double> serialVecType = new Playa::SerialVectorType();
+  VectorSpace<double> Wrows = serialVecType.createEvenlyPartitionedSpace(MPIComm::world(), library[0]->numRows() );
+  int numCols = 0;
+  for(int count = 0 ; count < library.length(); count++)
+    {
+      numCols += library[count]->numCols();
+    }
+  VectorSpace<double> Wcols = serialVecType.createEvenlyPartitionedSpace(MPIComm::world(), numCols);
+  RCP<MatrixFactory<double>> Wmf = serialVecType.createMatrixFactory(Wcols,Wrows);
+  LinearOperator<double> W = Wmf->createMatrix();
+  RCP<DenseSerialMatrix> Wptr = DenseSerialMatrix::getConcretePtr(W);
+
+  int colProgress = 0;
+  for(int count = 0; count < library.size(); count++)
+    {
+      for(int i = 0; i < Wptr->numRows(); i++)
+  	{
+	  TEUCHOS_TEST_FOR_EXCEPTION(Wptr->numRows() != library[count]->numRows(),
+				     std::runtime_error,
+				     "Matrix " << count << " in the library has "
+				     << library[count]->numRows() << " rows instead of "
+				     << "the same number as the other matrices");
+  	  for(int j = 0; j < library[count]->numCols(); j++)
+  	    {
+	      Wptr->setElement(i, j+colProgress, library[count]->getElement(i,j) );
+  	    }
+			       
+  	}
+      colProgress += library[count]->numCols();
+    }
+
+  return W;
+}

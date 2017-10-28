@@ -76,12 +76,12 @@ void POD_SVD::calculateSVD()
    * The premise here is that instead of solving R eigenvalue problems, we solve one SVD
    * Since B^T S B is symmetric, positive semi-definite, it has all non-negative ews
    * Singular values of B^T S B are the square roots of the ews of 
-   * (W^T S W)^T (W^T S W) = W^T S^2 W
+   * A^T A = (V^T S V)^T (V^T S V) = V^T S^2 V
    * which has eigenvalues that are just the square of the ews of B^T S B
    * Therefore the eigenvalues and singular values of B^T S B are the same
    */
 
-  // Let A = B^T W B; then A = Chi Sigma ChiT
+  // Let A = B^T S B; then A = Chi Sigma ChiT
   /* Note: Due to an issue in LAPACK dgesvd, the left and right matrices aren't
    * exactly maintaining the rule that U.V^T = I when only a few of the singular
    * values are noticably greater than 0. Thus we will only be working with

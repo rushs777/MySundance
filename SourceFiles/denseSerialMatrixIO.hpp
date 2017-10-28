@@ -49,9 +49,18 @@ Vector<double> meanVector(const LinearOperator<double> A);
 Expr timeMeanFunctionGenerator(const LinearOperator<double> A, const DiscreteSpace ds);
 
 /**
- * Thus function returns a matrix for which the mean of the columns has been
+ * This function returns a matrix for which the mean of the columns has been
  * subtracted from each column for the supplied matrix
  */
 LinearOperator<double> generateFluctuationMatrix(const LinearOperator<double> A);
+
+
+/**
+ * This function takes in an array of pointers to DenseSerialMatrix objects (all with the
+ * same number of rows, not necessarily the same number of columns) and compiles them
+ * into a single LinearOperator<double>
+ */
+LinearOperator<double> matrixAssembly(const Array<RCP<DenseSerialMatrix>> library);
+
 
 #endif

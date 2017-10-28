@@ -13,9 +13,10 @@
 
 #include "denseSerialMatrixIO.hpp"
 #include "QuadraticODERHSBase.hpp"
+#include "meshAddOns.hpp"
 #include "MathematicaConverter.hpp"
 
-/** */
+/** NSEProjectedODE creates the necessary components from projecting the NSE onto the space spanned by a set of basis functions */
 class NSEProjectedODE : public QuadraticODERHSBase
 {
 public:
@@ -79,5 +80,27 @@ private:
   double tensorIP(Expr f, Expr g, Expr h);
 
 }; // End of MMSQuadODE class
+
+
+/**
+ * This class is designed to give a CELL_PREDICATE test that
+ * returns true for all Points that do not have an x-coordinate 
+ * equal to dim0_max_
+ */
+class outflowEdgeTest: public CellPredicateFunctorBase,
+		       public Playa::Handleable<CellPredicateFunctorBase>
+{
+public:
+  outflowEdgeTest(const double& dim0_max) : CellPredicateFunctorBase("outflowEdgeTest"), dim0_max_(dim0_max) {}
+  virtual ~outflowEdgeTest() {}
+  virtual bool operator()(const Point& x) const {return fabs(x[0] - dim0_max_) > 1.0e-10;}
+  GET_RCP(CellPredicateFunctorBase);
+
+private:
+  double dim0_max_;
+};
+
+
+
 
 #endif

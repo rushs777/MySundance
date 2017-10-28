@@ -10,7 +10,7 @@
 NSEProjectedODE::NSEProjectedODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double deltat, Mesh mesh, bool MatrixAndTensorInFile, int verbosity, int quadOrder) 
     : QuadraticODERHSBase(phi.size(), verbosity),
       interior_(new MaximalCellFilter()),
-      boundary_(new BoundaryCellFilter()),
+      //      boundary_(new BoundaryCellFilter()),
       phi_(phi),
       uB_(uB),
       q_(q),
@@ -27,8 +27,6 @@ NSEProjectedODE::NSEProjectedODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr
     // NEED TO ADD A NU VALUE
     nu_ = 1.0;
     fileDir_ = "NSEProjectedODEFiles/";
-    //t_.setParameterValue(0.0); // eliminate this line and the next
-    //tNext_ = new Sundance::Parameter(deltat_);
     
     // mesh.spatialDim() returns n for nD
     // Define grad operator
@@ -56,6 +54,13 @@ NSEProjectedODE::NSEProjectedODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr
 	//Before change
 	Expr integrand_interior = -(uB_*grad)*uB_*phi_[i] + qToUse*phi_[i] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[i]));
 	Expr integrand_boundary = nu_*(nHat*((phi_[i]*grad)*uB_));
+
+	// Eliminate the outflow boundary from the boundary CellFilter
+	// Returns the array [xmin, xmax, ymin, ymax]
+	Array<double> boundaries = getBoundaries(mesh_);
+	CellFilter allBoundaries = new BoundaryCellFilter();
+	// Make GammaStar
+	boundary_ = allBoundaries.subset( new outflowEdgeTest(boundaries[1]) );
 
 	//After change
 	//Expr integrand_interior = -outerProduct(grad,uB_)*uB_*phi_[i] + qToUse*phi_[i] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[i]));
