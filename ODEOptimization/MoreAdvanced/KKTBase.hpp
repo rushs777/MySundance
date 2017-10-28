@@ -33,6 +33,10 @@ public:
    */
   virtual Expr solve(string solverXML, double eta_design, double eta_reg=0) = 0;
 
+  /**
+   * Return the value of alphaOPT_
+   */
+  Expr get_alpha() {return alphaOPT_;}
 
 protected:
   /** 
@@ -58,7 +62,7 @@ protected:
   // Initialized in initialize_b()
   BasisFamily time_basis_;
   Expr b_;
-  //  DiscreteSpace time_DS_; Currently not used anywhere else, and so not a clas variable
+  //  DiscreteSpace time_DS_; Currently not used anywhere else, and so not a class variable
 
   // Initialized in initialize_phi()
   int Ru_;
@@ -87,6 +91,7 @@ protected:
   Expr adjointBC_;
   Expr designEqn_;
   Expr designBC_;
+  Expr alphaOPT_;
 
 
 

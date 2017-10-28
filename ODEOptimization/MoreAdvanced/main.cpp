@@ -145,9 +145,10 @@ int main(int argc, char *argv[])
       string solverFile = "playa-newton-amesos.xml";
       Expr soln = KKT_System.solve(solverFile,eta_design,eta_reg);
 
-      Expr alphaOPT = soln[0];
-      for(int r=1; r < 2; r++)
-      	alphaOPT.append(soln[r]);
+      // Expr alphaOPT = soln[0];
+      // for(int r=1; r < 2; r++)
+      // 	alphaOPT.append(soln[r]);
+      Expr alphaOPT = KKT_System.get_alpha();
 
       timerKKT.stop();
 
@@ -159,9 +160,15 @@ int main(int argc, char *argv[])
       Expr y = new CoordExpr(1,"y");
       Expr t = new Sundance::Parameter(0.0);
       Expr uExact = List(1 - (Pi*(-1 + Power(x,2))*(8*Sin((Pi*t)/2.)*Power(Sin(Pi*x),2)*Sin(4*Pi*y) +45*Sin(Pi*t)*Power(Sin(2*Pi*x),2)*Sin(6*Pi*y)))/200.,(4*Sin((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) + x*Sin(Pi*x))*Power(Sin(2*Pi*y),2) +15*Sin(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) + x*Sin(2*Pi*x))*Power(Sin(3*Pi*y),2))/100.);
-      double alphaError = KKT_System.errorCheck(alphaOPT,uExact,t);
+      //      double alphaError = KKT_System.errorCheck(alphaOPT,uExact,t);
+      // Returns [absolute alpha error, relative alpha error,
+      //          aggregate velocity abs error, aggregate velocity rel error]
+      Array<double> errors = KKT_System.errorCheck(uExact,t);
       cout << "Run for nx = " << nx << ", nSteps = " << nSteps << ", and tol = " << tol << endl;
-      cout << "||alphaExact - alphaOPT||_2 = " << alphaError << endl;
+      cout << "||alphaExact - alphaOPT||_2 = " << errors[0] << endl;
+      cout << "||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = " << errors[1] << endl;
+      cout << "||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :\t "  << errors[2] << endl;
+      cout << "||Relative error in velocity at all timesteps||_2 :\t " << errors[3] << endl;
 
 
       timerErrorCheck.stop();

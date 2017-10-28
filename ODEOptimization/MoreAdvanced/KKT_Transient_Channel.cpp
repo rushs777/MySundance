@@ -119,6 +119,7 @@ Expr KKT_Transient_Channel::solve(string solverXML, double eta_design, double et
   Expr U0 = new DiscreteFunction(ODECO_DS, 0.0);
 
 
+
   stateEqn();
   adjointEqn();
   regularizationTerm(eta_reg);
@@ -146,10 +147,57 @@ Expr KKT_Transient_Channel::solve(string solverXML, double eta_design, double et
 			     "Nonlinear solve failed to converge: message="
 			     << state.finalMsg());
 
+  // This is what I had originally; I think it is just storing
+  // copies of U0, not elements of it since it is an Expr
+  // alphaOPT_ = U0[0];
+  // for(int r=1; r < Ru_; r++)
+  //   alphaOPT_.append(U0[r]);
+
+  // This did not work; says alphaEx has 2 elements and alphaOPT has 6
+  //alphaOPT_ = U0;
+
+  // Attempting to create alphaOPT_ from the first Ru_*(nSteps_+1) elements
+  // getDiscreteFunctionVector(U0).dim()
+  Vector<double> U0_Vec = getDiscreteFunctionVector(U0);
+  Array<BasisFamily> time_basisArray(Ru_);
+  for(int i = 0; i < Ru_; i++)
+    time_basisArray[i] = time_basis_;
+  DiscreteSpace time_DS(timeMesh_, time_basisArray, epetraVecType_);
+  alphaOPT_ = new DiscreteFunction(time_DS, 0.0, "alphaOPT_");
+  // The get() links to the DiscreteFunction's actual vector (shallow)
+  Vector<double> alphaOPT_Vec = getDiscreteFunctionVector(alphaOPT_);
+  for(int tIndex=0; tIndex < nSteps_+1; tIndex++)
+    {
+      for(int r = 0; r < Ru_; r++)
+	// KL says this ordering should work, but it's not
+	//alphaOPT_Vec[r+tIndex*Ru_] = U0_Vec[3*r+3*Ru_*tIndex];
+
+	// I think that the problem is that there is an implied third runner
+	// for which function (alpha, lambda, p)  is being referenced.
+	// Thus I propose that the runners go t, k, r instead of t, r, k
+	alphaOPT_Vec[r+tIndex*Ru_] = U0_Vec[r + 3*Ru_*tIndex];
+    }
+
+  // This is correct, but results in alphaOPT_ having the same underlying
+  // Vector for each component
+  // alphaOPT_ = U0[0];
+  // for(int i=1; i< Ru_; i++)
+  //   {
+  //     // From the file 2DAnalytical.... in the KLWay folder
+  //     alphaOPT_.append(U0[i]);
+  //   }
+
+  // Each component of U0 shares a single underlying vector of size 3*(Ru_*(nSteps+1))
+  // for(int i=0; i< Ru_*3; i++)
+  //   {
+  //     std::cout << "This is the size of  U0["<<i<<"]'s vector: "
+  // 		<< getDiscreteFunctionVector(U0[i]).dim() << std::endl;
+  //   }
+
   return U0;
 }
 
-double KKT_Transient_Channel::errorCheck(Expr alphaOPT, Expr uExact, Expr t)
+Array<double> KKT_Transient_Channel::errorCheck(Expr uExact, Expr t)
 {
   // Based off the value for Ru, create an appropriate VectorSpace<double>
   VectorType<double> Ru_vecType = new SerialVectorType();
@@ -191,9 +239,63 @@ double KKT_Transient_Channel::errorCheck(Expr alphaOPT, Expr uExact, Expr t)
 	alphaExact_Vec[r+tIndex*Ru_] = ipVec[tIndex][r];
     }
 
-  // Compare alphaROM and alphaOPT
-  double alphaError = L2Norm(timeMesh_, interior_, alphaExact-alphaOPT, quad);
-  return alphaError;
+  // Compare alphaExact and alphaOPT
+  double alphaAbsError = L2Norm(timeMesh_, interior_, alphaExact-alphaOPT_, quad_);
+  double alphaRelError = alphaAbsError/L2Norm(timeMesh_, interior_, alphaExact, quad_);
+
+
+  /*
+   * Begin calculating the error comparison for uOPT against uExact
+   * Since we cannot have both time and x be CoordExpr(0), we will discretize
+   * in time. This will require getting the underlying Vector<double>
+   * from alphaOPT_, which will have Ru_*(nSteps_+1) elements
+   */
+  SUNDANCE_ROOT_MSG2(verbosity_, "(Ru_ = " << Ru_ << ")*(nSteps_+1="
+		     << nSteps_+1 << ") = " << Ru_*(nSteps_+1) );
+  TEUCHOS_TEST_FOR_EXCEPTION(getDiscreteFunctionVector(alphaOPT_).dim() != alphaExact_Vec.dim(),
+			     runtime_error,
+			     "The size of the underlying vector for alphaOPT_ ("
+			     << getDiscreteFunctionVector(alphaOPT_).dim()
+			     << " ) is not equal to the size of the underlying vector for "
+			     << " alphaExact (" << alphaExact_Vec.dim() << ")");
+  SUNDANCE_ROOT_MSG1(verbosity_, "Size of ||alphaEx|| "
+		     << L2Norm(timeMesh_, interior_, alphaExact, quad_) );
+
+  Vector<double> alphaOPT_Vec = getDiscreteFunctionVector(alphaOPT_);
+
+
+
+  Array<Expr> uOPT_(nSteps_+1, uB_);
+  for(int time = 0; time < nSteps_+1; time++)
+    {
+      for(int r = 0; r < Ru_; r++)
+	{
+	  uOPT_[time] = uOPT_[time] + alphaOPT_Vec[r + time*Ru_]*phi_[r];
+	}
+    }
+
+  VectorType<double> timeVecType = new SerialVectorType();
+  VectorSpace<double> timeVecSpace = timeVecType.createEvenlyPartitionedSpace(MPIComm::self(), nSteps_+1.0);
+
+  //Needed for the integral
+  QuadratureFamily quadU = new GaussianQuadrature(6);
+
+  Vector<double> velocityAbsError = timeVecSpace.createMember();
+  Vector<double> velocityRelError = timeVecSpace.createMember();
+  for(int time = 0; time < nSteps_+1; time++)
+    {
+      t.setParameterValue(tInit+time*deltat);
+      velocityAbsError[time] = L2Norm(spatialMesh_, interior_, uExact - uOPT_[time], quadU);
+      velocityRelError[time] = velocityAbsError[time]/L2Norm(spatialMesh_, interior_, uExact, quadU);
+      //cout << "||uExact(t="<<time<<",x,y)||_2 = " << L2Norm(spatialMesh_, interior_, uExact, quadU) << endl;
+    }
+
+  // Convert the estimations of the error for velocity into single double values
+  // by taking the two norm of each
+  double aggregateVelAbsError = velocityAbsError.norm2();
+  double aggregateVelRelError = velocityRelError.norm2();
+  
+  return tuple(alphaAbsError, alphaRelError, aggregateVelAbsError, aggregateVelRelError);
 
   // Legacy: double KKT_Transient_Channel::errorCheck(string ROM_base_dir, Expr alphaOPT)
   // Read in alphaROM(t) from the ROM code 

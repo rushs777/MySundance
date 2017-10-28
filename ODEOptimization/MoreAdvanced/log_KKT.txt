@@ -1,8 +1,49 @@
+Runs done on 10/28/17
+
+Figured out why I had the correct solution, but could not build the underlying vector correctly
+Re=1
+tol=0.999
+
+Run for nx = 25, nSteps = 25, and tol = 0.999
+||alphaExact - alphaOPT||_2 = 0.000334722
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00395093
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 : 0.00402882
+||Relative error in velocity at all timesteps||_2 : 0.00395364
+KKT Runtime = 0.084168
+ErrorCheck Runtime = 2.19594
+Total Runtime = 2.28011
+
+
+ 
+ 
+Run for nx = 50, nSteps = 50, and tol = 0.999
+||alphaExact - alphaOPT||_2 = 0.000148731
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00175776
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 : 0.00202792
+||Relative error in velocity at all timesteps||_2 : 0.00202296
+KKT Runtime = 0.150131
+ErrorCheck Runtime = 11.0438
+Total Runtime = 11.1939
+
+
+Run for nx = 100, nSteps = 100, and tol = 0.999
+||alphaExact - alphaOPT||_2 = 9.32767e-05
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00110276
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 : 0.00164909
+||Relative error in velocity at all timesteps||_2 : 0.0016489
+KKT Runtime = 0.306169
+ErrorCheck Runtime = 72.4754
+Total Runtime = 72.7816
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Historical
+
 Runs commenced on 9/23/17
 
 Re=1
 tol=0.999
 
+alphaROM is from solving the inverse problem
 Run for nx = 25, nSteps = 25, and tol = 0.999
 ||alphaROM - alphaOPT||_2 = 0.000232477
 runtime = 0.048729
@@ -25,7 +66,8 @@ Run for nx = 100, nSteps = 100, and tol = 0.999
 runtime = 56.7113
 
 
-KL made a mistake when he suggested the values for the design and regularization constants. The new values are eta_design = 10.0 and eta_reg = 0.001
+We had the values for the etas reversed. The new values are 
+eta_design = 10.0 and eta_reg = 0.001
 
 
 Run for nx = 25, nSteps = 25, and tol = 0.999
@@ -33,8 +75,6 @@ Run for nx = 25, nSteps = 25, and tol = 0.999
 KKT Runtime = 0.094064
 ErrorCheck Runtime = 1.34758
 Total Runtime = 1.44165
-
-
 
 Run for nx = 50, nSteps = 50, and tol = 0.999
 ||alphaExact - alphaOPT||_2 = 0.000148914

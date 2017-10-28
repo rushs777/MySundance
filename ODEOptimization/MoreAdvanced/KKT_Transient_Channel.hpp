@@ -29,9 +29,9 @@ public:
 
   /** 
    * In the instance where the parameter space only has one
-   * seleciton of values, compare alphaOPT to alphaROM
+   * seleciton of values, compare alphaOPT to alphaExact
    */
-  double errorCheck(Expr alphaOPT, Expr uExact, Expr t);
+  Array<double> errorCheck(Expr uExact, Expr t);
   
 
 
