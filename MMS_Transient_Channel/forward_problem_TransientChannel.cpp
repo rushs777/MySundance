@@ -336,7 +336,7 @@ int main(int argc, char** argv)
 	+ "nt" + Teuchos::toString(nSteps);
    //   system( ("mkdir -p " + outDir).c_str() ); Done in DefaultOutputManager constructor
       //  string filename = outDir + "forward_problem_Transient_Channel_nx" + Teuchos::toString(nx)
-	+ "nt" + Teuchos::toString(nSteps);
+      //	+ "nt" + Teuchos::toString(nSteps);
 
       system( ("rm -fr " + outDir).c_str() );
 
