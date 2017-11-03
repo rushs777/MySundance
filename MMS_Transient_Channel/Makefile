@@ -91,20 +91,22 @@
 	     /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
 
 # Turn this on for stage_KKT_required_files.cpp
-#EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/POD_SVD.o \
+EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/POD_SVD.o \
 	     /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
 	     /home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
 	     /home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
-	     /home/sirush/PhDResearch/SourceFiles/NSEProjectedODE.o
+	     /home/sirush/PhDResearch/SourceFiles/NSEProjectedODE.o \
+	     /home/sirush/PhDResearch/SourceFiles/meshAddOns.o
 
 # Turn this on for uRO.cpp
-EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
+#EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
 	     /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
 	     /home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
 	     /home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
 	     /home/sirush/PhDResearch/SourceFiles/MyNLO.o \
 	     /home/sirush/PhDResearch/SourceFiles/PMB.o \
 	     /home/sirush/PhDResearch/SourceFiles/velocityROM.o \
+	     /home/sirush/PhDResearch/SourceFiles/meshAddOns.o \
 	     /home/sirush/PhDResearch/SourceFiles/NSEProjectedODE.o
 
 
@@ -112,6 +114,7 @@ EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
 #EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
 		PMB.o
 
+#Nothing needed to run the forward code
 #EXTRA_OBJS =
 
 # ***

@@ -25,7 +25,10 @@ int main(int argc, char* argv[])
   Sundance::setOption("tol",tol,"The tolerance used in the relative information content (RIC) to determine the number of basis functions to keep");
 
   int precision = 3;
-  Sundance::setOption("precision",precision,"Number of significant digits to keep in a filename using tol");  
+  Sundance::setOption("precision",precision,"Number of significant digits to keep in a filename using tol");
+
+  double Re = 1.0;
+  Sundance::setOption("Re", Re, "Reynolds number");
 
   int verbosity = 1;
   Sundance::setOption("verbosity",verbosity,"verbosity sets the level of displayed output");
@@ -34,7 +37,13 @@ int main(int argc, char* argv[])
   Sundance::init(&argc, &argv);
 
   // Define the location of the snapshot matrix (matrices)
-  string snapshotDataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/ForwardProblem/Re1/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/";
+  string snapshotDataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/ForwardProblem/Re";
+  std::ostringstream ReynoldsString;
+  ReynoldsString << std::setprecision(precision) << Re;
+  snapshotDataDir = snapshotDataDir + ReynoldsString.str()
+    + "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/";  
+
+  
   string velocityPrefix = "st-v";
   string snapshotFilenamePrefix = snapshotDataDir + velocityPrefix;
 
@@ -69,14 +78,17 @@ int main(int argc, char* argv[])
   POD_SVD pod(Wprime, velocityDS, verbosity);
   pod.calculateSVD();
   pod.calculateBasisFunctions();
-  string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/POD/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/tol";
+  string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/POD/Re"
+    + ReynoldsString.str() +"/nx" + Teuchos::toString(nx)
+    + "nt" + Teuchos::toString(nSteps) + "/tol";
   std::ostringstream tolFileValue;
   tolFileValue << std::setprecision(precision) << tol;
   POD_DataDir = POD_DataDir + tolFileValue.str() + "/";
   Array<Expr> phi = pod.get_basis_functions(tol,POD_DataDir);
 
   timer.stop();
-  cout << "For nx = " << nx << ", nSteps = " << nSteps << ", and tol = " << tol << endl;
+  cout << "For Re = " << Re << ", nx = " << nx << ", nSteps = " << nSteps << ", and tol = "
+       << tol << endl;
   cout << "runtime = " << timer.totalElapsedTime() << endl << endl << endl;
 
   Sundance::finalize(); 

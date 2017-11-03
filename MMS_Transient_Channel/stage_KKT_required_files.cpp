@@ -27,6 +27,15 @@ int main(int argc, char* argv[])
   int precision = 3;
   Sundance::setOption("precision",precision,"Number of significant digits to keep in a filename using tol"); 
 
+  double Re = 1.0;
+  Sundance::setOption("Re", Re, "Reynolds number");
+
+  double U0 = 1.0;
+  Sundance::setOption("U0", U0, "Characteristic velocity used for calculating nu");
+  
+  double L0 = 1.0;
+  Sundance::setOption("L0", L0, "Characteristic length used for calculating nu");  
+  
   int verbosity = 0;
   Sundance::setOption("verbosity",verbosity,"Level of verbosity for displayed output");
 
@@ -40,11 +49,11 @@ int main(int argc, char* argv[])
   Expr x = new CoordExpr(0,"x");
   Expr y = new CoordExpr(1,"y");
   Expr t = new Sundance::Parameter(tInit);
-  double R = 1.0; // Reynolds Number
+  double R = Re; // Reynolds Number
   double deltat = (tFinal-tInit)/nSteps;
 
   // Define the forcing term
-  Expr q = List((-(Power(Pi,2)*(-1 + Power(x,2))*(4*Cos((Pi*t)/2.)*Power(Sin(Pi*x),2)*Sin(4*Pi*y) +45*Cos(Pi*t)*Power(Sin(2*Pi*x),2)*Sin(6*Pi*y))) -4*Power(Pi,3)*(-1 + Power(x,2))*(32*Sin((Pi*t)/2.)*Power(Sin(Pi*x),2)*Sin(4*Pi*y) +405*Sin(Pi*t)*Power(Sin(2*Pi*x),2)*Sin(6*Pi*y)) +Pi*(16*Power(Pi,2)*(-1 + Power(x,2))*Cos(2*Pi*x)*Sin((Pi*t)/2.)*Sin(4*Pi*y) +16*Sin((Pi*t)/2.)*Sin(Pi*x)*(4*Pi*x*Cos(Pi*x) +Sin(Pi*x))*Sin(4*Pi*y) +45*Sin(Pi*t)*(1 +(-1 +8*Power(Pi,2)*(-1 + Power(x,2)))*Cos(4*Pi*x) +8*Pi*x*Sin(4*Pi*x))*Sin(6*Pi*y)) +(Pi*R*(-((-1 + Power(x,2))*(32*Pi*Cos(4*Pi*y)*Sin((Pi*t)/2.)*Power(Sin(Pi*x),2) +270*Pi*Cos(6*Pi*y)*Sin(Pi*t)*Power(Sin(2*Pi*x),2))*(4*Sin((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) + x*Sin(Pi*x))*Power(Sin(2*Pi*y),2)+ 15*Sin(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) +x*Sin(2*Pi*x))*Power(Sin(3*Pi*y),2)))+ (8*Sin((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) + x*Sin(Pi*x))*Sin(4*Pi*y) +45*Sin(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) +x*Sin(2*Pi*x))*Sin(6*Pi*y))*(8*Pi*(-1 + Power(x,2))*Sin((Pi*t)/2.)*Power(Sin(Pi*x),2)*Sin(4*Pi*y) +5*(-40 +9*Pi*(-1 + Power(x,2))*Sin(Pi*t)*Power(Sin(2*Pi*x),2)*Sin(6*Pi*y)))))/100.)/200.,(-32*Power(Pi,2)*Cos(4*Pi*y)*Sin((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) + x*Sin(Pi*x)) -270*Power(Pi,2)*Cos(6*Pi*y)*Sin(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) + x*Sin(2*Pi*x)) + 2*Pi*Cos((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) + x*Sin(Pi*x))*Power(Sin(2*Pi*y),2) +4*Power(Pi,2)*Sin((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) + x*Sin(Pi*x))*Power(Sin(2*Pi*y),2) -4*Pi*Sin((Pi*t)/2.)*Sin(Pi*x)*((4 - Power(Pi,2)*(-1 + Power(x,2)))*Cos(Pi*x) -5*Pi*x*Sin(Pi*x))*Power(Sin(2*Pi*y),2) -8*Pi*Cos(Pi*x)*Sin((Pi*t)/2.)*(3*Pi*x*Cos(Pi*x) +(1 - Power(Pi,2)*(-1 + Power(x,2)))*Sin(Pi*x))*Power(Sin(2*Pi*y),2) +15*Pi*Cos(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) + x*Sin(2*Pi*x))*Power(Sin(3*Pi*y),2) +60*Power(Pi,2)*Sin(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) + x*Sin(2*Pi*x))*Power(Sin(3*Pi*y),2) +60*Pi*Sin(Pi*t)*Sin(2*Pi*x)*(2*(-1 +Power(Pi,2)*(-1 + Power(x,2)))*Cos(2*Pi*x) +5*Pi*x*Sin(2*Pi*x))*Power(Sin(3*Pi*y),2) -60*Pi*Cos(2*Pi*x)*Sin(Pi*t)*(6*Pi*x*Cos(2*Pi*x) +(1 - 4*Power(Pi,2)*(-1 + Power(x,2)))*Sin(2*Pi*x))*Power(Sin(3*Pi*y),2) +(R*((4*Sin((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) + x*Sin(Pi*x))*Power(Sin(2*Pi*y),2)+ 15*Sin(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) +x*Sin(2*Pi*x))*Power(Sin(3*Pi*y),2))*(8*Pi*Sin((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) + x*Sin(Pi*x))*Sin(4*Pi*y) +45*Pi*Sin(Pi*t)*(x*Power(Sin(2*Pi*x),2) +Pi*(-1 + Power(x,2))*Sin(4*Pi*x))*Sin(6*Pi*y)) -((8*Power(Pi,2)*(-1 + Power(x,2))*Power(Cos(Pi*x),2)*Sin((Pi*t)/2.)*Power(Sin(2*Pi*y),2) -8*Sin((Pi*t)/2.)*Sin(Pi*x)*(-4*Pi*x*Cos(Pi*x) +(-1 +Power(Pi,2)*(-1 + Power(x,2)))*Sin(Pi*x))*Power(Sin(2*Pi*y),2) +15*Sin(Pi*t)*(1 +(-1 +8*Power(Pi,2)*(-1 + Power(x,2)))*Cos(4*Pi*x) +8*Pi*x*Sin(4*Pi*x))*Power(Sin(3*Pi*y),2))*(8*Pi*(-1 + Power(x,2))*Sin((Pi*t)/2.)*Power(Sin(Pi*x),2)*Sin(4*Pi*y) +5*(-40 +9*Pi*(-1 + Power(x,2))*Sin(Pi*t)*Power(Sin(2*Pi*x),2)*Sin(6*Pi*y))))/4.))/100.)/100.);
+  Expr q =  List((Pi*(-((-1 + Power(x,2))*(32*Pi*Cos(4*Pi*y)*Sin((Pi*t)/2.)*Power(Sin(Pi*x),2) +270*Pi*Cos(6*Pi*y)*Sin(Pi*t)*Power(Sin(2*Pi*x),2))*(4*Sin((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) +x*Sin(Pi*x))*Power(Sin(2*Pi*y),2)+ 15*Sin(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) +x*Sin(2*Pi*x))*Power(Sin(3*Pi*y),2))) -100*Pi*(-1 + Power(x,2))*(4*Cos((Pi*t)/2.)*Power(Sin(Pi*x),2)*Sin(4*Pi*y) +45*Cos(Pi*t)*Power(Sin(2*Pi*x),2)*Sin(6*Pi*y)) +(200*(8*Power(Pi,2)*(-1 + Power(x,2))*Power(Cos(Pi*x),2)*Sin((Pi*t)/2.)*Sin(4*Pi*y) -8*Sin((Pi*t)/2.)*Sin(Pi*x)*(-4*Pi*x*Cos(Pi*x) +(-1 +9*Power(Pi,2)*(-1 + Power(x,2)))*Sin(Pi*x))*Sin(4*Pi*y) +(45*Sin(Pi*t)*(1 +18*Power(Pi,2) -18*Power(Pi,2)*Power(x,2) +(-1 +26*Power(Pi,2)*(-1 + Power(x,2)))*Cos(4*Pi*x) +8*Pi*x*Sin(4*Pi*x))*Sin(6*Pi*y))/2.))/R+ (8*Sin((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) +x*Sin(Pi*x))*Sin(4*Pi*y) +45*Sin(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) +x*Sin(2*Pi*x))*Sin(6*Pi*y))*(8*Pi*(-1 + Power(x,2))*Sin((Pi*t)/2.)*Power(Sin(Pi*x),2)*Sin(4*Pi*y) +5*(-40 +9*Pi*(-1 + Power(x,2))*Sin(Pi*t)*Power(Sin(2*Pi*x),2)*Sin(6*Pi*y)))))/20000.,(400*Pi*(2*Cos((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) +x*Sin(Pi*x))*Power(Sin(2*Pi*y),2) +15*Cos(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) +x*Sin(2*Pi*x))*Power(Sin(3*Pi*y),2)) -(800*Pi*(16*Pi*Power(Cos(2*Pi*y),2)*Sin((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) +x*Sin(Pi*x)) +135*Pi*Power(Cos(3*Pi*y),2)*Sin(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) +x*Sin(2*Pi*x)) +12*Pi*x*Power(Cos(Pi*x),2)*Sin((Pi*t)/2.)*Power(Sin(2*Pi*y),2)- 28*Pi*x*Sin((Pi*t)/2.)*Power(Sin(Pi*x),2)*Power(Sin(2*Pi*y),2)+ 6*Sin((Pi*t)/2.)*Sin(2*Pi*x)*Power(Sin(2*Pi*y),2)+ 12*Power(Pi,2)*Sin((Pi*t)/2.)*Sin(2*Pi*x)*Power(Sin(2*Pi*y),2)- 12*Power(Pi,2)*Power(x,2)*Sin((Pi*t)/2.)*Sin(2*Pi*x)*Power(Sin(2*Pi*y),2)+ 180*Pi*x*Power(Cos(2*Pi*x),2)*Sin(Pi*t)*Power(Sin(3*Pi*y),2)- 315*Pi*x*Sin(Pi*t)*Power(Sin(2*Pi*x),2)*Power(Sin(3*Pi*y),2)+ 45*Sin(Pi*t)*Sin(4*Pi*x)*Power(Sin(3*Pi*y),2)+ 255*Power(Pi,2)*Sin(Pi*t)*Sin(4*Pi*x)*Power(Sin(3*Pi*y),2)- 255*Power(Pi,2)*Power(x,2)*Sin(Pi*t)*Sin(4*Pi*x)*Power(Sin(3*Pi*y),2)))/R + 4*Pi*(4*Sin((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) +x*Sin(Pi*x))*Power(Sin(2*Pi*y),2) +15*Sin(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) +x*Sin(2*Pi*x))*Power(Sin(3*Pi*y),2))*(8*Sin((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) +x*Sin(Pi*x))*Sin(4*Pi*y) +45*Sin(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) +x*Sin(2*Pi*x))*Sin(6*Pi*y)) -(8*Power(Pi,2)*(-1 + Power(x,2))*Power(Cos(Pi*x),2)*Sin((Pi*t)/2.)*Power(Sin(2*Pi*y),2) -8*Sin((Pi*t)/2.)*Sin(Pi*x)*(-4*Pi*x*Cos(Pi*x) +(-1 +Power(Pi,2)*(-1 + Power(x,2)))*Sin(Pi*x))*Power(Sin(2*Pi*y),2) +15*Sin(Pi*t)*(1 +(-1 +8*Power(Pi,2)*(-1 + Power(x,2)))*Cos(4*Pi*x) +8*Pi*x*Sin(4*Pi*x))*Power(Sin(3*Pi*y),2))*(8*Pi*(-1 + Power(x,2))*Sin((Pi*t)/2.)*Power(Sin(Pi*x),2)*Sin(4*Pi*y) +5*(-40 +9*Pi*(-1 + Power(x,2))*Sin(Pi*t)*Power(Sin(2*Pi*x),2)*Sin(6*Pi*y))))/40000.);
 
 
 
@@ -71,7 +80,11 @@ int main(int argc, char* argv[])
   Sundance::DiscreteSpace velocityDS(spatialMesh, velBasis, epetraVecType);
 
   // Create the snapshot matrix W
-  string outDir = "Results/ForwardProblem/Re1/nx" +Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/";
+  string outDir = "Results/ForwardProblem/Re";
+  std::ostringstream ReynoldsString;
+  ReynoldsString << std::setprecision(precision) << Re;
+  outDir = outDir + ReynoldsString.str()
+    + "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/";
   string snapshotLibraryFilePrefix = outDir + "st-v";
   LinearOperator<double> W = snapshotToMatrix(snapshotLibraryFilePrefix, nSteps, spatialMesh);
   
@@ -80,7 +93,9 @@ int main(int argc, char* argv[])
 
   // My current thinking is that this should go in the POD directory since it relies
   // on the same information
-  string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/POD/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/tol";
+  string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/POD/Re"
+    + ReynoldsString.str() + "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps)
+    + "/tol";
   std::ostringstream tolFileValue;
   tolFileValue << std::setprecision(precision) << tol;
   POD_DataDir = POD_DataDir + tolFileValue.str() + "/";  
@@ -92,8 +107,8 @@ int main(int argc, char* argv[])
   // Read in the POD from file
   string POD_basis_fileprefix = POD_DataDir + "POD_basis";
   Array<Expr> phi;
-  R = 10000;
-  for(int r = 0; r < R; r++)
+  int Ru = 10000;
+  for(int r = 0; r < Ru; r++)
     {
       try
 	{
@@ -101,11 +116,14 @@ int main(int argc, char* argv[])
 	}
       catch (std::runtime_error& e)
 	{
-	  R = r;
+	  Ru = r;
 	}
     }
 
-  RCP<NSEProjectedODE> f = rcp(new NSEProjectedODE(phi, uB, q, t, deltat, spatialMesh, false, verbosity));
+  // Calculate the kinematic viscosity nu
+  double nu = (U0*L0)/Re;
+
+  RCP<NSEProjectedODE> f = rcp(new NSEProjectedODE(phi, uB, q, t, deltat, nu, spatialMesh, false, verbosity));
   f->initialize();
   f->write_b(nSteps);
 
@@ -114,7 +132,6 @@ int main(int argc, char* argv[])
   TEUCHOS_TEST_FOR_EXCEPTION( moveError == -1,
 			      runtime_error,
 			      "Failed to move A, T, or b to the POD Directory");
-
 
 
 
