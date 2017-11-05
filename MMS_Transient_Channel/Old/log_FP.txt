@@ -1,0 +1,51 @@
+From a run on 9/3 with R = and tau tolerance = 10^-8
+nx=25 nt=25 uErr=3.51259e-05 pErr=0.00114564 runtime=100.178
+nx=50 nt=50 uErr=4.80959e-06 pErr=0.00795132 runtime=996.03
+nx=100 nt=100 uErr=1.92147e-06 pErr=0.0407255 runtime=12136.3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+This is with R=1
+
+Current Viento Version
+nx=8 nt=8 uErr=0.000908613 pErr=0.00812001 runtime=2.49105
+nx=16 nt=16 uErr=0.000128137 pErr=0.00257755 runtime=8.51612
+nx=32 nt=32 uErr=1.70499e-05 pErr=0.00123087 runtime=49.1359
+nx=64 nt=64 uErr=2.25952e-06 pErr=0.00600875 runtime=366.801
+nx=128 nt=128 uErr=6.8383e-07 pErr=0.0455199 runtime=2890.24
+
+Previous Viento Version
+nx=8 nt=8 uErr=0.00090922 pErr=0.00809749 runtime=4.26574
+nx=16 nt=16 uErr=0.000128133 pErr=0.00258025 runtime=23.1955
+nx=32 nt=32 uErr=1.70554e-05 pErr=0.00166843 runtime=209.836
+nx=64 nt=64 uErr=2.73217e-06 pErr=0.0132049 runtime=2258.18
+nx=128 nt=128 uErr=3.38504e-06 pErr=0.0631768 runtime=19776.5
+
+This is with R=0 (Stokes)
+nx=8 nt=8 uErr=0.00186758 pErr=0.0151439 runtime=4.9596
+
+
+
+nx=8 nt=8 uErr=0.00186758 pErr=0.0151439 runtime=4.18899
+nx=16 nt=16 uErr=0.00167032 pErr=0.0132781 runtime=21.5061
+nx=32 nt=32 uErr=0.00166508 pErr=0.0133241 runtime=199.314
+nx=64 nt=64 uErr=0.00166499 pErr=0.0199876 runtime=2169.94
+nx=128 nt=128 uErr=0.00166514 pErr=0.298105 runtime=19158.5
+
+
+R=2, Nu=0.5
+nx=8 nt=8 uErr=0.0462201 pErr=0.0226917 runtime=4.67927
+nx=16 nt=16 uErr=0.0468054 pErr=0.0196753 runtime=24.0461

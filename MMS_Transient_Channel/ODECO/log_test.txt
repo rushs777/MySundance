@@ -1,0 +1,496 @@
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=      4.2422 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 1.27799e-09
+[1]  Newton iter #     1 |F|= 1.27799e-09 |F|/|F0|= 3.01257e-10
+[2]    Armijo step t=           1 |F|= 3.78392e-16
+[1]  Newton iter #     2 |F|= 3.78392e-16 |F|/|F0|= 8.91971e-17
+[1]  |F|= 3.78392e-16
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA=  5.2422e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=1 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.000148731
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00175776
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.00202792
+||Relative error in velocity at all timesteps||_2 :	 0.00202296
+Writing results to file
+KKT Runtime = 0.182197
+ErrorCheck Runtime = 11.1952
+VTK Runtime = 80.2023
+Total Runtime = 91.5797
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=     3.04509 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 4.70387e-10
+[1]  Newton iter #     1 |F|= 4.70387e-10 |F|/|F0|= 1.54474e-10
+[2]    Armijo step t=           1 |F|= 2.92543e-16
+[1]  Newton iter #     2 |F|= 2.92543e-16 |F|/|F0|= 9.60706e-17
+[1]  |F|= 2.92543e-16
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA= 4.04509e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=1 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 9.32767e-05
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00110276
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.00164909
+||Relative error in velocity at all timesteps||_2 :	 0.0016489
+Writing results to file
+KKT Runtime = 0.27625
+ErrorCheck Runtime = 76.4381
+VTK Runtime = 573.204
+Total Runtime = 649.918
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=     2.12292 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 1.34384e-09
+[1]  Newton iter #     1 |F|= 1.34384e-09 |F|/|F0|= 6.33012e-10
+[2]    Armijo step t=           1 |F|= 2.14954e-16
+[1]  Newton iter #     2 |F|= 2.14954e-16 |F|/|F0|= 1.01254e-16
+[1]  |F|= 2.14954e-16
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA= 3.12292e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=2 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.000263974
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00311974
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.00334879
+||Relative error in velocity at all timesteps||_2 :	 0.00334589
+Writing results to file
+KKT Runtime = 0.145712
+ErrorCheck Runtime = 11.019
+VTK Runtime = 75.0033
+Total Runtime = 86.168
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=     1.52362 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 5.45528e-10
+[1]  Newton iter #     1 |F|= 5.45528e-10 |F|/|F0|= 3.58048e-10
+[2]    Armijo step t=           1 |F|= 1.50797e-16
+[1]  Newton iter #     2 |F|= 1.50797e-16 |F|/|F0|= 9.89733e-17
+[1]  |F|= 1.50797e-16
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA= 2.52362e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=2 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.000177824
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00210232
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.00282983
+||Relative error in velocity at all timesteps||_2 :	 0.00282971
+Writing results to file
+KKT Runtime = 0.407615
+ErrorCheck Runtime = 72.9322
+VTK Runtime = 559.746
+Total Runtime = 633.085
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=      1.0645 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 4.56924e-09
+[1]  Newton iter #     1 |F|= 4.56924e-09 |F|/|F0|= 4.29239e-09
+[2]    Armijo step t=           1 |F|= 1.52905e-16
+[1]  Newton iter #     2 |F|= 1.52905e-16 |F|/|F0|=  1.4364e-16
+[1]  |F|= 1.52905e-16
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA=  2.0645e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=4 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.00050294
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00594393
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.00569179
+||Relative error in velocity at all timesteps||_2 :	 0.00569006
+Writing results to file
+KKT Runtime = 0.171252
+ErrorCheck Runtime = 11.0171
+VTK Runtime = 74.9493
+Total Runtime = 86.1377
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=    0.763746 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 1.65802e-10
+[1]  Newton iter #     1 |F|= 1.65802e-10 |F|/|F0|=  2.1709e-10
+[1]  |F|= 1.65802e-10
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA= 1.76375e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=4 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.000401995
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00475257
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.00551791
+||Relative error in velocity at all timesteps||_2 :	 0.00551778
+Writing results to file
+KKT Runtime = 0.366268
+ErrorCheck Runtime = 72.9204
+VTK Runtime = 561.807
+Total Runtime = 635.094
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=    0.537691 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 1.66919e-08
+[1]  Newton iter #     1 |F|= 1.66919e-08 |F|/|F0|= 3.10437e-08
+[2]    Armijo step t=           1 |F|= 5.80589e-17
+[1]  Newton iter #     2 |F|= 5.80589e-17 |F|/|F0|= 1.07978e-16
+[1]  |F|= 5.80589e-17
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA= 1.53769e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=8 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.00137082
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.0162009
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.0127862
+||Relative error in velocity at all timesteps||_2 :	 0.0127838
+Writing results to file
+KKT Runtime = 0.157341
+ErrorCheck Runtime = 11.1185
+VTK Runtime = 74.8376
+Total Runtime = 86.1135
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=    0.385519 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 2.49247e-09
+[1]  Newton iter #     1 |F|= 2.49247e-09 |F|/|F0|= 6.46522e-09
+[2]    Armijo step t=           1 |F|= 5.91385e-17
+[1]  Newton iter #     2 |F|= 5.91385e-17 |F|/|F0|=   1.534e-16
+[1]  |F|= 5.91385e-17
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA= 1.38552e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=8 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.00233216
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.0275719
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.0260834
+||Relative error in velocity at all timesteps||_2 :	 0.0260752
+Writing results to file
+KKT Runtime = 0.423612
+ErrorCheck Runtime = 72.8743
+VTK Runtime = 565.465
+Total Runtime = 638.763
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=    0.278901 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 9.35428e-08
+[1]  Newton iter #     1 |F|= 9.35428e-08 |F|/|F0|= 3.35398e-07
+[2]    Armijo step t=           1 |F|= 3.47064e-17
+[1]  Newton iter #     2 |F|= 3.47064e-17 |F|/|F0|=  1.2444e-16
+[1]  |F|= 3.47064e-17
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA=  1.2789e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=16 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.0611446
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.722629
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.473831
+||Relative error in velocity at all timesteps||_2 :	 0.473162
+Writing results to file
+KKT Runtime = 0.22858
+ErrorCheck Runtime = 11.0227
+VTK Runtime = 74.7815
+Total Runtime = 86.0328
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=    0.199688 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 3.91972e-07
+[1]  Newton iter #     1 |F|= 3.91972e-07 |F|/|F0|= 1.96292e-06
+[2]    Armijo step t=           1 |F|= 8.36251e-17
+[1]  Newton iter #     2 |F|= 8.36251e-17 |F|/|F0|= 4.18778e-16
+[1]  |F|= 8.36251e-17
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA= 1.19969e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=16 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.239085
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 2.82657
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 2.50652
+||Relative error in velocity at all timesteps||_2 :	 2.50263
+Writing results to file
+KKT Runtime = 0.448227
+ErrorCheck Runtime = 72.798
+VTK Runtime = 567.073
+Total Runtime = 640.32
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=    0.157473 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 1.25591e-05
+[1]  Newton iter #     1 |F|= 1.25591e-05 |F|/|F0|=  7.9754e-05
+[2]    Armijo step t=           1 |F|= 4.70851e-16
+[1]  Newton iter #     2 |F|= 4.70851e-16 |F|/|F0|= 2.99005e-15
+[1]  |F|= 4.70851e-16
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA= 1.15747e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=32 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.389871
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 4.60765
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 2.89239
+||Relative error in velocity at all timesteps||_2 :	 2.87884
+Writing results to file
+KKT Runtime = 0.258339
+ErrorCheck Runtime = 11.0029
+VTK Runtime = 74.9496
+Total Runtime = 86.2109
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=    0.112466 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 1.61482e-06
+[1]  Newton iter #     1 |F|= 1.61482e-06 |F|/|F0|= 1.43583e-05
+[2]    Armijo step t=           1 |F|= 1.12712e-16
+[1]  Newton iter #     2 |F|= 1.12712e-16 |F|/|F0|= 1.00218e-15
+[1]  |F|= 1.12712e-16
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA= 1.11247e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=32 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.35192
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 4.16056
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 3.62405
+||Relative error in velocity at all timesteps||_2 :	 3.60874
+Writing results to file
+KKT Runtime = 0.504631
+ErrorCheck Runtime = 73.2973
+VTK Runtime = 572.816
+Total Runtime = 646.618
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=    0.107108 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|=   0.0044269
+[1]  Newton iter #     1 |F|=   0.0044269 |F|/|F0|=   0.0413314
+[2]    Armijo step t=           1 |F|= 1.08051e-06
+[1]  Newton iter #     2 |F|= 1.08051e-06 |F|/|F0|=  1.0088e-05
+[2]    Armijo step t=           1 |F|= 8.73945e-14
+[1]  Newton iter #     3 |F|= 8.73945e-14 |F|/|F0|= 8.15951e-13
+[1]  |F|= 8.73945e-14
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA= 1.10711e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=64 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 33.2653
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 393.142
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 248.642
+||Relative error in velocity at all timesteps||_2 :	 247.724
+Writing results to file
+KKT Runtime = 0.275693
+ErrorCheck Runtime = 11.092
+VTK Runtime = 74.7222
+Total Runtime = 86.0898
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=   0.0763039 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 1.34238e-05
+[1]  Newton iter #     1 |F|= 1.34238e-05 |F|/|F0|= 0.000175925
+[2]    Armijo step t=           1 |F|= 2.12965e-14
+[1]  Newton iter #     2 |F|= 2.12965e-14 |F|/|F0|= 2.79101e-13
+[1]  |F|= 2.12965e-14
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA=  1.0763e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=64 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 2.73208
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 32.3
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 28.105
+||Relative error in velocity at all timesteps||_2 :	 27.9951
+Writing results to file
+KKT Runtime = 0.38869
+ErrorCheck Runtime = 73.0758
+VTK Runtime = 570.024
+Total Runtime = 643.488
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=   0.0900068 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 2.82877e-06
+[1]  Newton iter #     1 |F|= 2.82877e-06 |F|/|F0|= 3.14284e-05
+[2]    Armijo step t=           1 |F|= 7.49402e-15
+[1]  Newton iter #     2 |F|= 7.49402e-15 |F|/|F0|= 8.32606e-14
+[1]  |F|= 7.49402e-15
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA= 1.09001e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=128 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.400402
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 4.73211
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 2.91267
+||Relative error in velocity at all timesteps||_2 :	 2.88583
+Writing results to file
+KKT Runtime = 0.274752
+ErrorCheck Runtime = 11.0548
+VTK Runtime = 74.4483
+Total Runtime = 85.7778
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Took single branch
+Solving problem...
+[0] begin Playa::NewtonArmijoSolver::solve()
+[1]  Newton iter #     0 |F|=   0.0640766 |F|/|F0|=           1
+[2]    Armijo step t=           1 |F|= 2.84944e-07
+[1]  Newton iter #     1 |F|= 2.84944e-07 |F|/|F0|= 4.44693e-06
+[2]    Armijo step t=           1 |F|= 1.57161e-16
+[1]  Newton iter #     2 |F|= 1.57161e-16 |F|/|F0|=  2.4527e-15
+[1]  |F|= 1.57161e-16
+[1]  Relative tolerance tauR=       1e-10
+[1]  Absolute tolerance tauA=       1e-10
+[1]    F0*tauR+tauA= 1.06408e-10
+[1]  converged!
+[1] done Playa::NewtonArmijoSolver::solve()
+Re=128 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.396574
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 4.68849
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 4.02291
+||Relative error in velocity at all timesteps||_2 :	 3.98476
+Writing results to file
+KKT Runtime = 0.403875
+ErrorCheck Runtime = 73.0043
+VTK Runtime = 576.85
+Total Runtime = 650.259

@@ -1,0 +1,88 @@
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+For Re = 1, nx = 100, nSteps = 100, and tol = 0.999
+runtime = 158.846
+
+
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+For Re = 2, nx = 100, nSteps = 100, and tol = 0.999
+runtime = 171.737
+
+
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+For Re = 4, nx = 100, nSteps = 100, and tol = 0.999
+runtime = 215.289
+
+
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+For Re = 8, nx = 100, nSteps = 100, and tol = 0.999
+runtime = 156.393
+
+
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+For Re = 16, nx = 100, nSteps = 100, and tol = 0.999
+runtime = 157.13
+
+
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+For Re = 32, nx = 100, nSteps = 100, and tol = 0.999
+runtime = 155.768
+
+
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+For Re = 64, nx = 100, nSteps = 100, and tol = 0.999
+runtime = 159.06
+
+
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+For Re = 128, nx = 100, nSteps = 100, and tol = 0.999
+runtime = 155.181
+
+

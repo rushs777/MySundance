@@ -1,0 +1,263 @@
+Re=1 nx=25 nSteps=25 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.000334722
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00395093
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.00402882
+||Relative error in velocity at all timesteps||_2 :	 0.00395364
+KKT Runtime = 0.078761
+ErrorCheck Runtime = 2.34631
+Total Runtime = 2.42507
+
+Re=1 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.000148731
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00175776
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.00202792
+||Relative error in velocity at all timesteps||_2 :	 0.00202296
+Writing results to file
+KKT Runtime = 0.182197
+ErrorCheck Runtime = 11.1952
+VTK Runtime = 80.2023
+Total Runtime = 91.5797
+
+Re=1 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 9.32767e-05
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00110276
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.00164909
+||Relative error in velocity at all timesteps||_2 :	 0.0016489
+Writing results to file
+KKT Runtime = 0.27625
+ErrorCheck Runtime = 76.4381
+VTK Runtime = 573.204
+Total Runtime = 649.918
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Re=2 nx=25 nSteps=25 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.000455497
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.0053765
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.0051176
+||Relative error in velocity at all timesteps||_2 :	 0.00506087
+KKT Runtime = 0.050145
+ErrorCheck Runtime = 2.32801
+Total Runtime = 2.37816
+
+Re=2 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.000263974
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00311974
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.00334879
+||Relative error in velocity at all timesteps||_2 :	 0.00334589
+Writing results to file
+KKT Runtime = 0.145712
+ErrorCheck Runtime = 11.019
+VTK Runtime = 75.0033
+Total Runtime = 86.168
+
+Re=2 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.000177824
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00210232
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.00282983
+||Relative error in velocity at all timesteps||_2 :	 0.00282971
+Writing results to file
+KKT Runtime = 0.407615
+ErrorCheck Runtime = 72.9322
+VTK Runtime = 559.746
+Total Runtime = 633.085
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Re=4 nx=25 nSteps=25 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.000759542
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00896532
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.00739426
+||Relative error in velocity at all timesteps||_2 :	 0.00735554
+KKT Runtime = 0.073542
+ErrorCheck Runtime = 2.28296
+Total Runtime = 2.35651
+
+Re=4 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.00050294
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00594393
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.00569179
+||Relative error in velocity at all timesteps||_2 :	 0.00569006
+Writing results to file
+KKT Runtime = 0.171252
+ErrorCheck Runtime = 11.0171
+VTK Runtime = 74.9493
+Total Runtime = 86.1377
+
+Re=4 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.000401995
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.00475257
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.00551791
+||Relative error in velocity at all timesteps||_2 :	 0.00551778
+Writing results to file
+KKT Runtime = 0.366268
+ErrorCheck Runtime = 72.9204
+VTK Runtime = 561.807
+Total Runtime = 635.094
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Re=8 nx=25 nSteps=25 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.00138591
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.0163587
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.0116133
+||Relative error in velocity at all timesteps||_2 :	 0.0115887
+KKT Runtime = 0.061722
+ErrorCheck Runtime = 2.25853
+Total Runtime = 2.32025
+
+Re=8 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.00137082
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.0162009
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.0127862
+||Relative error in velocity at all timesteps||_2 :	 0.0127838
+Writing results to file
+KKT Runtime = 0.157341
+ErrorCheck Runtime = 11.1185
+VTK Runtime = 74.8376
+Total Runtime = 86.1135
+
+Re=8 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.00233216
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.0275719
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.0260834
+||Relative error in velocity at all timesteps||_2 :	 0.0260752
+Writing results to file
+KKT Runtime = 0.423612
+ErrorCheck Runtime = 72.8743
+VTK Runtime = 565.465
+Total Runtime = 638.763
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Re=16 nx=25 nSteps=25 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.0153469
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.18115
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.0916702
+||Relative error in velocity at all timesteps||_2 :	 0.0915642
+KKT Runtime = 0.084363
+ErrorCheck Runtime = 2.2837
+Total Runtime = 2.36807
+
+Re=16 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.0611446
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 0.722629
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.473831
+||Relative error in velocity at all timesteps||_2 :	 0.473162
+Writing results to file
+KKT Runtime = 0.22858
+ErrorCheck Runtime = 11.0227
+VTK Runtime = 74.7815
+Total Runtime = 86.0328
+
+Re=16 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.239085
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 2.82657
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 2.50652
+||Relative error in velocity at all timesteps||_2 :	 2.50263
+Writing results to file
+KKT Runtime = 0.448227
+ErrorCheck Runtime = 72.798
+VTK Runtime = 567.073
+Total Runtime = 640.32
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Re=32 nx=25 nSteps=25 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.156753
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 1.85031
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 0.858814
+||Relative error in velocity at all timesteps||_2 :	 0.855087
+KKT Runtime = 0.057021
+ErrorCheck Runtime = 2.27507
+Total Runtime = 2.33209
+
+Re=32 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.389871
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 4.60765
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 2.89239
+||Relative error in velocity at all timesteps||_2 :	 2.87884
+Writing results to file
+KKT Runtime = 0.258339
+ErrorCheck Runtime = 11.0029
+VTK Runtime = 74.9496
+Total Runtime = 86.2109
+
+Re=32 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.35192
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 4.16056
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 3.62405
+||Relative error in velocity at all timesteps||_2 :	 3.60874
+Writing results to file
+KKT Runtime = 0.504631
+ErrorCheck Runtime = 73.2973
+VTK Runtime = 572.816
+Total Runtime = 646.618
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Re=64 nx=25 nSteps=25 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.431914
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 5.09846
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 2.40194
+||Relative error in velocity at all timesteps||_2 :	 2.39385
+KKT Runtime = 0.064577
+ErrorCheck Runtime = 2.26378
+Total Runtime = 2.32836
+
+Re=64 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 33.2653
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 393.142
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 248.642
+||Relative error in velocity at all timesteps||_2 :	 247.724
+Writing results to file
+KKT Runtime = 0.275693
+ErrorCheck Runtime = 11.092
+VTK Runtime = 74.7222
+Total Runtime = 86.0898
+
+Re=64 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 2.73208
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 32.3
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 28.105
+||Relative error in velocity at all timesteps||_2 :	 27.9951
+Writing results to file
+KKT Runtime = 0.38869
+ErrorCheck Runtime = 73.0758
+VTK Runtime = 570.024
+Total Runtime = 643.488
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Re=128 nx=25 nSteps=25 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.381355
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 4.50183
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 2.01575
+||Relative error in velocity at all timesteps||_2 :	 1.99821
+KKT Runtime = 0.077509
+ErrorCheck Runtime = 2.25296
+Total Runtime = 2.33047
+
+Re=128 nx=50 nSteps=50 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.400402
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 4.73211
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 2.91267
+||Relative error in velocity at all timesteps||_2 :	 2.88583
+Writing results to file
+KKT Runtime = 0.274752
+ErrorCheck Runtime = 11.0548
+VTK Runtime = 74.4483
+Total Runtime = 85.7778
+
+Re=128 nx=100 nSteps=100 tol=0.999
+||alphaExact - alphaOPT||_2 = 0.396574
+||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = 4.68849
+||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :	 4.02291
+||Relative error in velocity at all timesteps||_2 :	 3.98476
+Writing results to file
+KKT Runtime = 0.403875
+ErrorCheck Runtime = 73.0043
+VTK Runtime = 576.85
+Total Runtime = 650.259
