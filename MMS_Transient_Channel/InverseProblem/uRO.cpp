@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 
 
       // Specify the location of the velocity snapshots
-      string outDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/ForwardProblem/Results/Re";
+      string outDir = "../ForwardProblem/Results/Re";
       std::ostringstream ReynoldsString;
       ReynoldsString << std::setprecision(precision) << Re;
       outDir += ReynoldsString.str() + "/nx" +Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/";
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
       string filePrefix = outDir + "st-v";
 
       // Specify the location of the reduced-order basis functions
-      string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/POD/SingleParameterSpace/Results/Re" + ReynoldsString.str() + "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/tol";
+      string POD_DataDir = "../POD/SingleParameterSpace/Results/Re" + ReynoldsString.str() + "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/tol";
       std::ostringstream tolFileValue;
       tolFileValue << std::setprecision(precision) << tol;
       POD_DataDir = POD_DataDir + tolFileValue.str() + "/";

@@ -83,7 +83,10 @@ int main(int argc, char* argv[])
   Sundance::DiscreteSpace velocityDS(spatialMesh, velBasis, epetraVecType);
 
   // Create the snapshot matrix W
-  string outDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/ForwardProblem/Results/Re";
+  // Absolute Path
+  //string outDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/ForwardProblem/Results/Re";
+  // Relative Path
+  string outDir = "../../ForwardProblem/Results/Re";
   std::ostringstream ReynoldsString;
   ReynoldsString << std::setprecision(precision) << Re;
   outDir = outDir + ReynoldsString.str()
@@ -96,7 +99,7 @@ int main(int argc, char* argv[])
 
   // My current thinking is that this should go in the POD directory since it relies
   // on the same information
-  string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/POD/SingleParameterSpace/Results/Re"
+  string POD_DataDir = "Results/Re"
     + ReynoldsString.str() + "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps)
     + "/tol";
   std::ostringstream tolFileValue;

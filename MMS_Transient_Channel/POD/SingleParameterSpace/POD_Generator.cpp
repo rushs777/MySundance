@@ -37,7 +37,10 @@ int main(int argc, char* argv[])
   Sundance::init(&argc, &argv);
 
   // Define the location of the snapshot matrix (matrices)
-  string snapshotDataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/ForwardProblem/Results/Re";
+  // Absolute Path
+  //string snapshotDataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/ForwardProblem/Results/Re";
+  // Relative Path
+  string snapshotDataDir = "../../ForwardProblem/Results/Re";
   std::ostringstream ReynoldsString;
   ReynoldsString << std::setprecision(precision) << Re;
   snapshotDataDir = snapshotDataDir + ReynoldsString.str()
@@ -78,7 +81,12 @@ int main(int argc, char* argv[])
   POD_SVD pod(Wprime, velocityDS, verbosity);
   pod.calculateSVD();
   pod.calculateBasisFunctions();
-  string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/POD/SingleParameterSpace/Results/Re"
+  // Absolute Path
+  // string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/POD/SingleParameterSpace/Results/Re"
+  //   + ReynoldsString.str() +"/nx" + Teuchos::toString(nx)
+  //   + "nt" + Teuchos::toString(nSteps) + "/tol";
+  // Relative Path
+  string POD_DataDir = "Results/Re"
     + ReynoldsString.str() +"/nx" + Teuchos::toString(nx)
     + "nt" + Teuchos::toString(nSteps) + "/tol";
   std::ostringstream tolFileValue;

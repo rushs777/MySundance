@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
       // State the location of the POD files (phi, b, A, and T)
       std::ostringstream ReynoldsString;
       ReynoldsString << std::setprecision(precision) << Re;
-      string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/POD/";
+      string POD_DataDir = "../POD/";
       if(parameterSpace=="single")
 	{
 	  cout << "Took single branch" << endl;
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
       Expr eastVec = List(cos(eastAngle), sin(eastAngle));
 
       // Specify where to find the sensor data for one choice of parameter values
-      string snapshotDataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/ForwardProblem/Results/Re"
+      string snapshotDataDir = "../ForwardProblem/Results/Re"
 	+ ReynoldsString.str() + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/";
       string filenamePrefix = "st-v";
       string snapshotFilenamePrefix = snapshotDataDir + filenamePrefix;
