@@ -116,10 +116,69 @@ Expr KKT_Transient_Channel::solve(string solverXML, double eta_design, double et
     ODECO_basisArray[i]=time_basis_;
   DiscreteSpace ODECO_DS(timeMesh_, ODECO_basisArray, epetraVecType_);
   // NonlinearSolver will override the intial guess with the final solution
-  Expr U0 = new DiscreteFunction(ODECO_DS, 1.0);
-  std::cout << "U0 = " << U0 << std::endl;
+  Expr U0 = new DiscreteFunction(ODECO_DS, 0.0);
+
+  // Due to the fact that the initial state of the approximation is terrible for high Re,
+  // I will give the first Ru_ components of U0 the underlying Vector<double> for alpha
+  // These values will be obtained via projeciton
+  // This seemed to have no effect
+  /*
+  Expr u0 = List(1.0,0.0);
+  VectorType<double> Ru_vecType = new SerialVectorType();
+  VectorSpace<double> Ru_vecSpace = Ru_vecType.createEvenlyPartitionedSpace(MPIComm::self(),Ru_);
+  Vector<double> a0 = Ru_vecSpace.createMember();
+  for(int i = 0; i < Ru_; i++)
+    {
+      FunctionalEvaluator IP = FunctionalEvaluator(spatialMesh_, Integral(interior_,
+									  (u0 - uB_)*phi_[i],
+									  quad_));
+      a0[i] = IP.evaluate();
+    }
+  Vector<double> U0_Vec = getDiscreteFunctionVector(U0);
+  std::cout << "Size of U0_Vec: " << U0_Vec.dim() << std::endl;
+  // Need to give the first Ru_ components of a0's vec to U0_Vec
+  for(int r = 0; r < Ru_; r++)
+    U0_Vec[r] = a0[r];
+  */
+
+  // Next thought: Take the alpha from the inverse problem and use that to build U0_Vec
+  Vector<double> U0_Vec = getDiscreteFunctionVector(U0);
+  string filename = "/home/sirush/PhDResearch/MMS_Transient_Channel/InverseProblem/Results/SingleParameterSpace/tol0.999/Re128/nx25nt25/alphaROM.txt";
+  std::ifstream alpha_reader(filename, std::ios::in);
+  TEUCHOS_TEST_FOR_EXCEPTION(!alpha_reader,
+			     std::runtime_error,
+			     "could not open file " << filename << " for reading");
+  int basisOrder;
+  alpha_reader >> basisOrder;
+  int temp;
+  alpha_reader >> temp; // Ru is the number of elements in vector-valued function b
+  int numOfVectors; // equal to nSteps+1
+  alpha_reader >> numOfVectors;
+  string alias;
+  alpha_reader >> alias;
+
+  // Check to make sure that the time-dependent only functions are using Lagrange(1)
+  TEUCHOS_TEST_FOR_EXCEPTION(basisOrder != 1,
+			     std::runtime_error,
+			     "The order of the basis functions for time-dependent only functions is not Lagrange(1)");
 
 
+  // Create the time DiscreteSpace
+  Array<BasisFamily> time_basisArray_(Ru_);
+  for(int i = 0; i < Ru_; i++)
+    time_basisArray_[i] = time_basis_;
+  //  time_DS_ = new DiscreteSpace(timeMesh_, time_basisArray, epetraVecType_);
+  DiscreteSpace time_DS_(timeMesh_, time_basisArray_, epetraVecType_);
+  
+  // Establish the values for U0
+  for(int tIndex=0; tIndex < nSteps_+1; tIndex++)
+    {
+      for(int r = 0; r < Ru_; r++)
+	// I think that the problem is that there is an implied third runner
+	// for which function (alpha, lambda, p)  is being referenced.
+	// Thus I propose that the runners go t, k, r instead of t, r, k
+	alpha_reader >> U0_Vec[r + 3*Ru_*tIndex];
+    }  
 
   stateEqn();
   adjointEqn();
@@ -159,7 +218,7 @@ Expr KKT_Transient_Channel::solve(string solverXML, double eta_design, double et
 
   // Attempting to create alphaOPT_ from the first Ru_*(nSteps_+1) elements
   // getDiscreteFunctionVector(U0).dim()
-  Vector<double> U0_Vec = getDiscreteFunctionVector(U0);
+  U0_Vec = getDiscreteFunctionVector(U0);
   Array<BasisFamily> time_basisArray(Ru_);
   for(int i = 0; i < Ru_; i++)
     time_basisArray[i] = time_basis_;

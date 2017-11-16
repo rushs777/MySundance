@@ -117,8 +117,10 @@ VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
 #--------------------------------------------------------------------------
 # If needed, set extra include and lib macros
 #--------------------------------------------------------------------------
-CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles -I/home/sirush/PhDResearch/MMS_Transient_Channel
-#CLIENT_EXTRA_INCLUDES = -I../SourceFiles -I../MMS_Inflow -I../DenseMatrixMatrixProduct
+# Absolute Path
+#CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles -I/home/sirush/PhDResearch/MMS_Transient_Channel
+# Relative Path
+CLIENT_EXTRA_INCLUDES = -I../../SourceFiles
 #CLIENT_EXTRA_INCLUDES =
 
 CLIENT_EXTRA_LIBS = 

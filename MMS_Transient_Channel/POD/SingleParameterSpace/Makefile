@@ -78,12 +78,20 @@
 
 
 # Turn this on for stage_KKT_required_files.cpp (only first two required for POD_Generator.cpp)
-EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/POD_SVD.o \
+# Absolute Path
+#EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/POD_SVD.o \
 	     /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
 	     /home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
 	     /home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
 	     /home/sirush/PhDResearch/SourceFiles/NSEProjectedODE.o \
 	     /home/sirush/PhDResearch/SourceFiles/meshAddOns.o
+# Relative Path
+EXTRA_OBJS = ../../../SourceFiles/POD_SVD.o \
+	     ../../../SourceFiles/denseSerialMatrixIO.o \
+	     ../../../SourceFiles/ODERHSBase.o \
+	     ../../../SourceFiles/QuadraticODERHSBase.o \
+	     ../../../SourceFiles/NSEProjectedODE.o \
+	     ../../../SourceFiles/meshAddOns.o
 
 
 # ***
@@ -119,8 +127,10 @@ VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
 #--------------------------------------------------------------------------
 # If needed, set extra include and lib macros
 #--------------------------------------------------------------------------
-CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles -I/home/sirush/PhDResearch/MMS_Transient_Channel
-#CLIENT_EXTRA_INCLUDES = -I../SourceFiles -I../MMS_Inflow -I../DenseMatrixMatrixProduct
+# Absolute Path
+#CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles -I/home/sirush/PhDResearch/MMS_Transient_Channel
+# Relative Path
+CLIENT_EXTRA_INCLUDES = -I../../../SourceFiles
 #CLIENT_EXTRA_INCLUDES =
 
 CLIENT_EXTRA_LIBS = 

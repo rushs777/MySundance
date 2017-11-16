@@ -3,6 +3,7 @@
 
 #include "KKTBase.hpp"
 #include "sensorData.hpp"
+#include "PlayaSerialVectorType.hpp" // Only needed to set up u0
 
 #include "MathematicaConverter.hpp"
 

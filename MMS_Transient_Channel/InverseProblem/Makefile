@@ -67,7 +67,8 @@
 #--------------------------------------------------------------------------
 #
 # Turn this on for uRO.cpp
-EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
+# Absolute Path
+#EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
 	     /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
 	     /home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
 	     /home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
@@ -76,8 +77,17 @@ EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
 	     /home/sirush/PhDResearch/SourceFiles/velocityROM.o \
 	     /home/sirush/PhDResearch/SourceFiles/meshAddOns.o \
 	     /home/sirush/PhDResearch/SourceFiles/NSEProjectedODE.o
+# Relative Path
+EXTRA_OBJS = ../../SourceFiles/PlayaSVD.o \
+	     ../../SourceFiles/denseSerialMatrixIO.o \
+	     ../../SourceFiles/ODERHSBase.o \
+	     ../../SourceFiles/QuadraticODERHSBase.o \
+	     ../../SourceFiles/MyNLO.o \
+	     ../../SourceFiles/velocityROM.o \
+	     ../../SourceFiles/meshAddOns.o \
+	     ../../SourceFiles/NSEProjectedODE.o
 
-#Nothing needed to run the forward code
+
 #EXTRA_OBJS =
 
 # ***
@@ -113,7 +123,10 @@ VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
 #--------------------------------------------------------------------------
 # If needed, set extra include and lib macros
 #--------------------------------------------------------------------------
-CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles 
+# Absolute Path
+#CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles
+# Relative Path
+CLIENT_EXTRA_INCLUDES = -I../../SourceFiles 
 CLIENT_EXTRA_LIBS = 
 
 

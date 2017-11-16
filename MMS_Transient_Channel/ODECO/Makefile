@@ -65,12 +65,19 @@
 # SomeOtherFile.o: SomeOtherFile.hpp SomeFile.hpp
 # 
 #--------------------------------------------------------------------------
-#
-EXTRA_OBJS = /home/sirush/PhDResearch/MMS_Transient_Channel/ODECO/integralOperator.o \
+# Absolute Path
+#EXTRA_OBJS = /home/sirush/PhDResearch/MMS_Transient_Channel/ODECO/integralOperator.o \
 	     /home/sirush/PhDResearch/MMS_Transient_Channel/ODECO/KKTBase.o \
 	     /home/sirush/PhDResearch/MMS_Transient_Channel/ODECO/KKT_Transient_Channel.o\
 	     /home/sirush/PhDResearch/MMS_Transient_Channel/ODECO/sensorData.o \
 	     /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o
+# Relative Path
+EXTRA_OBJS = integralOperator.o \
+	     KKTBase.o \
+	     KKT_Transient_Channel.o\
+	     sensorData.o \
+	     ../../SourceFiles/denseSerialMatrixIO.o
+
 
 
 
@@ -106,7 +113,10 @@ VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
 #--------------------------------------------------------------------------
 # If needed, set extra include and lib macros
 #--------------------------------------------------------------------------
+# Absolute Path
 CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles -I/home/sirush/PhDResearch/MMS_Transient_Channel/ODECO
+# Relative Path
+CLIENT_EXTRA_INCLUDES = -I../../SourceFiles -I.
 
 
 CLIENT_EXTRA_LIBS = 

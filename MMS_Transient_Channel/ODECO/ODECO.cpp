@@ -200,6 +200,7 @@ int main(int argc, char *argv[])
       cout << "Writing results to file" << endl;
       Time timerVTK("vtk");
       timerVTK.start();
+      /*
       string vtkDir = "Results/";
       if (parameterSpace=="single")
       	vtkDir+="SingleParameterSpace/";
@@ -251,7 +252,7 @@ int main(int argc, char *argv[])
       	  writer.addField("uError[1]", new ExprFieldWrapper(uErrorProjector.project()[1]) );
       	  writer.write();	  
       	}
-
+      */
       timerVTK.stop();
       timerTotal.stop();
       Out::root() << "KKT Runtime = " << timerKKT.totalElapsedTime() << endl;
