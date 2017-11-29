@@ -66,6 +66,16 @@
 # 
 #--------------------------------------------------------------------------
 #
+
+# ---------------------------------------------------------------------------------
+# Set pathname for where files are located
+# ---------------------------------------------------------------------------------
+
+PATH_TO_FILES=${HOME}/Projects/Simon/MySundance
+#PATH_TO_FILES=/home/sirush/PhDResearch
+
+
+
 #EXTRA_OBJS = 	../SourceFiles/PlayaSVD.o \
 		../SourceFiles/denseSerialMatrixIO.o \
 		../SourceFiles/ODERHSBase.o \
@@ -77,41 +87,41 @@
 		../DenseMatrixMatrixProduct/PlayaDenseMatrixMatrixProduct.o
 
 # The whole shebang
-#EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
-		/home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
-		/home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
-		/home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
-		/home/sirush/PhDResearch/SourceFiles/MyNLO.o \
-		/home/sirush/PhDResearch/SourceFiles/PMB.o \
-		/home/sirush/PhDResearch/SourceFiles/velocityROM.o \
-		/home/sirush/PhDResearch/MMS_Transient_Channel/MMSQuadODE.o
+#EXTRA_OBJS = 	$(PATH_TO_FILES)/SourceFiles/PlayaSVD.o \
+		$(PATH_TO_FILES)/SourceFiles/denseSerialMatrixIO.o \
+		$(PATH_TO_FILES)/SourceFiles/ODERHSBase.o \
+		$(PATH_TO_FILES)/SourceFiles/QuadraticODERHSBase.o \
+		$(PATH_TO_FILES)/SourceFiles/MyNLO.o \
+		$(PATH_TO_FILES)/SourceFiles/PMB.o \
+		$(PATH_TO_FILES)/SourceFiles/velocityROM.o \
+		$(PATH_TO_FILES)/MMS_Transient_Channel/MMSQuadODE.o
 
 # Turn this on for POD_Generator.cpp
-#EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/POD_SVD.o \
-	     /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
+#EXTRA_OBJS = $(PATH_TO_FILES)/SourceFiles/POD_SVD.o \
+	     $(PATH_TO_FILES)/SourceFiles/denseSerialMatrixIO.o \
 
 # Turn this on for stage_KKT_required_files.cpp
-EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/POD_SVD.o \
-	     /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
-	     /home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
-	     /home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
-	     /home/sirush/PhDResearch/SourceFiles/NSEProjectedODE.o \
-	     /home/sirush/PhDResearch/SourceFiles/meshAddOns.o
+EXTRA_OBJS = $(PATH_TO_FILES)/SourceFiles/POD_SVD.o \
+	     $(PATH_TO_FILES)/SourceFiles/denseSerialMatrixIO.o \
+	     $(PATH_TO_FILES)/SourceFiles/ODERHSBase.o \
+	     $(PATH_TO_FILES)/SourceFiles/QuadraticODERHSBase.o \
+	     $(PATH_TO_FILES)/SourceFiles/NSEProjectedODE.o \
+	     $(PATH_TO_FILES)/SourceFiles/meshAddOns.o
 
 # Turn this on for uRO.cpp
-#EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
-	     /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
-	     /home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
-	     /home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
-	     /home/sirush/PhDResearch/SourceFiles/MyNLO.o \
-	     /home/sirush/PhDResearch/SourceFiles/PMB.o \
-	     /home/sirush/PhDResearch/SourceFiles/velocityROM.o \
-	     /home/sirush/PhDResearch/SourceFiles/meshAddOns.o \
-	     /home/sirush/PhDResearch/SourceFiles/NSEProjectedODE.o
+#EXTRA_OBJS = $(PATH_TO_FILES)/SourceFiles/PlayaSVD.o \
+	     $(PATH_TO_FILES)/SourceFiles/denseSerialMatrixIO.o \
+	     $(PATH_TO_FILES)/SourceFiles/ODERHSBase.o \
+	     $(PATH_TO_FILES)/SourceFiles/QuadraticODERHSBase.o \
+	     $(PATH_TO_FILES)/SourceFiles/MyNLO.o \
+	     $(PATH_TO_FILES)/SourceFiles/PMB.o \
+	     $(PATH_TO_FILES)/SourceFiles/velocityROM.o \
+	     $(PATH_TO_FILES)/SourceFiles/meshAddOns.o \
+	     $(PATH_TO_FILES)/SourceFiles/NSEProjectedODE.o
 
 
 
-#EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
+#EXTRA_OBJS = 	$(PATH_TO_FILES)/SourceFiles/PlayaSVD.o \
 		PMB.o
 
 #Nothing needed to run the forward code
@@ -140,17 +150,17 @@ EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/POD_SVD.o \
 
 # Kevin's system
 #TRILINOS_INSTALL_DIR = ${HOME}/Code/BUILDS/OPT
-#VIENTO_INSTALL_DIR = ${HOME}/Projects/CFD/BUILDS/OPT
+VIENTO_INSTALL_DIR = ${HOME}/Projects/CFD/BUILDS/OPT
 
 # Simon's system
 #TRILINOS_INSTALL_DIR = /usr/local/Trilinos/BUILDS/SERIAL-OPT
-VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
+#VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
 
 
 #--------------------------------------------------------------------------
 # If needed, set extra include and lib macros
 #--------------------------------------------------------------------------
-CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles -I/home/sirush/PhDResearch/MMS_Transient_Channel
+CLIENT_EXTRA_INCLUDES = -I$(PATH_TO_FILES)/SourceFiles -I$(PATH_TO_FILES)/MMS_Transient_Channel
 #CLIENT_EXTRA_INCLUDES = -I../SourceFiles -I../MMS_Inflow -I../DenseMatrixMatrixProduct
 #CLIENT_EXTRA_INCLUDES =
 
