@@ -7,7 +7,9 @@
  *
  ******************************************************************************************/
 
-NSEProjectedODE::NSEProjectedODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double deltat, Mesh mesh, bool MatrixAndTensorInFile, int verbosity, int quadOrder) 
+NSEProjectedODE::NSEProjectedODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double deltat,
+				 double nu, Mesh mesh, bool MatrixAndTensorInFile, int verbosity,
+				 int quadOrder) 
     : QuadraticODERHSBase(phi.size(), verbosity),
       interior_(new MaximalCellFilter()),
       //      boundary_(new BoundaryCellFilter()),
@@ -16,6 +18,7 @@ NSEProjectedODE::NSEProjectedODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr
       q_(q),
       t_(t),
       deltat_(deltat),
+      nu_(nu),
       mesh_(mesh),
       forceIP_(phi.size()),
       MatrixAndTensorInFile_(MatrixAndTensorInFile),
@@ -24,8 +27,6 @@ NSEProjectedODE::NSEProjectedODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr
       qDiscrete_(),
       qProj_()
   {
-    // NEED TO ADD A NU VALUE
-    nu_ = 1.0;
     fileDir_ = "NSEProjectedODEFiles/";
     
     // mesh.spatialDim() returns n for nD

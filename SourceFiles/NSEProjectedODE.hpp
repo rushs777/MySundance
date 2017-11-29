@@ -21,7 +21,9 @@ class NSEProjectedODE : public QuadraticODERHSBase
 {
 public:
   /**Constructor*/
-  NSEProjectedODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double deltat, Mesh mesh, bool MatrixAndTensorInFile = false, int verbosity = 1, int quadOrder = 6);
+  NSEProjectedODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double deltat,
+		  double nu, Mesh mesh, bool MatrixAndTensorInFile = false,
+		  int verbosity = 1, int quadOrder = 6);
 
   /**Project the force term onto the basis*/
   Vector<double> evalForceTerm(const double& t) const;
@@ -51,11 +53,11 @@ private:
   Expr q_;
   mutable Expr t_;
   double deltat_;
+  double nu_;
   Mesh mesh_;
   Teuchos::Array<FunctionalEvaluator> forceIP_;
   bool MatrixAndTensorInFile_;
   QuadratureFamily quad_;
-  double nu_;
   mutable Expr tNext_;
   string fileDir_;
 
