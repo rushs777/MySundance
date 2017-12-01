@@ -5,6 +5,8 @@ Results/
 *.exo
 *valgrind*
 *~
+*.dat
+*.o
 
 #Folders I don't want added
 latex/
@@ -16,6 +18,8 @@ KISS/
 OrthogonalIteration/
 A_and_T/
 VMB-ROM/
+ResidualBasedStabilization/
+Viento/
 
 #Mathematica Notebooks to ignore
 ODETest/MMS.nb
@@ -31,4 +35,6 @@ SVD/MMS_SVD.cpp
 PMB-ROM/log.txt
 PMB-ROM/log_tau_8.txt
 SVD/cube3DTest.99.vec
+denseSerialMatrixIO.o
+
 
