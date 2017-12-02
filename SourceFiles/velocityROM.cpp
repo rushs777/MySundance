@@ -1,13 +1,17 @@
 #include "velocityROM.hpp"
 
-velocityROM::velocityROM(const string POD_base_dir, string nlParamFile, const DiscreteSpace& ds, Expr u0, Expr forceTerm, Expr t, int nSteps, double deltat, double tolerance, int verbosity)
+velocityROM::velocityROM(const string POD_base_dir, string nlParamFile,
+			 const DiscreteSpace& ds, Expr u0, Expr forceTerm, Expr t,
+			 int nSteps, double deltat, double nu, double tolerance, int verbosity)
   : POD_base_dir_(POD_base_dir),
     nlParamFile_(nlParamFile),
     ds_(ds),
     u0_(u0),
     forceTerm_(forceTerm),
     t_(t),
-    nSteps_(nSteps), deltat_(deltat),
+    nSteps_(nSteps),
+    deltat_(deltat),
+    nu_(nu),
     tol_(tolerance),
     verbosity_(verbosity)
 {
@@ -69,7 +73,8 @@ void velocityROM::generate_alpha()
   SUNDANCE_ROOT_MSG1(verbosity_, "Creating NSEProjectedODE");
   // Create the nonlinear operator for solving our nonlinear ODE
   //NSEProjectedODE f(phi_, ubar_, forceTerm_, t_, deltat_, ds_.mesh(), false, verbosity_);
-  RCP<NSEProjectedODE> f = rcp(new NSEProjectedODE(phi_, uB_, forceTerm_, t_, deltat_, ds_.mesh(), false, verbosity_));
+  RCP<NSEProjectedODE> f = rcp(new NSEProjectedODE(phi_, uB_, forceTerm_, t_, deltat_, nu_,
+						   ds_.mesh(), false, verbosity_));
   f->initialize();
 
   SUNDANCE_ROOT_MSG1(verbosity_, "Creating NLO");
@@ -111,7 +116,8 @@ void velocityROM::generate_alpha()
 
 void velocityROM::write_b(const string filename)
 {
-  RCP<NSEProjectedODE> f = rcp(new NSEProjectedODE(phi_, uB_, forceTerm_, t_, deltat_, ds_.mesh(), false, verbosity_));
+  RCP<NSEProjectedODE> f = rcp(new NSEProjectedODE(phi_, uB_, forceTerm_, t_, deltat_,
+						   nu_, ds_.mesh(), false, verbosity_));
   f->initialize();
 
   // // Assumes that tInit = 0.0

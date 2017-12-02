@@ -220,6 +220,7 @@ LinearOperator<double> denseMatrixMatrixProduct(
   const LinearOperator<double>& A,
   const LinearOperator<double>& B)
 {
+  std::cout << "Performing denseMatrixMatrixProduct from the local file " << std::endl;
 // op(A) is m by kA, op(B) is kB by n and their product C is m by n
 	char TRANSA = 'N';
 	char TRANSB = 'N';
