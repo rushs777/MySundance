@@ -12,17 +12,22 @@ filename=log_test.txt
 filenameShort=log_test_short.txt
 executable=forward_problem_TransientChannel.exe
 
-rm $filename
+echo "removing old files"
+rm -f $filename
 
 ReArray=( "${@:2:$1}" ); shift "$(( $1 + 1))"
 nxnt=( "$@" )
 
+echo "start loop"
+echo "nxnt=" ${nxnt}
+echo "Re=" "${!ReArray[@]}"
+
 for i in "${!ReArray[@]}"
 do
-#    echo "Value of Re = ${ReArray[$i]}"
+    echo "Value of Re = ${ReArray[$i]}"
     for j in "${!nxnt[@]}"
     do
-#	echo "Value of nxnt = ${nxnt[$j]}"
+	echo "Value of nxnt = ${nxnt[$j]}"
 	echo "Starting run for Re = ${ReArray[$i]}, nx=nSteps = ${nxnt[$j]}"
 	./$executable --nx=${nxnt[$j]} --nSteps=${nxnt[$j]} --Re=${ReArray[$i]} --verbosity=1 2>&1 | tee -a $filename
     done
