@@ -142,6 +142,7 @@ Expr KKT_Transient_Channel::solve(string solverXML, double eta_design, double et
   */
 
   // Next thought: Take the alpha from the inverse problem and use that to build U0_Vec
+  /*
   Vector<double> U0_Vec = getDiscreteFunctionVector(U0);
   string filename = "/home/sirush/PhDResearch/MMS_Transient_Channel/InverseProblem/Results/SingleParameterSpace/tol0.999/Re128/nx25nt25/alphaROM.txt";
   std::ifstream alpha_reader(filename, std::ios::in);
@@ -178,7 +179,8 @@ Expr KKT_Transient_Channel::solve(string solverXML, double eta_design, double et
 	// for which function (alpha, lambda, p)  is being referenced.
 	// Thus I propose that the runners go t, k, r instead of t, r, k
 	alpha_reader >> U0_Vec[r + 3*Ru_*tIndex];
-    }  
+    } 
+  */ 
 
   stateEqn();
   adjointEqn();
@@ -218,7 +220,7 @@ Expr KKT_Transient_Channel::solve(string solverXML, double eta_design, double et
 
   // Attempting to create alphaOPT_ from the first Ru_*(nSteps_+1) elements
   // getDiscreteFunctionVector(U0).dim()
-  U0_Vec = getDiscreteFunctionVector(U0);
+  Vector<double> U0_Vec = getDiscreteFunctionVector(U0);
   Array<BasisFamily> time_basisArray(Ru_);
   for(int i = 0; i < Ru_; i++)
     time_basisArray[i] = time_basis_;
