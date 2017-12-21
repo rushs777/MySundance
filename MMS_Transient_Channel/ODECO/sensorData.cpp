@@ -10,22 +10,27 @@ sensorData::sensorData(Array<Point> sensorLocations, Mesh spatialMesh, Mesh time
 {
   // This check ensures that the sensor locations are a subset of the spatial mesh vertices
   int numOfVertices = spatialMesh_.numCells(0);
+  int numLiveSensors = 0;
   int Ns = allSensorLocations_.length(); // Number of sensors
   for(int i = 0; i < Ns; i++)
     {
       bool flag = false;
       for(int j = 0; j < numOfVertices; j++)
 	{
-	  if(allSensorLocations_[i][0] == spatialMesh_.nodePosition(j)[0] &&
-	     allSensorLocations_[i][1] == spatialMesh_.nodePosition(j)[1] )
+	  if(fabs(allSensorLocations_[i][0] - spatialMesh_.nodePosition(j)[0])<1.0e-8 &&
+	     fabs(allSensorLocations_[i][1] - spatialMesh_.nodePosition(j)[1])<1.0e-8 )
 	    {
 	      flag = true;
+	      numLiveSensors++;
 	      break;
 	    }
 	}
       TEUCHOS_TEST_FOR_EXCEPTION(!flag, std::runtime_error, "sensor locations are not a subset of spatial mesh vertices");	    
     }
-  
+  Out::root() << "found " << numLiveSensors << " active sensors in mesh " << endl;
+  TEUCHOS_TEST_FOR_EXCEPTION(numLiveSensors != Ns, std::runtime_error,
+			     "Found " << numLiveSensors << " active sensor locations in mesh"
+			     ", expected " << Ns);
 
 }
 

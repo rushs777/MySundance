@@ -15,6 +15,7 @@ executable=stage_KKT_required_files.exe
 
 ReArray=( "${@:2:$1}" ); shift "$(( $1 + 1))"
 nxnt=( "$@" )
+tf=4
 
 for i in "${!ReArray[@]}"
 do
@@ -22,7 +23,9 @@ do
     for j in "${!nxnt[@]}"
     do
 #	echo "Value of nxnt = ${nxnt[$j]}"
-	echo "Starting run for Re = ${ReArray[$i]}, nx=nSteps = ${nxnt[$j]}"
-	./$executable --nx=${nxnt[$j]} --nSteps=${nxnt[$j]} --Re=${ReArray[$i]} --verbosity=0 2>&1 | tee -a $filename
+	nx=${nxnt[$j]}
+	nt=$((${tf} * ${nxnt[$j]}))
+	echo "Starting run for Re = ${ReArray[$i]}, nx=$nx, nt=${nt}, tf=${tf}"
+	./$executable --nx=${nx} --nSteps=${nt} --tFinal=${tf} --Re=${ReArray[$i]} --verbosity=0 2>&1 | tee -a $filename
     done
 done

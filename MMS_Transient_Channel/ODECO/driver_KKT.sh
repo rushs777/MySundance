@@ -15,14 +15,20 @@ rm $filename
 
 ReArray=( "${@:2:$1}" ); shift "$(( $1 + 1))"
 nxnt=( "$@" )
+tf=4
 
 for i in "${!ReArray[@]}"
 do
 #    echo "Value of Re = ${ReArray[$i]}"
     for j in "${!nxnt[@]}"
     do
-#	echo "Value of nxnt = ${nxnt[$j]}"
-	echo "Starting run for Re = ${ReArray[$i]}, nx=nSteps = ${nxnt[$j]}"
-	./$executable --nx=${nxnt[$j]} --nSteps=${nxnt[$j]} --Re=${ReArray[$i]} --verbosity=0 2>&1 | tee -a $filename
+	echo "Value of nxnt = ${nxnt[$j]}"
+	nx=${nxnt[$j]}
+	nt=$((${tf} * ${nxnt[$j]}))
+	for sens in 1 3 5
+	do
+	    echo "Starting run for Re = ${ReArray[$i]}, nx=$nx, nt=${nt}, tf=${tf} nSens=${sens}"
+	    ./$executable --nx=${nx} --nSteps=${nt} --tFinal=${tf} --Re=${ReArray[$i]} --nSens=${sens} --verbosity=0 2>&1 | tee -a $filename
+	done
     done
 done

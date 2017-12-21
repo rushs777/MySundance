@@ -1,9 +1,13 @@
 #!/bin/bash
 
-cd ForwardProblem
-./driver_simulation.sh {4,1,10,20,40} {25,50}
-cd ../POD/SingleParameterSpace
-./driver_POD.sh {4,1,10,20,40} {25,50}
-./driver_stager.sh {4,1,10,20,40} {25,50}
-cd ../../ODECO
-./driver_KKT.sh {4,1,10,20,40} {25,50}
+#cd ForwardProblem
+#echo "================== RUNNING SIMULATIONS ================= "
+#./driver_simulation.sh {2,10,100} {24,36,48,60,72}
+#cd ../POD/SingleParameterSpace
+#echo "================== FORMING PODS ================= "
+#./driver_POD.sh {2,10,100} {24,36,48,60,72}
+#echo "================== STAGING PODS ================= "
+#./driver_stager.sh {2,10,100} {24,36,48,60,72}
+echo "================== RUNNING KKT ================= "
+cd ODECO #../../ODECO
+./driver_KKT.sh {2,10,100} {24,36,48,60,72}
