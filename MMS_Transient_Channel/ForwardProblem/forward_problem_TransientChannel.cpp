@@ -65,8 +65,6 @@ Expr qExFunc(const Expr& t)
 {
   Expr x = new CoordExpr(0);
   Expr y = new CoordExpr(1);
-  // double R = 2.0;
-  Out::os() << "Hi from qExFunc where R is " << R << endl;
 
   // This is my updated version of q
   // Changes are 1) Moved the 1/Re term to the correct place
