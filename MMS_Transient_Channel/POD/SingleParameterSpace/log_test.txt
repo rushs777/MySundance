@@ -1,88 +1,150 @@
 Playa::MPISession::init() started serial run
+
+./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-For Re = 1, nx = 100, nSteps = 100, and tol = 0.999
-runtime = 158.846
+Performing denseMatrixMatrixProduct from the local file 
+Performing denseMatrixMatrixProduct from the local file 
+For Re = 10, nx = 24, nSteps = 96, and tol = 0.999
+runtime = 14.2792
 
 
 Playa::MPISession::init() started serial run
+
+./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-For Re = 2, nx = 100, nSteps = 100, and tol = 0.999
-runtime = 171.737
+Performing denseMatrixMatrixProduct from the local file 
+Performing denseMatrixMatrixProduct from the local file 
+For Re = 10, nx = 36, nSteps = 144, and tol = 0.999
+runtime = 50.9109
 
 
 Playa::MPISession::init() started serial run
+
+./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-For Re = 4, nx = 100, nSteps = 100, and tol = 0.999
-runtime = 215.289
+Performing denseMatrixMatrixProduct from the local file 
+Performing denseMatrixMatrixProduct from the local file 
+For Re = 10, nx = 48, nSteps = 192, and tol = 0.999
+runtime = 136.354
 
 
 Playa::MPISession::init() started serial run
+
+./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-For Re = 8, nx = 100, nSteps = 100, and tol = 0.999
-runtime = 156.393
+Performing denseMatrixMatrixProduct from the local file 
+Performing denseMatrixMatrixProduct from the local file 
+For Re = 10, nx = 60, nSteps = 240, and tol = 0.999
+runtime = 300.731
 
 
 Playa::MPISession::init() started serial run
+
+./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-For Re = 16, nx = 100, nSteps = 100, and tol = 0.999
-runtime = 157.13
+Performing denseMatrixMatrixProduct from the local file 
+Performing denseMatrixMatrixProduct from the local file 
+For Re = 10, nx = 72, nSteps = 288, and tol = 0.999
+runtime = 602.536
 
 
 Playa::MPISession::init() started serial run
+
+./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-For Re = 32, nx = 100, nSteps = 100, and tol = 0.999
-runtime = 155.768
+Performing denseMatrixMatrixProduct from the local file 
+Performing denseMatrixMatrixProduct from the local file 
+For Re = 100, nx = 24, nSteps = 96, and tol = 0.999
+runtime = 13.93
 
 
 Playa::MPISession::init() started serial run
+
+./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-For Re = 64, nx = 100, nSteps = 100, and tol = 0.999
-runtime = 159.06
+Performing denseMatrixMatrixProduct from the local file 
+Performing denseMatrixMatrixProduct from the local file 
+For Re = 100, nx = 36, nSteps = 144, and tol = 0.999
+runtime = 50.8167
 
 
 Playa::MPISession::init() started serial run
+
+./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-For Re = 128, nx = 100, nSteps = 100, and tol = 0.999
-runtime = 155.181
+Performing denseMatrixMatrixProduct from the local file 
+Performing denseMatrixMatrixProduct from the local file 
+For Re = 100, nx = 48, nSteps = 192, and tol = 0.999
+runtime = 134.362
+
+
+Playa::MPISession::init() started serial run
+
+./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Performing denseMatrixMatrixProduct from the local file 
+Performing denseMatrixMatrixProduct from the local file 
+For Re = 100, nx = 60, nSteps = 240, and tol = 0.999
+runtime = 303.847
+
+
+Playa::MPISession::init() started serial run
+
+./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+Performing denseMatrixMatrixProduct from the local file 
+Performing denseMatrixMatrixProduct from the local file 
+For Re = 100, nx = 72, nSteps = 288, and tol = 0.999
+runtime = 613.103
 
 

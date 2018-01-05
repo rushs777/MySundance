@@ -61,6 +61,9 @@ int main(int argc, char *argv[])
 
       int nSteps = 25;
       Sundance::setOption("nSteps", nSteps, "Number of time steps");
+      
+      int numSens = 5;
+      Sundance::setOption("nSens", numSens, "Number of sensors");
 
       //double gamma = 0.1;
       //Sundance::setOption("gamma", gamma, "perturbation to target");
@@ -132,7 +135,9 @@ int main(int argc, char *argv[])
 
       // Create the measurement value functions
       // Create an array that holds the * position values of the sensors
-      Array<double> positionValues = tuple(0.2, 0.4, 0.6, 0.8);
+      double DeltaX = 1.0/(numSens+1.0);
+      Array<double> positionValues(numSens);
+      for (int i=0; i<numSens; i++) positionValues[i] = (i+1)*DeltaX;
       Array<Point> positionArray;
       // spatialDim() returns n for nD
       positionArray.resize(pow(positionValues.length(),spatialMesh.spatialDim() ));
@@ -186,6 +191,7 @@ int main(int argc, char *argv[])
       //          aggregate velocity abs error, aggregate velocity rel error]
       Array<double> errors = KKT_System.errorCheck(uExact,t);
       cout << "Re=" << Re
+	   << " numSensors=" << numSens
 	   << " nx=" << nx
 	   << " nSteps=" << nSteps
 	   << " tol=" << tol << endl;
@@ -208,7 +214,8 @@ int main(int argc, char *argv[])
       	vtkDir+="MultipleParameterSpace/";
 
       vtkDir += "tol" + tolFileValue.str() + "/Re" + ReynoldsString.str() + "/"
-      	+ "nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/";
+      	+ "nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/"
+	+ "numSens" + Teuchos::toString(numSens) + "/";
 
       // Create the directory for storing the vtk files
       int dirCreation = system( ("mkdir -p " + vtkDir).c_str() );

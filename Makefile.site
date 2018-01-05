@@ -6,8 +6,11 @@
 # This should be the only change necessary upon switching between our systems
 #
 # ########################################################
-#USER=KL
-USER=SIMON
+#
+# Uncomment to work on KL's machine
+USER=KL
+# Uncomment to work on Simon's machine
+#USER=SIMON
 # ########################################################
 
 
