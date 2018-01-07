@@ -7,6 +7,9 @@
 # These lists can be enclosed in {} and comma-separated, or simply as a series of space
 # separated values; but the {} notation is easier for readibility
 
+# UPDATE: After Christmas 2017, the {} seems to have broken inexplicitly. Thus have to use the
+# space separated version now
+
 #filename is the name of the file to store the output from the runs
 filename=log_test.txt
 filenameShort=log_test_short.txt
@@ -17,11 +20,13 @@ rm -f $filename
 
 ReArray=( "${@:2:$1}" ); shift "$(( $1 + 1))"
 nxnt=( "$@" )
-tf=4
+# in the current iteration, we are letting nt be the number of timesteps per second
+# Thus the real number of time steps is the time of the simulation (tf) times nt
+tf=1
 
 echo "start loop"
 echo "nxnt=" ${nxnt}
-echo "Re array=" "${!ReArray[@]}"
+echo "Re array=" "${ReArray[@]}"
 
 for i in "${!ReArray[@]}"
 do
@@ -36,7 +41,7 @@ do
     done
 done
 
-grep -i Re= $filename > $filenameShort
+grep -i tFinal= $filename > $filenameShort
 
 # Prints out everything in the array
 #declare -p ReArray

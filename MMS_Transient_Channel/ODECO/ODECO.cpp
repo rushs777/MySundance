@@ -7,7 +7,6 @@
 
 
 #include "integralOperator.hpp"
-//#include "ODECO.hpp"
 #include "KKT_Transient_Channel.hpp"
 //#include "sensorData.hpp"
 
@@ -37,10 +36,6 @@ using std::vector;
 
 //   return vertex;
 // }
-
-
-// Resume by cleaning up this file; and get results to be outputted.
-
     
 int main(int argc, char *argv[]) 
 {
@@ -110,7 +105,7 @@ int main(int argc, char *argv[])
 	{
 	  cout << "Took multiple branch" << endl;
 	}
-      POD_DataDir += "Results/Re" + ReynoldsString.str()
+      POD_DataDir += "Results/tFinal"+Teuchos::toString(int(tFinal))+"sec/Re" + ReynoldsString.str()
 	+ "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps)
 	+ "/tol";
       std::ostringstream tolFileValue;
@@ -155,8 +150,9 @@ int main(int argc, char *argv[])
       Expr eastVec = List(cos(eastAngle), sin(eastAngle));
 
       // Specify where to find the sensor data for one choice of parameter values
-      string snapshotDataDir = "../ForwardProblem/Results/Re"
-	+ ReynoldsString.str() + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/";
+      string snapshotDataDir = "../ForwardProblem/Results/tFinal" + Teuchos::toString(int(tFinal))
+	+ "sec/Re" + ReynoldsString.str() + Teuchos::toString(nx) + "nt"
+	+ Teuchos::toString(nSteps) + "/";
       string filenamePrefix = "st-v";
       string snapshotFilenamePrefix = snapshotDataDir + filenamePrefix;
 
@@ -190,7 +186,8 @@ int main(int argc, char *argv[])
       // Returns [absolute alpha error, relative alpha error,
       //          aggregate velocity abs error, aggregate velocity rel error]
       Array<double> errors = KKT_System.errorCheck(uExact,t);
-      cout << "Re=" << Re
+      cout << "tFinal=" << tFinal << " sec"
+	   << " Re=" << Re
 	   << " numSensors=" << numSens
 	   << " nx=" << nx
 	   << " nSteps=" << nSteps
@@ -213,7 +210,8 @@ int main(int argc, char *argv[])
       else if (parameterSpace=="multiple")
       	vtkDir+="MultipleParameterSpace/";
 
-      vtkDir += "tol" + tolFileValue.str() + "/Re" + ReynoldsString.str() + "/"
+      vtkDir += "tol" + tolFileValue.str() + "/tFinal" + Teuchos::toString(int(tFinal))
+	+ "sec/Re" + ReynoldsString.str() + "/"
       	+ "nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/"
 	+ "numSens" + Teuchos::toString(numSens) + "/";
 

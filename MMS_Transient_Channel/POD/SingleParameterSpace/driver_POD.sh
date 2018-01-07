@@ -7,15 +7,21 @@
 # These lists can be enclosed in {} and comma-separated, or simply as a series of space
 # separated values; but the {} notation is easier for readibility
 
+# UPDATE: After Christmas 2017, the {} seems to have broken inexplicitly. Thus have to use the
+# space separated version now
+
 #filename is the name of the file to store the output from the runs
 filename=log_test.txt
 executable=POD_Generator.exe
 
+echo "removing old files"
 rm $filename
 
 ReArray=( "${@:2:$1}" ); shift "$(( $1 + 1))"
 nxnt=( "$@" )
-tf=4
+# in the current iteration, we are letting nt be the number of timesteps per second
+# Thus the real number of time steps is the time of the simulation (tf) times nt
+tf=1
 
 for i in "${!ReArray[@]}"
 do
@@ -29,25 +35,3 @@ do
 	./$executable --nx=${nx} --nSteps=${nt} --tFinal=${tf} --Re=${ReArray[$i]} --verbosity=0 2>&1 | tee -a $filename
     done
 done
-
-
-
-
-
-
-#Old way
-#This bash script expects 1 argument, which is the list of integer values
-# to execute POD_Generator.exe with for nx and nSteps
-# The list must be enclosed in {} and comma-separated.
-#filename is the name of the file to store the output from the runs
-
-#filename=log_POD_Generation_tol0.999.txt
-#executable=POD_Generator.exe
-
-#rm $filename
-
-#for i in "$@"
-#do
-#    echo "Running for nx,nSteps = $i"
-#    ./$executable --nx=$i --nSteps=$i 2>&1 | tee -a $filename
-#done

@@ -21,6 +21,9 @@ int main(int argc, char* argv[])
   int nSteps = 8;
   Sundance::setOption("nSteps",nSteps,"Number of time steps taken to go from iInit to tFinal");
 
+  double tFinal = 1.0;
+  Sundance::setOption("tFinal", tFinal, "final time");  
+
   double tol = .999;
   Sundance::setOption("tol",tol,"The tolerance used in the relative information content (RIC) to determine the number of basis functions to keep");
 
@@ -40,7 +43,8 @@ int main(int argc, char* argv[])
   // Absolute Path
   //string snapshotDataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/ForwardProblem/Results/Re";
   // Relative Path
-  string snapshotDataDir = "../../ForwardProblem/Results/Re";
+  string snapshotDataDir = "../../ForwardProblem/Results/tFinal"
+                           +Teuchos::toString(int(tFinal)) +"sec/Re";
   std::ostringstream ReynoldsString;
   ReynoldsString << std::setprecision(precision) << Re;
   snapshotDataDir = snapshotDataDir + ReynoldsString.str()
@@ -86,7 +90,7 @@ int main(int argc, char* argv[])
   //   + ReynoldsString.str() +"/nx" + Teuchos::toString(nx)
   //   + "nt" + Teuchos::toString(nSteps) + "/tol";
   // Relative Path
-  string POD_DataDir = "Results/Re"
+  string POD_DataDir = "Results/tFinal"+Teuchos::toString(int(tFinal))+"sec/Re"
     + ReynoldsString.str() +"/nx" + Teuchos::toString(nx)
     + "nt" + Teuchos::toString(nSteps) + "/tol";
   std::ostringstream tolFileValue;
@@ -95,8 +99,8 @@ int main(int argc, char* argv[])
   Array<Expr> phi = pod.get_basis_functions(tol,POD_DataDir);
 
   timer.stop();
-  cout << "For Re = " << Re << ", nx = " << nx << ", nSteps = " << nSteps << ", and tol = "
-       << tol << endl;
+  cout << "For tFinal = " << tFinal << " sec, Re = " << Re << ", nx = " << nx << ", nSteps = "
+       << nSteps << ", and tol = " << tol << endl;
   cout << "runtime = " << timer.totalElapsedTime() << endl << endl << endl;
 
   Sundance::finalize(); 

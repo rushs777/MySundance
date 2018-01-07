@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 
 
       // Specify the location of the velocity snapshots
-      string outDir = "../ForwardProblem/Results/Re";
+      string outDir = "../ForwardProblem/Results/tFinal"+Teuchos::toString(int(tFinal))+"sec/Re";
       std::ostringstream ReynoldsString;
       ReynoldsString << std::setprecision(precision) << Re;
       outDir += ReynoldsString.str() + "/nx" +Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/";
@@ -128,7 +128,9 @@ int main(int argc, char *argv[])
       string filePrefix = outDir + "st-v";
 
       // Specify the location of the reduced-order basis functions
-      string POD_DataDir = "../POD/SingleParameterSpace/Results/Re" + ReynoldsString.str() + "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/tol";
+      string POD_DataDir = "../POD/SingleParameterSpace/Results/tFinal"
+	+Teuchos::toString(int(tFinal))+"sec/Re"+ ReynoldsString.str() + "/nx"
+	+ Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/tol";
       std::ostringstream tolFileValue;
       tolFileValue << std::setprecision(precision) << tol;
       POD_DataDir = POD_DataDir + tolFileValue.str() + "/";
@@ -157,7 +159,8 @@ int main(int argc, char *argv[])
 
       // Write alphaROM(t) to file
       string ROM_Dir="Results/SingleParameterSpace/tol" + tolFileValue.str()
-	+ "/Re" + ReynoldsString.str() + "/nx"+Teuchos::toString(nx)+"nt"
+	+ "/tFinal" + Teuchos::toString(int(tFinal))
+	+ "sec/Re" + ReynoldsString.str() + "/nx"+Teuchos::toString(nx)+"nt"
 	+Teuchos::toString(nSteps)+"/";
       string alpha_filename = ROM_Dir + "alphaROM.txt";
       int dirCreation = system( ("mkdir -p " + ROM_Dir).c_str() );
@@ -170,7 +173,8 @@ int main(int argc, char *argv[])
 
       // Find the error between alphaEx and alphaROM
       Vector<double> alphaError = ROM.alphaErrorCheck(uExact);
-      cout << "Run for nx = " << nx << ", nSteps = " << nSteps << endl;
+      cout << "For tFinal = " << tFinal << " sec, Re = " << Re << ", nx = " << nx << ", nSteps = "
+       << nSteps << ", and tol = " << tol << endl;
       cout << "||2norm of the error in alpha at all timesteps||_2  :\t "  << alphaError.norm2() << endl;
       cout << "||2norm of the error in alpha at all timesteps||_inf:\t " << alphaError.normInf() << endl;
       

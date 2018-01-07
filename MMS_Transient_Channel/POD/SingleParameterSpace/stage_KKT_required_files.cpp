@@ -22,8 +22,8 @@ int main(int argc, char* argv[])
   Sundance::setOption("nx",nx,"Number of spatial elements along each axis");
 
   int nSteps = 8;
-  Sundance:: setOption("nSteps",nSteps,"Number of time steps taken to get from tInit to tFinal");
-
+  Sundance:: setOption("nSteps",nSteps,"Number of time steps taken to get from tInit to tFinal"); 
+  
   double tol = 0.999;
   Sundance::setOption("tol",tol,"tol is the tolerance used by the RIC to determine the number of basis functions to keep");
 
@@ -86,7 +86,8 @@ int main(int argc, char* argv[])
   // Absolute Path
   //string outDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/ForwardProblem/Results/Re";
   // Relative Path
-  string outDir = "../../ForwardProblem/Results/Re";
+  string outDir = "../../ForwardProblem/Results/tFinal"
+                           +Teuchos::toString(int(tFinal)) +"sec/Re";
   std::ostringstream ReynoldsString;
   ReynoldsString << std::setprecision(precision) << Re;
   outDir = outDir + ReynoldsString.str()
@@ -99,7 +100,7 @@ int main(int argc, char* argv[])
 
   // My current thinking is that this should go in the POD directory since it relies
   // on the same information
-  string POD_DataDir = "Results/Re"
+  string POD_DataDir = "Results/tFinal"+Teuchos::toString(int(tFinal))+"sec/Re"
     + ReynoldsString.str() + "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps)
     + "/tol";
   std::ostringstream tolFileValue;

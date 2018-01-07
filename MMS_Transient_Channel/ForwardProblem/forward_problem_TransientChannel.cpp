@@ -183,7 +183,7 @@ int main(int argc, char** argv)
       state->initialize(tCur, dt, uExFunc, pExFunc);
 
       //string outDir = "Results/ForwardProblem/Stokes/";
-      string outDir = "Results/Re";
+      string outDir = "Results/tFinal"+Teuchos::toString(int(tFinal))+"sec/Re";
       std::ostringstream ReynoldsString;
       ReynoldsString << std::setprecision(precision) << Re;
       outDir = outDir + ReynoldsString.str()
@@ -224,7 +224,8 @@ int main(int argc, char** argv)
      
 
       timer.stop();
-      Out::root() << "Re=" << Re
+      Out::root() << "tFinal=" << tFinal
+	          << " Re=" << Re
 		  << " nx=" << nx << " nt=" << nSteps << " uErr=" << check.uErrL2()
 		  << " pErr=" << check.pErrL2() << " runtime=" << timer.totalElapsedTime()
 		  << endl << endl << endl;
