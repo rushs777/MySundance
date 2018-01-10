@@ -7,14 +7,15 @@
 # HAVE TO CHANGE tFinal IN EACH ONE MANUALLY
 args=(2 10 100 24 36)
 
-cd ForwardProblem
-echo "================== RUNNING SIMULATIONS ================= "
-./driver_simulation.sh "${args[@]}"
-cd ../POD/SingleParameterSpace
+#echo "================== RUNNING SIMULATIONS ================= "
+#cd ForwardProblem
+#./driver_simulation.sh "${args[@]}"
 echo "================== FORMING PODS ================= "
-./driver_POD.sh "${args[@]}"
+#cd ../POD/SingleParameterSpace
+#./driver_POD.sh "${args[@]}"
 echo "================== STAGING PODS ================= "
-./driver_stager.sh "${args[@]}"
+#./driver_stager.sh "${args[@]}"
 echo "================== RUNNING KKT ================= "
-cd ODECO #../../ODECO
+cd ODECO
+#cd ../../ODECO
 ./driver_KKT.sh "${args[@]}"

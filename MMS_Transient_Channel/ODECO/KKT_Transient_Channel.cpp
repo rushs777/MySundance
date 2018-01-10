@@ -5,7 +5,11 @@ KKT_Transient_Channel::KKT_Transient_Channel(string POD_DataDir, Mesh spatialMes
   : KKTBase(POD_DataDir, spatialMesh, timeMesh, tFinal, nSteps, verbosity),
     dataClass_(dataClass),
     quad_(new GaussianQuadrature(quadOrder))
-{}
+{
+  std::cout << "About to call dataClass_.create_vstar()" << std::endl;
+  dataClass_.create_vstar();
+  std::cout << "Finished dataClass.create_vstar()" << std::endl;
+}
 
 void KKT_Transient_Channel::stateEqn()
 {
@@ -23,13 +27,16 @@ void KKT_Transient_Channel::adjointEqn()
   integralOperator S = dataClass_.get_S();
   Expr vstar = dataClass_.get_vstar();
   Array<Point> sensorLocations = dataClass_.get_locations();
-  int Ns = vstar.size();  
+  int Ns = vstar.size();
+  std::cout << "From KKT_Transient_Channel::adjointEqn() vstar.size(): " << vstar.size() << std::endl;
+  std::cout << "From KKT_Transient_Channel::adjointEqn() vstar.totalSize(): " << vstar.totalSize() << std::endl;
 
   // Build Su, where S_i(u) = S_i(uB) + sum( alpha[r] S_i( phi[r] ) )
   Expr Su;
   for(int i = 0; i < Ns; i++)
     {
       // Calculate S_i(uB)
+      std::cout << "Hi for i="<<i<<std::endl;
       CellFilter location = getPoint(sensorLocations[i]);
       Expr Si = S.staticDetect(location, uB_);
       for(int r = 0; r < Ru_; r++)

@@ -6,12 +6,10 @@
 #include "PlayaDenseSerialMatrix.hpp"
 #include "VientoSnapshotIO.hpp" // for readSnap
 #include "denseSerialMatrixIO.hpp"
-#include "POD_SVD.hpp"
-
 
 // Local Includes
 //#include "MathematicaConverter.hpp"
-
+#include "POD_SVD.hpp"
 
 /**
  * KKTBase is a base class for solving the KKT system of equations.

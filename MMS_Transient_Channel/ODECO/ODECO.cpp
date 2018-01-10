@@ -131,8 +131,12 @@ int main(int argc, char *argv[])
       // Create the measurement value functions
       // Create an array that holds the * position values of the sensors
       double DeltaX = 1.0/(numSens+1.0);
+      // Turn this back on to be general
       Array<double> positionValues(numSens);
       for (int i=0; i<numSens; i++) positionValues[i] = (i+1)*DeltaX;
+      // This is for specific testing
+      //Array<double> positionValues(1);
+      //positionValues[0] = 0.04;
       Array<Point> positionArray;
       // spatialDim() returns n for nD
       positionArray.resize(pow(positionValues.length(),spatialMesh.spatialDim() ));
@@ -151,7 +155,7 @@ int main(int argc, char *argv[])
 
       // Specify where to find the sensor data for one choice of parameter values
       string snapshotDataDir = "../ForwardProblem/Results/tFinal" + Teuchos::toString(int(tFinal))
-	+ "sec/Re" + ReynoldsString.str() + Teuchos::toString(nx) + "nt"
+	+ "sec/Re" + ReynoldsString.str() + "/nx" + Teuchos::toString(nx) + "nt"
 	+ Teuchos::toString(nSteps) + "/";
       string filenamePrefix = "st-v";
       string snapshotFilenamePrefix = snapshotDataDir + filenamePrefix;

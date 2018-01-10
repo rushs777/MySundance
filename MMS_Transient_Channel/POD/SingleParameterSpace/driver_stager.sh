@@ -20,7 +20,7 @@ ReArray=( "${@:2:$1}" ); shift "$(( $1 + 1))"
 nxnt=( "$@" )
 # in the current iteration, we are letting nt be the number of timesteps per second
 # Thus the real number of time steps is the time of the simulation (tf) times nt
-tf=4
+tf=1
 
 for i in "${!ReArray[@]}"
 do
