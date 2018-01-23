@@ -58,10 +58,9 @@ int main(int argc, char *argv[])
       Sundance::setOption("nSteps", nSteps, "Number of time steps");
       
       int numSens = 5;
-      Sundance::setOption("nSens", numSens, "Number of sensors");
+      Sundance::setOption("numSens", numSens, "Number of sensors");
 
-      //double gamma = 0.1;
-      //Sundance::setOption("gamma", gamma, "perturbation to target");
+      Array<int> ReValues = tuple(10,100);
 
       int quadOrder = 2;
       Sundance::setOption("quadOrder", quadOrder, "Order for the Gaussian Quadrature rule");
@@ -88,7 +87,7 @@ int main(int argc, char *argv[])
       Sundance::setOption("eta_reg",eta_reg,"Value for the constant term in the regularization term");
 
       string parameterSpace = "single";
-      Sundance::setOption("parameterSpace",parameterSpace,"Defines the space from which the POD velocity modes are derived; i.e. a single selection of parameters or multiple simulations");
+      Sundance::setOption("parameterSpace",parameterSpace, "Defines the space from which the POD velocity modes are derived; i.e. a single selection of parameters or multiple simulations");
 
       Sundance::init(&argc, &argv);
 
@@ -100,17 +99,28 @@ int main(int argc, char *argv[])
 	{
 	  cout << "Took single branch" << endl;
 	  POD_DataDir += "SingleParameterSpace/";
+	  POD_DataDir += "Results/tFinal"+Teuchos::toString(int(tFinal))+"sec/Re"
+	    + ReynoldsString.str();
 	}
       else if(parameterSpace=="multiple")
 	{
 	  cout << "Took multiple branch" << endl;
+	  POD_DataDir += "MultipleParameterSpace/";
+	  POD_DataDir += "Results/tFinal"+Teuchos::toString(int(tFinal))+"sec/ReValues";
+	  // Format the displayed ReValues information system() can't create directories with
+	  // parenthesis in the name
+	  string ReValuesStr = "{";
+	  for(int ReIndex=0;ReIndex<ReValues.length()-1;ReIndex++)
+	    ReValuesStr = ReValuesStr + Teuchos::toString(ReValues[ReIndex]) + ",";
+	  ReValuesStr = ReValuesStr + Teuchos::toString(ReValues[ReValues.length()-1]) + "}";
+	  POD_DataDir += ReValuesStr; 
 	}
-      POD_DataDir += "Results/tFinal"+Teuchos::toString(int(tFinal))+"sec/Re" + ReynoldsString.str()
-	+ "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps)
-	+ "/tol";
+
+      POD_DataDir += + "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/tol";
       std::ostringstream tolFileValue;
       tolFileValue << std::setprecision(precision) << tol;
-      POD_DataDir += tolFileValue.str() + "/";
+      POD_DataDir = POD_DataDir + tolFileValue.str() + "/";
+
 
       // Create the spatial mesh
       MeshType spatialMeshType = new Sundance::BasicSimplicialMeshType();
@@ -161,7 +171,8 @@ int main(int argc, char *argv[])
       string snapshotFilenamePrefix = snapshotDataDir + filenamePrefix;
 
       // Create the sensorData object that will generate vstar
-      sensorData sensorObj(positionArray, spatialMesh, timeMesh, snapshotFilenamePrefix, nSteps, eastVec, quadOrder);
+      sensorData sensorObj(positionArray, spatialMesh, timeMesh, snapshotFilenamePrefix,
+			   nSteps, eastVec, quadOrder);
      
 
       // Define the KKT object for this test problem (Transient Channel)
@@ -196,6 +207,10 @@ int main(int argc, char *argv[])
 	   << " nx=" << nx
 	   << " nSteps=" << nSteps
 	   << " tol=" << tol << endl;
+      if(parameterSpace == "multiple")
+	   cout << "Parameter Space=" << ReValues << endl;
+      else
+	cout << "Parameter Space=single" << endl;
       cout << "||alphaExact - alphaOPT||_2 = " << errors[0] << endl;
       cout << "||alphaExact - alphaOPT||_2 / ||alphaExact||_2 = " << errors[1] << endl;
       cout << "||L2norm(uEx(t_m) - uOPT_(t_m)) at all timesteps||_2 :\t "  << errors[2] << endl;

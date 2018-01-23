@@ -5,17 +5,17 @@
 # Then the Re values to use
 # Then the nx,nSteps values to use
 # HAVE TO CHANGE tFinal IN EACH ONE MANUALLY
-args=(2 10 100 24 36)
+args=(2 10 100 24 36 48 60 72)
 
-#echo "================== RUNNING SIMULATIONS ================= "
-#cd ForwardProblem
-#./driver_simulation.sh "${args[@]}"
-echo "================== FORMING PODS ================= "
+echo "================== RUNNING SIMULATIONS ================= "
+cd ForwardProblem
+./driver_simulation.sh "${args[@]}"
+#echo "================== FORMING PODS ================= "
 #cd ../POD/SingleParameterSpace
 #./driver_POD.sh "${args[@]}"
-echo "================== STAGING PODS ================= "
+#echo "================== STAGING PODS ================= "
 #./driver_stager.sh "${args[@]}"
-echo "================== RUNNING KKT ================= "
-cd ODECO
+#echo "================== RUNNING KKT ================= "
+#cd ODECO
 #cd ../../ODECO
-./driver_KKT.sh "${args[@]}"
+#./driver_KKT.sh "${args[@]}"
