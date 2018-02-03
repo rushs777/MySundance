@@ -37,7 +37,6 @@ sensorData::sensorData(Array<Point> sensorLocations, Mesh spatialMesh, Mesh time
 
 void sensorData::create_vstar()
 {
-  std::cout << "Hi from create_vstar()" << std::endl;
   // Create the time DiscreteSpace
   BasisFamily time_basis = new Lagrange(1);
   VectorType<double> epetraVecType = new EpetraVectorType();
@@ -45,9 +44,7 @@ void sensorData::create_vstar()
   
   // This will get uForwardProblem(t_i = timeStep, x) for t_i = 0:tFinal
   Array<Expr> velocityDF;
-  std::cout << "About to resize velocityDF " << std::endl;
   velocityDF.resize(nSteps_+1);
-  cout << "Size of velocityDF=" << velocityDF.length() << std::endl;
   for(int timeStep = 0; timeStep < velocityDF.length(); timeStep++)
     velocityDF[timeStep] = readSnap(snapshotFilenamePrefix_, timeStep, spatialMesh_);
 
@@ -67,12 +64,8 @@ void sensorData::create_vstar()
 	  values[j] = S.staticDetect(pointFilter, velocityDF[j]);
 	  //cout << "The value of the integral eastVec*velocityDF over the point " << positionArray[i] << " at time step " << j << "  is " << values[j] << endl;	      
 	}
-      std::cout << "The values to build v" << i << " on: " << std::endl;
-      std::cout << values << std::endl;
       Expr vi = new DiscreteFunction(time_DS, values,"v["+Teuchos::toString(i)+"]");
-      std::cout << "v" << i << "? = " << vi << std::endl;
       vstar_.append(vi);
-      std::cout << "vstar at i=" << i << " is " << vstar_ << std::endl;
     }
 }
 
@@ -80,7 +73,6 @@ void sensorData::create_vstar()
 
 Expr sensorData::get_vstar()
 {
-  std::cout << "The size of vstar_: " << vstar_.totalSize() << std::endl;
   return vstar_;
 }
 

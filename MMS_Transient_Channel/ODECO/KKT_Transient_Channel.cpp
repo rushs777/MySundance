@@ -36,7 +36,6 @@ void KKT_Transient_Channel::adjointEqn()
   for(int i = 0; i < Ns; i++)
     {
       // Calculate S_i(uB)
-      std::cout << "Hi for i="<<i<<std::endl;
       CellFilter location = getPoint(sensorLocations[i]);
       Expr Si = S.staticDetect(location, uB_);
       for(int r = 0; r < Ru_; r++)
