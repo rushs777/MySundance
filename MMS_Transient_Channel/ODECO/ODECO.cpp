@@ -72,7 +72,13 @@ int main(int argc, char *argv[])
       Sundance::setOption("precision",precision,"Number of significant digits to keep in a filename using tol");
 
       double Re = 1.0;
-      Sundance::setOption("Re", Re, "Reynolds number");     
+      Sundance::setOption("Re", Re, "Reynolds number");
+
+      double U0 = 1.0;
+      Sundance::setOption("U0", U0, "Characteristic velocity used for calculating nu");
+  
+      double L0 = 1.0;
+      Sundance::setOption("L0", L0, "Characteristic length used for calculating nu");       
 
       double tFinal = 1.0;
       Sundance::setOption("tFinal",tFinal,"Final time value");
@@ -88,6 +94,9 @@ int main(int argc, char *argv[])
 
       string parameterSpace = "single";
       Sundance::setOption("parameterSpace",parameterSpace, "Defines the space from which the POD velocity modes are derived; i.e. a single selection of parameters or multiple simulations");
+
+      bool writeResults = true;
+      Sundance::setOption("writeVTK", "skipVTK", writeResults, "bool switch for wrtiing VTK resutls to file. To use: --writeVTK to write results, --skipVTK to not. Default is true");
 
       Sundance::init(&argc, &argv);
 
@@ -105,7 +114,23 @@ int main(int argc, char *argv[])
       else if(parameterSpace=="multiple")
 	{
 	  cout << "Took multiple branch" << endl;
+	  std::string command = "../../Sandbox/Test/exeToBeCalled.exe";
+	  int exeError = system(command.c_str());
+	  if(exeError == -1)
+	    {
+	      cout << "Failed to run exeToBeCalled" << endl;
+	      return 0;
+	    }
+       
+	  
 	  POD_DataDir += "MultipleParameterSpace/";
+
+
+	  
+
+
+
+	  
 	  POD_DataDir += "Results/tFinal"+Teuchos::toString(int(tFinal))+"sec/ReValues";
 	  // Format the displayed ReValues information system() can't create directories with
 	  // parenthesis in the name
@@ -219,69 +244,73 @@ int main(int argc, char *argv[])
 
       timerErrorCheck.stop();
 
-      cout << "Writing results to file" << endl;
       Time timerVTK("vtk");
-      timerVTK.start();
+      if(writeResults)
+	{
+	  cout << "Writing results to file" << endl;
+	  timerVTK.start();
       
-      string vtkDir = "Results/";
-      if (parameterSpace=="single")
-      	vtkDir+="SingleParameterSpace/";
-      else if (parameterSpace=="multiple")
-      	vtkDir+="MultipleParameterSpace/";
+	  string vtkDir = "Results/";
+	  if (parameterSpace=="single")
+	    vtkDir+="SingleParameterSpace/";
+	  else if (parameterSpace=="multiple")
+	    vtkDir+="MultipleParameterSpace/";
 
-      vtkDir += "tol" + tolFileValue.str() + "/tFinal" + Teuchos::toString(int(tFinal))
-	+ "sec/Re" + ReynoldsString.str() + "/"
-      	+ "nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/"
-	+ "numSens" + Teuchos::toString(numSens) + "/";
+	  vtkDir += "tol" + tolFileValue.str() + "/tFinal" + Teuchos::toString(int(tFinal))
+	    + "sec/Re" + ReynoldsString.str() + "/"
+	    + "nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/"
+	    + "numSens" + Teuchos::toString(numSens) + "/";
 
-      // Create the directory for storing the vtk files
-      int dirCreation = system( ("mkdir -p " + vtkDir).c_str() );
-      TEUCHOS_TEST_FOR_EXCEPTION( dirCreation == -1,
-      				  runtime_error,
-      				  "Failed to create " + vtkDir);
+	  // Create the directory for storing the vtk files
+	  int dirCreation = system( ("mkdir -p " + vtkDir).c_str() );
+	  TEUCHOS_TEST_FOR_EXCEPTION( dirCreation == -1,
+				      runtime_error,
+				      "Failed to create " + vtkDir);
       
 	    
-      DiscreteSpace scalarDS(spatialMesh, new Lagrange(1), new EpetraVectorType());
-      // Create a BasisFamily to express our solution; each spatial dim is Lagrange(2)
-      Array<Sundance::BasisFamily> velBasis(spatialMesh.spatialDim());
-      for(int i = 0; i < velBasis.length(); i++)
-      	velBasis[i] = new Sundance::Lagrange(2);
-      DiscreteSpace velocityDS(spatialMesh, velBasis, new EpetraVectorType());
-      L2Projector projector(velocityDS, uExact);
-      //Write uExact for all the time steps
-      int tInit = 0;
-      for(int time=0; time< nSteps+1; time++)
-      	{
-      	  FieldWriter writer = new VTKWriter(vtkDir+"step"+Teuchos::toString(time));
-      	  writer.addMesh(spatialMesh);
-      	  t.setParameterValue(tInit+time*(tFinal-tInit)/nSteps);
-      	  L2Projector projectorOPT(velocityDS, uOPT[time]);
-      	  L2Projector uErrorProjector(velocityDS, uExact - uOPT[time]);
-      	  Expr absErr = sqrt( (uExact - uOPT[time])*(uExact - uOPT[time]));
-      	  Expr absU = sqrt(uExact * uExact);
-      	  Expr absUOPT = sqrt(uOPT[time] * uOPT[time]);
-      	  L2Projector uMagProj(scalarDS, absU);
-      	  L2Projector uOPTMagProj(scalarDS, absUOPT);
-      	  L2Projector absErrorProj(scalarDS, absErr);
-      	  L2Projector relErrorProj(scalarDS, absErr / absU);
-      	  writer.addField("uMag", new ExprFieldWrapper(uMagProj.project()[0]) );
-      	  writer.addField("uOPTMag", new ExprFieldWrapper(uOPTMagProj.project()[0]) );
-      	  writer.addField("errAbs", new ExprFieldWrapper(absErrorProj.project()[0]) );
-      	  writer.addField("errRel", new ExprFieldWrapper(relErrorProj.project()[0]) );
-      	  writer.addField("uExact[0]", new ExprFieldWrapper(projector.project()[0]) );
-      	  writer.addField("uExact[1]", new ExprFieldWrapper(projector.project()[1]) );
-      	  writer.addField("uOPT[0]", new ExprFieldWrapper(projectorOPT.project()[0]) );
-      	  writer.addField("uOPT[1]", new ExprFieldWrapper(projectorOPT.project()[1]) );
-      	  writer.addField("uError[0]", new ExprFieldWrapper(uErrorProjector.project()[0]) );
-      	  writer.addField("uError[1]", new ExprFieldWrapper(uErrorProjector.project()[1]) );
-      	  writer.write();	  
-      	}
+	  DiscreteSpace scalarDS(spatialMesh, new Lagrange(1), new EpetraVectorType());
+	  // Create a BasisFamily to express our solution; each spatial dim is Lagrange(2)
+	  Array<Sundance::BasisFamily> velBasis(spatialMesh.spatialDim());
+	  for(int i = 0; i < velBasis.length(); i++)
+	    velBasis[i] = new Sundance::Lagrange(2);
+	  DiscreteSpace velocityDS(spatialMesh, velBasis, new EpetraVectorType());
+	  L2Projector projector(velocityDS, uExact);
+	  //Write uExact for all the time steps
+	  int tInit = 0;
+	  for(int time=0; time< nSteps+1; time++)
+	    {
+	      FieldWriter writer = new VTKWriter(vtkDir+"step"+Teuchos::toString(time));
+	      writer.addMesh(spatialMesh);
+	      t.setParameterValue(tInit+time*(tFinal-tInit)/nSteps);
+	      L2Projector projectorOPT(velocityDS, uOPT[time]);
+	      L2Projector uErrorProjector(velocityDS, uExact - uOPT[time]);
+	      Expr absErr = sqrt( (uExact - uOPT[time])*(uExact - uOPT[time]));
+	      Expr absU = sqrt(uExact * uExact);
+	      Expr absUOPT = sqrt(uOPT[time] * uOPT[time]);
+	      L2Projector uMagProj(scalarDS, absU);
+	      L2Projector uOPTMagProj(scalarDS, absUOPT);
+	      L2Projector absErrorProj(scalarDS, absErr);
+	      L2Projector relErrorProj(scalarDS, absErr / absU);
+	      writer.addField("uMag", new ExprFieldWrapper(uMagProj.project()[0]) );
+	      writer.addField("uOPTMag", new ExprFieldWrapper(uOPTMagProj.project()[0]) );
+	      writer.addField("errAbs", new ExprFieldWrapper(absErrorProj.project()[0]) );
+	      writer.addField("errRel", new ExprFieldWrapper(relErrorProj.project()[0]) );
+	      writer.addField("uExact[0]", new ExprFieldWrapper(projector.project()[0]) );
+	      writer.addField("uExact[1]", new ExprFieldWrapper(projector.project()[1]) );
+	      writer.addField("uOPT[0]", new ExprFieldWrapper(projectorOPT.project()[0]) );
+	      writer.addField("uOPT[1]", new ExprFieldWrapper(projectorOPT.project()[1]) );
+	      writer.addField("uError[0]", new ExprFieldWrapper(uErrorProjector.project()[0]) );
+	      writer.addField("uError[1]", new ExprFieldWrapper(uErrorProjector.project()[1]) );
+	      writer.write();	  
+	    }
       
-      timerVTK.stop();
+	  timerVTK.stop();
+	}
       timerTotal.stop();
       Out::root() << "KKT Runtime = " << timerKKT.totalElapsedTime() << endl;
       Out::root() << "ErrorCheck Runtime = " << timerErrorCheck.totalElapsedTime() << endl;
-      Out::root() << "VTK Runtime = " << timerVTK.totalElapsedTime() << endl;
+      if(writeResults)
+	Out::root() << "VTK Runtime = " << timerVTK.totalElapsedTime() << endl;
       Out::root() << "Total Runtime = " << timerTotal.totalElapsedTime() << endl;
      
     }
