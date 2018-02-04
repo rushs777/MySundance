@@ -8,6 +8,7 @@
 
 #include "integralOperator.hpp"
 #include "KKT_Transient_Channel.hpp"
+#include <unistd.h> // for chdir()
 //#include "sensorData.hpp"
 
 // Local Files
@@ -44,10 +45,6 @@ int main(int argc, char *argv[])
       Time timerTotal("total");
       timerTotal.start();
 
-      Time timerKKT("KKT");
-      timerKKT.start();
-      
-      
       int verbosity = 0;      
       Sundance::setOption("verbosity", verbosity, "verbosity level");
       
@@ -103,6 +100,9 @@ int main(int argc, char *argv[])
       // State the location of the POD files (phi, b, A, and T)
       std::ostringstream ReynoldsString;
       ReynoldsString << std::setprecision(precision) << Re;
+      std::ostringstream tolFileValue;
+      tolFileValue << std::setprecision(precision) << tol;
+      
       string POD_DataDir = "../POD/";
       if(parameterSpace=="single")
 	{
@@ -114,23 +114,39 @@ int main(int argc, char *argv[])
       else if(parameterSpace=="multiple")
 	{
 	  cout << "Took multiple branch" << endl;
-	  std::string command = "../../Sandbox/Test/exeToBeCalled.exe";
-	  int exeError = system(command.c_str());
-	  if(exeError == -1)
-	    {
-	      cout << "Failed to run exeToBeCalled" << endl;
-	      return 0;
-	    }
-       
-	  
 	  POD_DataDir += "MultipleParameterSpace/";
+	  // Simpler option was to have this code call stage_KKT_required_files.exe
+	  std::string command = "./stage_KKT_required_files.exe";
+	  // Note the space before each option
+	  std::string options = " --nx="+Teuchos::toString(nx)
+	    + " --nSteps="+Teuchos::toString(nSteps)
+	    + " --tol="+tolFileValue.str()
+	    + " --precision="+Teuchos::toString(precision)
+	    + " --Re="+ReynoldsString.str()
+	    + " --U0="+Teuchos::toString(int(U0)) // If U0 is not an int, update
+	    + " --L0="+Teuchos::toString(int(L0)) // If L0 " " 
+	    + " --tFinal="+Teuchos::toString(int(tFinal)) // If tFinal " "
+	    + " --verbosity="+Teuchos::toString(verbosity);
 
+	  cout << "Value sent to execute stage_KKT" << endl;
+	  cout << command + options << endl;
+	  // Navigate to POD_DataDir and execute command with options
+	  int cdError = chdir(POD_DataDir.c_str());
+	  TEUCHOS_TEST_FOR_EXCEPTION(cdError == -1,
+				     runtime_error,
+				     "Failed to to change the directory " + POD_DataDir);
+	  int exeError = system((command+options).c_str());
+	  TEUCHOS_TEST_FOR_EXCEPTION(exeError == -1,
+				     runtime_error,
+				     "Failed to execute " + command);
+	  // Navigate back to the ODECO folder
+	  std::string path_home = "../../ODECO";
+	  cdError = chdir(path_home.c_str());
+	  TEUCHOS_TEST_FOR_EXCEPTION(cdError == -1,
+				     runtime_error,
+				     "Failed to change to the directory " + path_home);	  
 
-	  
-
-
-
-	  
+	  // Resume with defining the Results path for the the POD basis and A,b,T
 	  POD_DataDir += "Results/tFinal"+Teuchos::toString(int(tFinal))+"sec/ReValues";
 	  // Format the displayed ReValues information system() can't create directories with
 	  // parenthesis in the name
@@ -140,11 +156,9 @@ int main(int argc, char *argv[])
 	  ReValuesStr = ReValuesStr + Teuchos::toString(ReValues[ReValues.length()-1]) + "}";
 	  POD_DataDir += ReValuesStr; 
 	}
-
-      POD_DataDir += + "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/tol";
-      std::ostringstream tolFileValue;
-      tolFileValue << std::setprecision(precision) << tol;
-      POD_DataDir = POD_DataDir + tolFileValue.str() + "/";
+      // Finish defining the Results path
+      POD_DataDir += + "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps)
+	+ "/tol" + tolFileValue.str() + "/";
 
 
       // Create the spatial mesh
@@ -161,7 +175,9 @@ int main(int argc, char *argv[])
       MeshSource timeMesher = new PartitionedLineMesher(0.0, tFinal, nSteps, timeMeshType);
       Mesh timeMesh = timeMesher.getMesh();
 
-
+      // Start the timer for the KKT portion of the code
+      Time timerKKT("KKT");
+      timerKKT.start();
 
       // Create the measurement value functions
       // Create an array that holds the * position values of the sensors
@@ -187,7 +203,7 @@ int main(int argc, char *argv[])
       // Create the sample direciton vector
       double eastAngle = 0.0;
       Expr eastVec = List(cos(eastAngle), sin(eastAngle));
-
+   
       // Specify where to find the sensor data for one choice of parameter values
       string snapshotDataDir = "../ForwardProblem/Results/tFinal" + Teuchos::toString(int(tFinal))
 	+ "sec/Re" + ReynoldsString.str() + "/nx" + Teuchos::toString(nx) + "nt"
