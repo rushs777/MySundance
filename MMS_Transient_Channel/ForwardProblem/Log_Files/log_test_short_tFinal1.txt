@@ -1,0 +1,10 @@
+tFinal=1 Re=10 nx=24 nt=24 uErr=4.9018e-05 pErr=0.000123237 runtime=67.147
+tFinal=1 Re=10 nx=36 nt=36 uErr=1.90714e-05 pErr=0.000273046 runtime=222.542
+tFinal=1 Re=10 nx=48 nt=48 uErr=1.02546e-05 pErr=0.000945505 runtime=564.889
+tFinal=1 Re=10 nx=60 nt=60 uErr=6.4452e-06 pErr=0.0024993 runtime=1204.29
+tFinal=1 Re=10 nx=72 nt=72 uErr=4.46075e-06 pErr=0.00522232 runtime=2222.39
+tFinal=1 Re=100 nx=24 nt=24 uErr=0.000188406 pErr=3.81601e-05 runtime=60.1001
+tFinal=1 Re=100 nx=36 nt=36 uErr=7.77581e-05 pErr=0.000110408 runtime=191.858
+tFinal=1 Re=100 nx=48 nt=48 uErr=4.25702e-05 pErr=0.000572826 runtime=457.947
+tFinal=1 Re=100 nx=60 nt=60 uErr=2.69211e-05 pErr=0.00114449 runtime=951.926
+tFinal=1 Re=100 nx=72 nt=72 uErr=1.85823e-05 pErr=0.00112555 runtime=1705.61
