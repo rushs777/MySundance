@@ -10,16 +10,41 @@
 # UPDATE: After Christmas 2017, the {} seems to have broken inexplicitly. Thus have to use the
 # space separated version now
 
-#filename is the name of the file to store the output from the runs
-filename=log_test.txt
-filenameShort=log_test_short.txt
-executable=forward_problem_TransientChannel.exe
-
-echo "removing old files"
-rm -f $filename
-
+# Parse the passed array into the relevant pieces
 ReArray=( "${@:2:$1}" ); shift "$(( $1 + 1))"
 nxnt=( "$@" )
+
+# filename is the prefix of the name of the file to store the output from the runs
+filename="log_Re{"
+# Name excutable the script will run
+executable=forward_problem_TransientChannel.exe
+# Define the directory where to store results
+directory="Log_Files/"
+
+# Build out the portion of the filename concering Re
+for i in "${ReArray[@]:0:${#ReArray[@]}-1}"
+do
+    echo $i
+    filename=$filename$i","
+done
+# Append the last Re value along with the next prefix in the filename
+filename=$filename${ReArray[-1]}"}_nxnt{"
+# Build out the portion of the filename concerning nx,nt
+for j in "${nxnt[@]:0:${#nxnt[@]}-1}"
+do
+    filename=$filename$j","
+done
+# Append the closing brace
+filename=$filename${nxnt[-1]}"}"
+# Build the short filename
+filename_short=$filename"_short.txt"
+# Add the file extension
+filename=$filename".txt"
+
+echo $filename
+echo $filename_short
+
+
 # in the current iteration, we are letting nt be the number of timesteps per second
 # Thus the real number of time steps is the time of the simulation (tf) times nt
 tf=1
@@ -41,7 +66,16 @@ do
     done
 done
 
-grep -i tFinal= $filename > $filenameShort
+# Only keep the main results
+grep -i tFinal= $filename > $filename_short
+
+# Move the files nto the Log_Files directory
+mv $filename $directory
+mv $filename_short $directory
+
+
+
+
 
 # Prints out everything in the array
 #declare -p ReArray
