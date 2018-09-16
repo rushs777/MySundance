@@ -15,6 +15,7 @@ POD_SVD::POD_SVD(const LinearOperator<double> &B, DiscreteSpace &ds, int verbosi
 
 void POD_SVD::createMassMatrix()
 {
+  std:: cout << "Hello from createMassMatrix()" << std::endl << std::endl;
   // Make sure that the DiscreteSpace is built off an EpetraVectorType
   const EpetraVectorType* check = dynamic_cast<const EpetraVectorType*>(ds_.vecType().ptr().get());
   TEUCHOS_TEST_FOR_EXCEPTION(check==0, runtime_error,
@@ -87,6 +88,7 @@ void POD_SVD::calculateSVD()
    * values are noticably greater than 0. Thus we will only be working with
    * U = Chi
    */
+  std::cout << "Hello from calculateSVD() " << std::endl;
   Playa::LinearOperator<double> ChiT;
   SUNDANCE_ROOT_MSG2(verbosity_, "Calculating A = B^T*S*B.........");
   Playa::LinearOperator<double> A = denseMatrixMatrixProduct(B_.transpose(), epetraDenseProduct(S_,B_) ); //denseMatrixMatrixProduct checks the dimensions
@@ -131,6 +133,7 @@ void POD_SVD::calculateSVD()
 
 void POD_SVD::calculateBasisFunctions()
 {
+  std::cout << "calculateBasisFunctions()" << std::endl;
   // Needed for checking that reduced-basis functions are orthogonal wrt L2Norm
   CellFilter interior = new MaximalCellFilter();
   QuadratureFamily quad = new GaussianQuadrature(6);
@@ -146,8 +149,10 @@ void POD_SVD::calculateBasisFunctions()
   Playa::VectorSpace<double> dense_S_domain = vecTypeSerial.createEvenlyPartitionedSpace(Playa::MPIComm::world(), S_.domain().dim() );
   phi_.resize(Chi_.domain().dim());
 
+  std::cout << "Starting to calculate phi from chi" << std::endl;
   for(int r = 0; r < Chi_.domain().dim(); r++)
     {
+      //std::cout << "For " << r << " out of " << Chi_.domain().dim() << std::endl;
       ej.zero();
       ej[r] = 1.0;
 
@@ -173,6 +178,10 @@ void POD_SVD::calculateBasisFunctions()
     }
 
   // Check that the reduced-basis functions are orthogonal
+  /*
+  std::cout << "Starting Orthogonal Check" << std::endl;
+  Time timer("orthogonal_check");
+  timer.start();
   for(int i = 0; i < phi_.length(); i++)
     {
       for(int j = 0; j < phi_.length(); j++)
@@ -189,12 +198,16 @@ void POD_SVD::calculateBasisFunctions()
 	    }
 	}
     }
-
+  timer.stop();
+  std::cout << "It took " << timer.totalElapsedTime() << " seconds to run the check" << std::endl;
+  */
 }
 
 
 Array<Expr> POD_SVD::get_basis_functions(double tol, string fileDir)
 {
+  std::cout << "Hello from get_basis_functions(tol,fileDir)" << std::endl;
+  std::cout << fileDir << std::endl;
   TEUCHOS_TEST_FOR_EXCEPTION(tol < 0 && tol > 1.0,
 			     runtime_error,
 			     "The value of tol given as " + Teuchos::toString(tol)
@@ -207,6 +220,7 @@ Array<Expr> POD_SVD::get_basis_functions(double tol, string fileDir)
   double RIC = sumInformation/totalInformation;
 
   int i = 1;
+  std::cout << "entering the RIC loop" << std::endl;
   while(RIC < tol)
     {
       rtn.push_back(phi_[i]);
@@ -214,34 +228,26 @@ Array<Expr> POD_SVD::get_basis_functions(double tol, string fileDir)
       RIC = sumInformation/totalInformation;
       i++;
     }
+  std::cout << "RIC loop completed with a value of i=" << i-1 << std::endl;
 
   // Write the reduced-order basis functions to file
-  int fileError = system( ("rm -fr " + fileDir).c_str() );
+  int fileError = system( ("mkdir -p " + fileDir).c_str() );
   TEUCHOS_TEST_FOR_EXCEPTION( fileError == -1, runtime_error,
-			      "Failed to delete " + fileDir
-			      + "; can also be triggered if this is the inital run" );
+			      "Failed to initially create " + fileDir); 
+  fileError = system( ("rm -fr " + fileDir).c_str() );
+  TEUCHOS_TEST_FOR_EXCEPTION( fileError == -1, runtime_error,
+			      "Failed to delete " + fileDir );
   fileError = system( ("mkdir -p " + fileDir).c_str() );
   TEUCHOS_TEST_FOR_EXCEPTION( fileError == -1, runtime_error,
-			      "Failed to create " + fileDir); 
+			      "Failed to recreate " + fileDir); 
   
   string filePrefix = fileDir + "/POD_basis";
   int Ru = i;
   for(int r = 0; r < Ru; r++)
     writeSnap(filePrefix, r, rtn[r]);
+  
 
   return rtn;
-
-  
-  // for(int i = 0; i < lambda_.dim(); i++)
-  //   {
-  //     sumInformation += lambda_[i];
-  //     RIC = sumInformation/totalInformation;
-  //     rtn.push_back(phi_[i]);      
-  //     if( RIC >= tol )
-  // 	break;
-  //   }
-  
-  
 }
 
 
