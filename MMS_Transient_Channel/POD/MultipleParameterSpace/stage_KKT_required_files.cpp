@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
   Array<RCP<DenseSerialMatrix>> ptrLibrary;
   
   // Loop over Re
-  Array<int> ReValues = tuple(10,100);
+  Array<int> ReValues = tuple(1,20,40,60,80,100);
   for(int ReIndex = 0; ReIndex < ReValues.length(); ReIndex++)
     {
       snapshotDataDir = "../../ForwardProblem/Results/tFinal"
@@ -165,7 +165,7 @@ int main(int argc, char* argv[])
   RCP<NSEProjectedODE> f = rcp(new NSEProjectedODE(phi, uB, q, t, deltat, nu,
 						   spatialMesh, false, verbosity));
   f->initialize();
-  f->write_b(nSteps);  // b is tied to Re through q
+  f->write_b(nSteps);  // b is tied to nu and the Re, inflow through q
 
   // Move the files to the POD Directory
   int moveError = system( ("mv NSEProjectedODEFiles/* " + POD_DataDir + ".").c_str() );

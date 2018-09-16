@@ -1,150 +1,450 @@
 Playa::MPISession::init() started serial run
-
-./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-Performing denseMatrixMatrixProduct from the local file 
-Performing denseMatrixMatrixProduct from the local file 
-For Re = 10, nx = 24, nSteps = 96, and tol = 0.999
-runtime = 14.2792
+runtime = 2.91658
 
 
+Time taken to make the snapshot matrix: 0.115939
+Time taken to generate u_B: 0.000197
+Time taken to write u_B: 0.01038
+Time taken to generate b: 0.060267
+Time taken to write b: 2.51409
 Playa::MPISession::init() started serial run
-
-./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-Performing denseMatrixMatrixProduct from the local file 
-Performing denseMatrixMatrixProduct from the local file 
-For Re = 10, nx = 36, nSteps = 144, and tol = 0.999
-runtime = 50.9109
+runtime = 9.11296
 
 
+Time taken to make the snapshot matrix: 0.255148
+Time taken to generate u_B: 0.00045
+Time taken to write u_B: 0.022957
+Time taken to generate b: 0.099392
+Time taken to write b: 8.39142
 Playa::MPISession::init() started serial run
-
-./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-Performing denseMatrixMatrixProduct from the local file 
-Performing denseMatrixMatrixProduct from the local file 
-For Re = 10, nx = 48, nSteps = 192, and tol = 0.999
-runtime = 136.354
+runtime = 20.7324
 
 
+Time taken to make the snapshot matrix: 0.579204
+Time taken to generate u_B: 0.001123
+Time taken to write u_B: 0.045141
+Time taken to generate b: 0.150757
+Time taken to write b: 19.4298
 Playa::MPISession::init() started serial run
-
-./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-Performing denseMatrixMatrixProduct from the local file 
-Performing denseMatrixMatrixProduct from the local file 
-For Re = 10, nx = 60, nSteps = 240, and tol = 0.999
-runtime = 300.731
+runtime = 40.1572
 
 
+Time taken to make the snapshot matrix: 1.12147
+Time taken to generate u_B: 0.001862
+Time taken to write u_B: 0.063234
+Time taken to generate b: 0.21823
+Time taken to write b: 37.9857
 Playa::MPISession::init() started serial run
-
-./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-Performing denseMatrixMatrixProduct from the local file 
-Performing denseMatrixMatrixProduct from the local file 
-For Re = 10, nx = 72, nSteps = 288, and tol = 0.999
-runtime = 602.536
+runtime = 68.7569
 
 
+Time taken to make the snapshot matrix: 1.92362
+Time taken to generate u_B: 0.002976
+Time taken to write u_B: 0.091162
+Time taken to generate b: 0.304139
+Time taken to write b: 65.3648
 Playa::MPISession::init() started serial run
-
-./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-Performing denseMatrixMatrixProduct from the local file 
-Performing denseMatrixMatrixProduct from the local file 
-For Re = 100, nx = 24, nSteps = 96, and tol = 0.999
-runtime = 13.93
+runtime = 2.87631
 
 
+Time taken to make the snapshot matrix: 0.113031
+Time taken to generate u_B: 0.000189
+Time taken to write u_B: 0.010433
+Time taken to generate b: 0.061485
+Time taken to write b: 2.476
 Playa::MPISession::init() started serial run
-
-./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-Performing denseMatrixMatrixProduct from the local file 
-Performing denseMatrixMatrixProduct from the local file 
-For Re = 100, nx = 36, nSteps = 144, and tol = 0.999
-runtime = 50.8167
+runtime = 8.98876
 
 
+Time taken to make the snapshot matrix: 0.24897
+Time taken to generate u_B: 0.00044
+Time taken to write u_B: 0.022192
+Time taken to generate b: 0.098824
+Time taken to write b: 8.2843
 Playa::MPISession::init() started serial run
-
-./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-Performing denseMatrixMatrixProduct from the local file 
-Performing denseMatrixMatrixProduct from the local file 
-For Re = 100, nx = 48, nSteps = 192, and tol = 0.999
-runtime = 134.362
+runtime = 20.7323
 
 
+Time taken to make the snapshot matrix: 0.582446
+Time taken to generate u_B: 0.000991
+Time taken to write u_B: 0.040648
+Time taken to generate b: 0.154473
+Time taken to write b: 19.437
 Playa::MPISession::init() started serial run
-
-./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-Performing denseMatrixMatrixProduct from the local file 
-Performing denseMatrixMatrixProduct from the local file 
-For Re = 100, nx = 60, nSteps = 240, and tol = 0.999
-runtime = 303.847
+runtime = 40.0683
 
 
+Time taken to make the snapshot matrix: 1.23522
+Time taken to generate u_B: 0.001855
+Time taken to write u_B: 0.063759
+Time taken to generate b: 0.220892
+Time taken to write b: 37.7724
 Playa::MPISession::init() started serial run
-
-./POD_Generator.exe : Warning, the 3rd option '--tFinal=4' was not recognized (use --help)!
 Simulation built using Sundance version 2.4.0 (10 June 2012)
 Sundance is copyright
  (C) 2005-2012 Sandia National Laboratories 
  (C) 2007-2012 Texas Tech University
 and is licensed under the BSD License
 
-Performing denseMatrixMatrixProduct from the local file 
-Performing denseMatrixMatrixProduct from the local file 
-For Re = 100, nx = 72, nSteps = 288, and tol = 0.999
-runtime = 613.103
+runtime = 68.8076
 
 
+Time taken to make the snapshot matrix: 1.9143
+Time taken to generate u_B: 0.00297
+Time taken to write u_B: 0.158156
+Time taken to generate b: 0.301527
+Time taken to write b: 65.3686
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 2.82985
+
+
+Time taken to make the snapshot matrix: 0.087687
+Time taken to generate u_B: 0.000197
+Time taken to write u_B: 0.010662
+Time taken to generate b: 0.060509
+Time taken to write b: 2.46389
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 8.96084
+
+
+Time taken to make the snapshot matrix: 0.252873
+Time taken to generate u_B: 0.000442
+Time taken to write u_B: 0.022292
+Time taken to generate b: 0.099331
+Time taken to write b: 8.24779
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 20.8598
+
+
+Time taken to make the snapshot matrix: 0.590023
+Time taken to generate u_B: 0.000997
+Time taken to write u_B: 0.039363
+Time taken to generate b: 0.151576
+Time taken to write b: 19.5548
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 40.2982
+
+
+Time taken to make the snapshot matrix: 1.12402
+Time taken to generate u_B: 0.001804
+Time taken to write u_B: 0.061147
+Time taken to generate b: 0.222422
+Time taken to write b: 38.1062
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 68.3209
+
+
+Time taken to make the snapshot matrix: 1.90786
+Time taken to generate u_B: 0.003065
+Time taken to write u_B: 0.086155
+Time taken to generate b: 0.297379
+Time taken to write b: 64.9764
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 2.80347
+
+
+Time taken to make the snapshot matrix: 0.077339
+Time taken to generate u_B: 0.000192
+Time taken to write u_B: 0.014484
+Time taken to generate b: 0.06183
+Time taken to write b: 2.44649
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 8.93801
+
+
+Time taken to make the snapshot matrix: 0.249847
+Time taken to generate u_B: 0.000454
+Time taken to write u_B: 0.022918
+Time taken to generate b: 0.098213
+Time taken to write b: 8.22476
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 20.7814
+
+
+Time taken to make the snapshot matrix: 0.579565
+Time taken to generate u_B: 0.000994
+Time taken to write u_B: 0.04012
+Time taken to generate b: 0.153483
+Time taken to write b: 19.4833
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 40.2045
+
+
+Time taken to make the snapshot matrix: 1.10476
+Time taken to generate u_B: 0.001817
+Time taken to write u_B: 0.059206
+Time taken to generate b: 0.311179
+Time taken to write b: 37.976
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 68.1737
+
+
+Time taken to make the snapshot matrix: 1.91238
+Time taken to generate u_B: 0.002986
+Time taken to write u_B: 0.088705
+Time taken to generate b: 0.297723
+Time taken to write b: 64.8085
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 2.84052
+
+
+Time taken to make the snapshot matrix: 0.089345
+Time taken to generate u_B: 0.000193
+Time taken to write u_B: 0.010363
+Time taken to generate b: 0.062058
+Time taken to write b: 2.4699
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 8.9191
+
+
+Time taken to make the snapshot matrix: 0.268941
+Time taken to generate u_B: 0.000462
+Time taken to write u_B: 0.021812
+Time taken to generate b: 0.100596
+Time taken to write b: 8.1867
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 20.7004
+
+
+Time taken to make the snapshot matrix: 0.57824
+Time taken to generate u_B: 0.001024
+Time taken to write u_B: 0.039155
+Time taken to generate b: 0.153931
+Time taken to write b: 19.4108
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 40.1152
+
+
+Time taken to make the snapshot matrix: 1.12044
+Time taken to generate u_B: 0.001856
+Time taken to write u_B: 0.062089
+Time taken to generate b: 0.217058
+Time taken to write b: 37.9304
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 69.5949
+
+
+Time taken to make the snapshot matrix: 1.90135
+Time taken to generate u_B: 0.003008
+Time taken to write u_B: 0.085914
+Time taken to generate b: 0.300697
+Time taken to write b: 66.2528
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 2.87049
+
+
+Time taken to make the snapshot matrix: 0.105131
+Time taken to generate u_B: 0.000196
+Time taken to write u_B: 0.010007
+Time taken to generate b: 0.062145
+Time taken to write b: 2.48197
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 9.15685
+
+
+Time taken to make the snapshot matrix: 0.28392
+Time taken to generate u_B: 0.000479
+Time taken to write u_B: 0.028821
+Time taken to generate b: 0.106944
+Time taken to write b: 8.36101
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 20.9615
+
+
+Time taken to make the snapshot matrix: 0.580486
+Time taken to generate u_B: 0.001017
+Time taken to write u_B: 0.038173
+Time taken to generate b: 0.151699
+Time taken to write b: 19.672
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 40.572
+
+
+Time taken to make the snapshot matrix: 1.1822
+Time taken to generate u_B: 0.001907
+Time taken to write u_B: 0.067627
+Time taken to generate b: 0.219353
+Time taken to write b: 38.3135
+Playa::MPISession::init() started serial run
+Simulation built using Sundance version 2.4.0 (10 June 2012)
+Sundance is copyright
+ (C) 2005-2012 Sandia National Laboratories 
+ (C) 2007-2012 Texas Tech University
+and is licensed under the BSD License
+
+runtime = 69.4868
+
+
+Time taken to make the snapshot matrix: 1.94178
+Time taken to generate u_B: 0.003164
+Time taken to write u_B: 0.088616
+Time taken to generate b: 0.319423
+Time taken to write b: 66.0311

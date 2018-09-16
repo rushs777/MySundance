@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 
   // Specify the different Reynolds numbers to examine as an Array<double>
   // At this time, Sundance.hpp does not support passing Array<T> as command line arguments
-  Array<int> ReValues = tuple(10,100);
+  Array<int> ReValues = tuple(1,20,40,60,80,100);
 
   // Create the spatial mesh 
   // Change this to reading in the mesh (eventually)
@@ -103,11 +103,14 @@ int main(int argc, char* argv[])
   // from each column of W to create WHat
   LinearOperator<double> WHat = generateFluctuationMatrix(W);
 
+  // Temporarily output the size of WHat
+  cout << "WHat is " << WHat.range() << "x" << WHat.domain() << endl;
+
   // Create the POD object and obtain the POD basis functions
   POD_SVD pod(WHat, velocityDS, verbosity);
   pod.calculateSVD();
   pod.calculateBasisFunctions();
-
+  
   // Define the relative path to where to store the results of the POD
   string POD_DataDir = "Results/tFinal"+Teuchos::toString(int(tFinal))+"sec/ReValues";
   // Format the displayed ReValues information system() can't create directories with
@@ -122,6 +125,8 @@ int main(int argc, char* argv[])
   tolFileValue << std::setprecision(precision) << tol;
   POD_DataDir = POD_DataDir + tolFileValue.str() + "/";
   Array<Expr> phi = pod.get_basis_functions(tol,POD_DataDir);
+  cout << "Returned from get_basis_functions(tol,POD_DataDir) " << std::endl;
+
 
   timer.stop();
   cout << "For tFinal = " << tFinal << " sec, Re = " << Re << ", nx = " << nx << ", nSteps = "

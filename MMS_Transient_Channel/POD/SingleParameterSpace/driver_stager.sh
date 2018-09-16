@@ -11,10 +11,10 @@
 # space separated version now
 
 #filename is the name of the file to store the output from the runs
-#filename=log_test.txt
+filename=log_test.txt
 executable=stage_KKT_required_files.exe
 
-#rm $filename
+rm $filename
 
 ReArray=( "${@:2:$1}" ); shift "$(( $1 + 1))"
 nxnt=( "$@" )

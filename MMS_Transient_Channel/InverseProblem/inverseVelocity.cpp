@@ -56,15 +56,15 @@ int main(int argc, char *argv[])
       int nx = 25;
       Sundance::setOption("nx", nx, "Number of elements along each axis");
 
+      int nSteps = 25;
+      Sundance::setOption("nSteps", nSteps, "Number of time steps");
+
       double tol = .999;
       Sundance::setOption("tol", tol, "Tolerance requirement for the number of basis functions to keep");
 
       int precision = 3;
       Sundance::setOption("precision",precision,"Number of significant digits to keep in a filename using tol");  
       
-      int nSteps = 25;
-      Sundance::setOption("nSteps", nSteps, "Number of time steps");
-
       double tInit = 0.0; 
       Sundance::setOption("tInit", tInit, "initial time");
 
@@ -83,6 +83,9 @@ int main(int argc, char *argv[])
       bool AreMatrixAndTensorInFile = false;
       Sundance::setOption("MatrixAndTensorInFile", "MatrixAndTensorNotInFile", AreMatrixAndTensorInFile, "true if the matrix and tensor are available text files. false if they need to be created");
 
+      bool writeResults = true;
+      Sundance::setOption("writeVTK", "skipVTK", writeResults, "bool switch for writing VTK results to file. To use: --writeVTK to write results, --skipVTK to not. Default is true");
+      
       Sundance::init(&argc, &argv);
       GlobalMPISession session(&argc, &argv);
 
@@ -148,6 +151,9 @@ int main(int argc, char *argv[])
 
       // Calculate the kinematic viscosity nu
       double nu = (U0*L0)/Re;
+
+      Time timerInvProb("Inv");
+      timerInvProb.start();
       
       // Create a velocityROM object
       velocityROM ROM(POD_DataDir,NLParamFile,velocityDS, u0, q,
@@ -156,77 +162,103 @@ int main(int argc, char *argv[])
       ROM.generate_alpha();
       // Get the discretized in time Array of velocity functions
       Array<Expr> uRO(ROM.get_uRO() );
+      timerInvProb.stop();
 
       // Write alphaROM(t) to file
       string ROM_Dir="Results/SingleParameterSpace/tol" + tolFileValue.str()
 	+ "/tFinal" + Teuchos::toString(int(tFinal))
 	+ "sec/Re" + ReynoldsString.str() + "/nx"+Teuchos::toString(nx)+"nt"
 	+Teuchos::toString(nSteps)+"/";
-      string alpha_filename = ROM_Dir + "alphaROM.txt";
       int dirCreation = system( ("mkdir -p " + ROM_Dir).c_str() );
       TEUCHOS_TEST_FOR_EXCEPTION( dirCreation == -1, runtime_error,
 				  "Failed to create " + ROM_Dir);
-      ROM.write_alpha(alpha_filename);
+
+      //string alpha_filename = ROM_Dir + "alphaROM.txt";
+      //ROM.write_alpha(alpha_filename);
 
 
 	  
 
       // Find the error between alphaEx and alphaROM
+      Time timerErrorCheck("ErrorCheck");
+      timerErrorCheck.start();
       Vector<double> alphaError = ROM.alphaErrorCheck(uExact);
-      cout << "For tFinal = " << tFinal << " sec, Re = " << Re << ", nx = " << nx << ", nSteps = "
-       << nSteps << ", and tol = " << tol << endl;
-      cout << "||2norm of the error in alpha at all timesteps||_2  :\t "  << alphaError.norm2() << endl;
-      cout << "||2norm of the error in alpha at all timesteps||_inf:\t " << alphaError.normInf() << endl;
+      cout << "tFinal=" << tFinal
+	   << " Re=" << Re
+	   << " nx=" << nx
+	   << " nSteps="  << nSteps
+	   << " tol=" << tol << endl;
+      cout << "||2norm of the error in alpha at all timesteps||_2  :\t "
+	   << alphaError.norm2() << endl;
+      cout << "||2norm of the error in alpha at all timesteps||_inf:\t "
+	   << alphaError.normInf() << endl;
       
 
       Vector<double> uError = ROM.velocityErrorCheck(uExact);
-
       SUNDANCE_ROOT_MSG1(verbosity, "Number of velocity modes kept: " + Teuchos::toString(ROM.get_phi().size()));
-      Out::root() << "||2norm of the error in u at all timesteps||_2  :\t " << uError.norm2() << endl;
-      Out::root() << "||2norm of the error in u at all timesteps||_inf:\t " << uError.normInf() << endl;
+      Out::root() << "||2norm of the error in u at all timesteps||_2  :\t "
+		  << uError.norm2() << endl;
+      Out::root() << "||2norm of the error in u at all timesteps||_inf:\t "
+		  << uError.normInf() << endl;
+      timerErrorCheck.stop();
 
 
-      timer.stop();
-      Out::root() << "runtime=" << timer.totalElapsedTime() << endl << endl;
       
       // Visualize the results
-      SUNDANCE_ROOT_MSG1(verbosity, "Writing results to file");
-      string vtkDir = ROM_Dir;
-      string vtkfilename = "Re" + ReynoldsString.str() + "nx"+Teuchos::toString(nx)+"nt"+Teuchos::toString(nSteps);
-      //      vtkDir = vtkDir + vtkfilename + "/";
-
-
-      DiscreteSpace scalarDS(spatialMesh, new Lagrange(1), new EpetraVectorType());
-      L2Projector projector(velocityDS, uExact);
-      //Write uExact for all the time steps
-      for(int time=0; time< nSteps+1; time++)
+      Time timerVTK("VTK");
+      if(writeResults)
 	{
-	  FieldWriter writer = new VTKWriter(vtkDir+vtkfilename+"step"+Teuchos::toString(time));
-	  writer.addMesh(spatialMesh);
-	  t.setParameterValue(tInit+time*deltat);
-	  L2Projector projectorRO(velocityDS, uRO[time]);
-	  L2Projector uErrorProjector(velocityDS, uExact - uRO[time]);
-	  Expr absErr = sqrt( (uExact - uRO[time])*(uExact - uRO[time]));
-	  Expr absU = sqrt(uExact * uExact);
-	  Expr absURO = sqrt(uRO[time] * uRO[time]);
-	  L2Projector uMagProj(scalarDS, absU);
-	  L2Projector uROMagProj(scalarDS, absURO);
-	  L2Projector absErrorProj(scalarDS, absErr);
-	  L2Projector relErrorProj(scalarDS, absErr / (absU + 1.0));
-	  writer.addField("uMag", new ExprFieldWrapper(uMagProj.project()[0]) );
-	  writer.addField("uROMag", new ExprFieldWrapper(uROMagProj.project()[0]) );
-	  writer.addField("errAbs", new ExprFieldWrapper(absErrorProj.project()[0]) );
-	  writer.addField("errRel", new ExprFieldWrapper(relErrorProj.project()[0]) );
-	  writer.addField("uExact[0]", new ExprFieldWrapper(projector.project()[0]) );
-	  writer.addField("uExact[1]", new ExprFieldWrapper(projector.project()[1]) );
-	  writer.addField("uRO[0]", new ExprFieldWrapper(projectorRO.project()[0]) );
-	  writer.addField("uRO[1]", new ExprFieldWrapper(projectorRO.project()[1]) );
-	  writer.addField("uError[0]", new ExprFieldWrapper(uErrorProjector.project()[0]) );
-	  writer.addField("uError[1]", new ExprFieldWrapper(uErrorProjector.project()[1]) );
-      	  writer.write();	  
+	  timerVTK.start();
+	  SUNDANCE_ROOT_MSG1(verbosity, "Writing results to file");
+	  string vtkDir = ROM_Dir;
+	  string vtkfilename = "Re" + ReynoldsString.str() + "nx"+Teuchos::toString(nx)
+	    +"nt"+Teuchos::toString(nSteps);
+	  //      vtkDir = vtkDir + vtkfilename + "/";
+
+
+	  DiscreteSpace scalarDS(spatialMesh, new Lagrange(1), new EpetraVectorType());
+	  L2Projector projector(velocityDS, uExact);
+	  //Write uExact for all the time steps
+	  for(int time=0; time< nSteps+1; time++)
+	    {
+	      FieldWriter writer = new VTKWriter(vtkDir+vtkfilename+"step"+Teuchos::toString(time));
+	      writer.addMesh(spatialMesh);
+	      t.setParameterValue(tInit+time*deltat);
+	      L2Projector projectorRO(velocityDS, uRO[time]);
+	      L2Projector uErrorProjector(velocityDS, uExact - uRO[time]);
+	      Expr absErr = sqrt( (uExact - uRO[time])*(uExact - uRO[time]));
+	      Expr absU = sqrt(uExact * uExact);
+	      Expr absURO = sqrt(uRO[time] * uRO[time]);
+	      L2Projector uMagProj(scalarDS, absU);
+	      L2Projector uROMagProj(scalarDS, absURO);
+	      L2Projector absErrorProj(scalarDS, absErr);
+	      L2Projector relErrorProj(scalarDS, absErr / (absU + 1.0));
+	      writer.addField("uMag", new ExprFieldWrapper(uMagProj.project()[0]) );
+	      writer.addField("uROMag", new ExprFieldWrapper(uROMagProj.project()[0]) );
+	      writer.addField("errAbs", new ExprFieldWrapper(absErrorProj.project()[0]) );
+	      writer.addField("errRel", new ExprFieldWrapper(relErrorProj.project()[0]) );
+	      writer.addField("uExact[0]", new ExprFieldWrapper(projector.project()[0]) );
+	      writer.addField("uExact[1]", new ExprFieldWrapper(projector.project()[1]) );
+	      writer.addField("uRO[0]", new ExprFieldWrapper(projectorRO.project()[0]) );
+	      writer.addField("uRO[1]", new ExprFieldWrapper(projectorRO.project()[1]) );
+	      writer.addField("uError[0]", new ExprFieldWrapper(uErrorProjector.project()[0]) );
+	      writer.addField("uError[1]", new ExprFieldWrapper(uErrorProjector.project()[1]) );
+	      writer.write();	  
+	    }
+
+	  timerVTK.stop();
 	}
 
 
+
+      timer.stop();
+
+      // Display runtime information
+      Out::root() << "Inverse Problem Runtime = " << timerInvProb.totalElapsedTime() << endl;
+      Out::root() << "ErrorCheck Runtime = " << timerErrorCheck.totalElapsedTime() << endl;
+      if(writeResults)
+	Out::root() << "VTK Runtime = " << timerVTK.totalElapsedTime() << endl;
+      Out::root() << "Total runtime=" << timer.totalElapsedTime() << endl << endl << endl;
 	
     }
   catch(std::exception& e)

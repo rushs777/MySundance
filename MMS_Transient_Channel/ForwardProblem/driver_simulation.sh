@@ -37,12 +37,12 @@ done
 # Append the closing brace
 filename=$filename${nxnt[-1]}"}"
 # Build the short filename
-filename_short=$filename"_short.txt"
+filenameShort=$filename"_short.txt"
 # Add the file extension
 filename=$filename".txt"
 
 echo $filename
-echo $filename_short
+echo $filenameShort
 
 
 # in the current iteration, we are letting nt be the number of timesteps per second
@@ -67,11 +67,11 @@ do
 done
 
 # Only keep the main results
-grep -i tFinal= $filename > $filename_short
+grep -i tFinal= $filename > $filenameShort
 
 # Move the files nto the Log_Files directory
 mv $filename $directory
-mv $filename_short $directory
+mv $filenameShort $directory
 
 
 

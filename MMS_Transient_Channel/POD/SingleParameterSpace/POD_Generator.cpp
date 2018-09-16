@@ -15,10 +15,10 @@ int main(int argc, char* argv[])
   Time timer("total");
   timer.start();
   
-  int nx = 8;
+  int nx = 24;
   Sundance::setOption("nx",nx,"Number of spatial elements along each axis");
 
-  int nSteps = 8;
+  int nSteps = 24;
   Sundance::setOption("nSteps",nSteps,"Number of time steps taken to go from iInit to tFinal");
 
   double tFinal = 1.0;
@@ -39,10 +39,7 @@ int main(int argc, char* argv[])
   // Initialize Sundance
   Sundance::init(&argc, &argv);
 
-  // Define the location of the snapshot matrix (matrices)
-  // Absolute Path
-  //string snapshotDataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/ForwardProblem/Results/Re";
-  // Relative Path
+  // Define the location of the snapshot matrix (relative)
   string snapshotDataDir = "../../ForwardProblem/Results/tFinal"
                            +Teuchos::toString(int(tFinal)) +"sec/Re";
   std::ostringstream ReynoldsString;
@@ -85,11 +82,8 @@ int main(int argc, char* argv[])
   POD_SVD pod(Wprime, velocityDS, verbosity);
   pod.calculateSVD();
   pod.calculateBasisFunctions();
-  // Absolute Path
-  // string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/POD/SingleParameterSpace/Results/Re"
-  //   + ReynoldsString.str() +"/nx" + Teuchos::toString(nx)
-  //   + "nt" + Teuchos::toString(nSteps) + "/tol";
-  // Relative Path
+
+  // Define the relative path to where the POD basis functions will be saved
   string POD_DataDir = "Results/tFinal"+Teuchos::toString(int(tFinal))+"sec/Re"
     + ReynoldsString.str() +"/nx" + Teuchos::toString(nx)
     + "nt" + Teuchos::toString(nSteps) + "/tol";
@@ -99,9 +93,12 @@ int main(int argc, char* argv[])
   Array<Expr> phi = pod.get_basis_functions(tol,POD_DataDir);
 
   timer.stop();
-  cout << "For tFinal = " << tFinal << " sec, Re = " << Re << ", nx = " << nx << ", nSteps = "
-       << nSteps << ", and tol = " << tol << endl;
-  cout << "runtime = " << timer.totalElapsedTime() << endl << endl << endl;
+  cout << "tFinal=" << tFinal
+       << " Re=" << Re
+       << " nx=" << nx
+       << " nSteps=" << nSteps
+       << " tol=" << tol
+       << " runtime=" << timer.totalElapsedTime() << endl << endl << endl;
 
   Sundance::finalize(); 
 

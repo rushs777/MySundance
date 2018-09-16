@@ -18,10 +18,10 @@ int main(int argc, char* argv[])
   Time timer("total");
   timer.start();
   
-  int nx = 8;
+  int nx = 24;
   Sundance::setOption("nx",nx,"Number of spatial elements along each axis");
 
-  int nSteps = 8;
+  int nSteps = 24;
   Sundance:: setOption("nSteps",nSteps,"Number of time steps taken to get from tInit to tFinal"); 
   
   double tol = 0.999;
@@ -82,10 +82,7 @@ int main(int argc, char* argv[])
   Playa::VectorType<double> epetraVecType = new Playa::EpetraVectorType();
   Sundance::DiscreteSpace velocityDS(spatialMesh, velBasis, epetraVecType);
 
-  // Create the snapshot matrix W
-  // Absolute Path
-  //string outDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/ForwardProblem/Results/Re";
-  // Relative Path
+  // Define the location of the snapshot matrix (relative)  
   string outDir = "../../ForwardProblem/Results/tFinal"
                            +Teuchos::toString(int(tFinal)) +"sec/Re";
   std::ostringstream ReynoldsString;
@@ -93,11 +90,18 @@ int main(int argc, char* argv[])
   outDir = outDir + ReynoldsString.str()
     + "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/";
   string snapshotLibraryFilePrefix = outDir + "st-v";
+  // Create the snapshot matrix W
+  Time makeW("make W");
+  makeW.start();
   LinearOperator<double> W = snapshotToMatrix(snapshotLibraryFilePrefix, nSteps, spatialMesh);
+  makeW.stop();
   
   // Create uB(x)
+  Time makeUB("make UB");
+  makeUB.start();
   Expr uB = timeMeanFunctionGenerator(W, velocityDS);
-
+  makeUB.stop();
+  
   // My current thinking is that this should go in the POD directory since it relies
   // on the same information
   string POD_DataDir = "Results/tFinal"+Teuchos::toString(int(tFinal))+"sec/Re"
@@ -107,10 +111,14 @@ int main(int argc, char* argv[])
   tolFileValue << std::setprecision(precision) << tol;
   POD_DataDir = POD_DataDir + tolFileValue.str() + "/";
   string uB_storagePrefix = POD_DataDir + "uB";
+  Time writeUB("write UB");
+  writeUB.start();
   writeSnap(uB_storagePrefix,0,uB);
-
-  // Also adding code that will move the creation of the RHS of projected NSE to here
-  // These files will also be sent to the POD_DataDir
+  writeUB.stop();
+  
+  // This section will create the necessary linear operators (A, b, and T) and
+  // save them to POD_DataDir
+  
   // Read in the POD from file
   string POD_basis_fileprefix = POD_DataDir + "POD_basis";
   Array<Expr> phi;
@@ -130,9 +138,16 @@ int main(int argc, char* argv[])
   // Calculate the kinematic viscosity nu
   double nu = (U0*L0)/Re;
 
-  RCP<NSEProjectedODE> f = rcp(new NSEProjectedODE(phi, uB, q, t, deltat, nu, spatialMesh, false, verbosity));
+  RCP<NSEProjectedODE> f = rcp(new NSEProjectedODE(phi, uB, q, t, deltat, nu,
+						   spatialMesh, false, verbosity));
+  Time makeb("make b");
+  makeb.start();
   f->initialize();
+  makeb.stop();
+  Time writeb("write b");
+  writeb.start();
   f->write_b(nSteps);
+  writeb.stop();
 
   // Move the files to the POD Directory
   int moveError = system( ("mv NSEProjectedODEFiles/* " + POD_DataDir + ".").c_str() );
@@ -144,5 +159,10 @@ int main(int argc, char* argv[])
   timer.stop();
   cout << "runtime = " << timer.totalElapsedTime() << endl << endl << endl;
 
+  cout << "Time taken to make the snapshot matrix: " << makeW.totalElapsedTime() << endl;
+  cout << "Time taken to generate u_B: " << makeUB.totalElapsedTime() << endl;
+  cout << "Time taken to write u_B: " << writeUB.totalElapsedTime() << endl;
+  cout << "Time taken to generate b: " << makeb.totalElapsedTime() << endl;
+  cout << "Time taken to write b: " << writeb.totalElapsedTime() << endl;
 
 }

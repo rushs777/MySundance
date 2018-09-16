@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
       int numSens = 5;
       Sundance::setOption("numSens", numSens, "Number of sensors");
 
-      Array<int> ReValues = tuple(10,100);
+      Array<int> ReValues = tuple(1,20,40,60,80,100);
 
       int quadOrder = 2;
       Sundance::setOption("quadOrder", quadOrder, "Order for the Gaussian Quadrature rule");
@@ -128,8 +128,8 @@ int main(int argc, char *argv[])
 	    + " --tFinal="+Teuchos::toString(int(tFinal)) // If tFinal " "
 	    + " --verbosity="+Teuchos::toString(verbosity);
 
-	  cout << "Value sent to execute stage_KKT" << endl;
-	  cout << command + options << endl;
+	  //cout << "Value sent to execute stage_KKT" << endl;
+	  //cout << command + options << endl;
 	  // Navigate to POD_DataDir and execute command with options
 	  int cdError = chdir(POD_DataDir.c_str());
 	  TEUCHOS_TEST_FOR_EXCEPTION(cdError == -1,
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
       // Returns [absolute alpha error, relative alpha error,
       //          aggregate velocity abs error, aggregate velocity rel error]
       Array<double> errors = KKT_System.errorCheck(uExact,t);
-      cout << "tFinal=" << tFinal << " sec"
+      cout << "tFinal=" << tFinal
 	   << " Re=" << Re
 	   << " numSensors=" << numSens
 	   << " nx=" << nx
@@ -327,7 +327,7 @@ int main(int argc, char *argv[])
       Out::root() << "ErrorCheck Runtime = " << timerErrorCheck.totalElapsedTime() << endl;
       if(writeResults)
 	Out::root() << "VTK Runtime = " << timerVTK.totalElapsedTime() << endl;
-      Out::root() << "Total Runtime = " << timerTotal.totalElapsedTime() << endl;
+      Out::root() << "Total Runtime = " << timerTotal.totalElapsedTime() << endl << endl << endl;
      
     }
   catch(std::exception& ex)

@@ -12,10 +12,12 @@
 
 #filename is the name of the file to store the output from the runs
 filename=log_test.txt
+filenameShort=log_test_short.txt
 executable=ODECO.exe
 
 echo "removing old files"
 rm $filename
+rm $filenameShort
 
 ReArray=( "${@:2:$1}" ); shift "$(( $1 + 1))"
 nxnt=( "$@" )
@@ -23,18 +25,34 @@ nxnt=( "$@" )
 # Thus the real number of time steps is the time of the simulation (tf) times nt
 tf=1
 
+space='multiple'
 for i in "${!ReArray[@]}"
 do
 #    echo "Value of Re = ${ReArray[$i]}"
     for j in "${!nxnt[@]}"
     do
-	echo "Value of nxnt = ${nxnt[$j]}"
+#	echo "Value of nxnt = ${nxnt[$j]}"
 	nx=${nxnt[$j]}
 	nt=$((${tf} * ${nxnt[$j]}))
-	for sens in 1 3 5
+	for sens in 1 2 3 5 11
 	do
 	    echo "Starting run for Re = ${ReArray[$i]}, nx=$nx, nt=${nt}, tf=${tf} nSens=${sens}"
-	    ./$executable --nx=${nx} --nSteps=${nt} --tFinal=${tf} --Re=${ReArray[$i]} --nSens=${sens} --verbosity=0 2>&1 | tee -a $filename
+	    if [ "$space" == "single" ]; then
+		./$executable --nx=${nx} --nSteps=${nt} --tFinal=${tf} --Re=${ReArray[$i]} --numSens=${sens} --verbosity=0 --writeVTK 2>&1 | tee -a $filename
+	    elif [ "$space" == 'multiple' ]; then
+		./$executable --nx=${nx} --nSteps=${nt} --tFinal=${tf} --Re=${ReArray[$i]} --numSens=${sens} --verbosity=0 --writeVTK --parameterSpace="multiple" 2>&1 | tee -a $filename
+	    fi
 	done
     done
 done
+
+grep -A 10 --group-separator="" "tFinal=" $filename > $filenameShort
+
+# Here's how to format the rest
+# Copy over an old naming of the headers
+# Use ctrl+H to get rid of all the labels. Remember to copy new line characters too
+# Once you have all the labels removed, to get rid of the extra new lines,
+#           Find: \n\n1
+#           Replace with: \n1
+
+
