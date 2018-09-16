@@ -41,8 +41,8 @@ int main(int argc, char *argv[])
   
   // Define the boundaries of the mesh
   double xmin = 0.0;
-  double xmax = 2.0;
-  double ymin = -1.0;
+  double xmax = 1.0;
+  double ymin = 0.0;
   double ymax = 1.0;
 
   // Create the 2D mesh
@@ -61,7 +61,9 @@ int main(int argc, char *argv[])
 
   CellFilter bdryFilter = new BoundaryCellFilter();
   CellFilter GammaStar = bdryFilter.subset( new outflowEdgeTest(boundaries[1]) );
+
   
+  cout << mesher.description() << endl;
 
   return 0;
 }

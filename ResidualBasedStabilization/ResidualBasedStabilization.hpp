@@ -26,6 +26,9 @@ public:
    */
   void initialize();
 
+  /** Generate the orthonormal basis functions for both stabilized velocity and pressure*/
+  void generateBasisFunctions();
+
   /** Get the stabilized reduced-order velocity*/
   Array<Expr> get_uRO();
 
@@ -40,7 +43,7 @@ private:
   Vector<double> calculateRc(int timeIndex);
 
   /** Perform Gram-Schmidt on the basis functions to get an orthonormal set */
-  void GramSchmidt();
+  Array<Expr> GramSchmidt(Array<Expr> v, Mesh mesh, int quadOrder);
 
   velocityROM velROM_;
   PMB pressROM_;
@@ -51,9 +54,13 @@ private:
   int verbosity_;
   Array<Expr> uRO_;
   Array<Expr> pRO_;
+  DiscreteSpace Rmds_;
+  DiscreteSpace Rcds_;
   double nu_;
   Array<Expr> zeta_;
   Array<Expr> eta;
+  Array<Expr> velBasisFuncs_;
+  Array<Expr> pressBasisFuncs_;
 
 
 

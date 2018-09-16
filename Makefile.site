@@ -8,9 +8,9 @@
 # ########################################################
 #
 # Uncomment to work on KL's machine
-USER=KL
+#USER=KL
 # Uncomment to work on Simon's machine
-#USER=SIMON
+USER=SIMON
 # ########################################################
 
 

@@ -65,14 +65,28 @@
 # SomeOtherFile.o: SomeOtherFile.hpp SomeFile.hpp
 # 
 #--------------------------------------------------------------------------
-#
-#EXTRA_OBJS = /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/integralOperator.o \
-	     /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/KKTBase.o \
-	     /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/KKT_Transient_Channel.o\
-	     /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/sensorData.o \
-	     /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o
+# Sandbox Makefile
 
-EXTRA_OBJS = 
+# Turn this one on for meshBoundaries.cpp
+#EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/meshAddOns.o
+
+# Turn this one on for expandingPOD.cpp
+#EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/POD_SVD.o
+
+# Turn this one on for ODE_POD_SVD.cpp
+#EXTRA_OBJS = /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/integralOperator.o \
+             /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/KKTBase.o \
+             /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/KKT_Transient_Channel.o\
+             /home/sirush/PhDResearch/ODEOptimization/MoreAdvanced/sensorData.o \
+             /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
+	     /home/sirush/PhDResearch/SourceFiles/POD_SVD.o
+
+# Turn this one for velocityROMRework.cpp, vstar_list_expr, exeToBeCalled
+EXTRA_OBJS =
+
+# Turn this on for snapshotMatrixBuilder.cpp, LinearOperatorMemoryStorage
+#EXTRA_OBJS = /home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o
+
 
 # ***
 # *** End copy section
@@ -106,7 +120,8 @@ VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
 #--------------------------------------------------------------------------
 # If needed, set extra include and lib macros
 #--------------------------------------------------------------------------
-CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles -I/home/sirush/PhDResearch/Sandbox -I/home/sirush/PhDResearch/SourceFiles
+CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles -I/home/sirush/PhDResearch/Sandbox #-I/home/sirush/PhDResearch/ODEOptimization/MoreAdvanced
+
 
 
 CLIENT_EXTRA_LIBS = 
