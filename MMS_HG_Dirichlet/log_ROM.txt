@@ -1,3 +1,61 @@
+These are runs with MMSQuadODE from the correct Transient Channel Problem:
+
+Run for nx = 8, nSteps = 8
+||alphaExact - alphaApprox||_2  :	 0.231432
+||alphaExact - alphaApprox||_inf:	 0.127153
+||uExact - uRO||_2  :	 0.404026
+||uExact - uRO||_inf:	 0.18869
+Number of velocity modes kept: 6
+Writing results to file
+runtime=2.93643
+
+
+
+Run for nx = 16, nSteps = 16
+||alphaExact - alphaApprox||_2  :	 0.278418
+||alphaExact - alphaApprox||_inf:	 0.137172
+||uExact - uRO||_2  :	 0.289549
+||uExact - uRO||_inf:	 0.139689
+Number of velocity modes kept: 5
+Writing results to file
+runtime=8.71088
+
+
+Run for nx = 32, nSteps = 32
+||alphaExact - alphaApprox||_2  :	 0.0750098
+||alphaExact - alphaApprox||_inf:	 0.0314342
+||uExact - uRO||_2  :	 0.0769086
+||uExact - uRO||_inf:	 0.0317112
+Number of velocity modes kept: 3
+Writing results to file
+runtime=35.9496
+
+
+Run for nx = 64, nSteps = 64
+||alphaExact - alphaApprox||_2  :	 0.00105353
+||alphaExact - alphaApprox||_inf:	 0.000178709
+||uExact - uRO||_2  :	 0.0037088
+||uExact - uRO||_inf:	 0.000643399
+Number of velocity modes kept: 2
+Writing results to file
+runtime=228.392
+
+
+Run for nx = 128, nSteps = 128
+||alphaExact - alphaApprox||_2  :	 0.000210538
+||alphaExact - alphaApprox||_inf:	 2.76671e-05
+||uExact - uRO||_2  :	 0.000708837
+||uExact - uRO||_inf:	 8.94749e-05
+Number of velocity modes kept: 2
+Writing results to file
+runtime=1755.01
+
+
+
+
+
+
+
 With the boundary integrals explicitly set to 0 for the RHS operator f
 
 Run for nx = 16, nSteps = 16

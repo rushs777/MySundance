@@ -19,51 +19,92 @@ MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double
       mesh_(mesh),
       forceIP_(phi.size()),
       MatrixAndTensorInFile_(MatrixAndTensorInFile),
-      quad_(new GaussianQuadrature(quadOrder))
+      quad_(new GaussianQuadrature(quadOrder)),
+      qCache_(),
+      qDiscrete_(),
+      qProj_()
   {
     // NEED TO ADD A NU VALUE
     nu_ = 1.0;
-    t_.setParameterValue(0.0);
-    tNext_ = new Sundance::Parameter(deltat_);
+    //t_.setParameterValue(0.0); // eliminate this line and the next
+    //tNext_ = new Sundance::Parameter(deltat_);
     
     // mesh.spatialDim() returns n for nD
     // Define grad operator
     Expr grad = gradient(mesh_.spatialDim());
     Expr nHat = CellNormalExpr(mesh_.spatialDim(), "nHat");
 
+    BasisFamily P2 = new Lagrange(2);
+    DiscreteSpace qSpace(mesh_, List(P2, P2), new EpetraVectorType());
+    qProj_ = L2Projector(qSpace, q_);
+    qCache_[0.0] = qProj_.project();
+    qDiscrete_ = copyDiscreteFunction(qCache_[0.0], "Q(0.0)");
 
+    Expr qToUse;
+    if (true) // change to "if (!true)" to use exact (expensive) q 
+      {
+	qToUse = qDiscrete_;
+      }
+    else
+      {
+	qToUse = q_;
+      }
+    
     for(int i = 0; i < phi_.size(); i++)
       {
-	//Expr integrand = -outerProduct(grad,uB_)*phi_[r]*uB_ + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
-	//	Expr integrand = -(uB_*grad)*uB_*phi_[r] + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
 	//Before change
-	//Expr integrand_interior = -(uB_*grad)*uB_*phi_[i] + q*phi_[i] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[i]));
-	//Expr integrand_boundary = nu_*(nHat*((phi_[i]*grad)*uB_));
+	Expr integrand_interior = -(uB_*grad)*uB_*phi_[i] + qToUse*phi_[i] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[i]));
+	Expr integrand_boundary = nu_*(nHat*((phi_[i]*grad)*uB_));
+
 	//After change
-	Expr integrand_interior = -outerProduct(grad,uB_)*uB_*phi_[i] + q*phi_[i] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[i]));
-	//	Expr integrand_boundary = nu_*(nHat*( (phi_[r]*grad)*uB_ ));
-	Expr integrand_boundary = nu_*(nHat*( outerProduct(grad,uB_)*phi[i]));
+	//Expr integrand_interior = -outerProduct(grad,uB_)*uB_*phi_[i] + qToUse*phi_[i] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[i]));
+	// Don't uncomment	Expr integrand_boundary = nu_*(nHat*( (phi_[r]*grad)*uB_ ));
+	//Expr integrand_boundary = nu_*(nHat*( outerProduct(grad,uB_)*phi[i]));
 	
 	//forceIP_[r] = FunctionalEvaluator(mesh_, Integral(interior_, integrand_interior, quad_));
 	forceIP_[i] = FunctionalEvaluator(mesh_, Integral(interior_, integrand_interior, quad_) + Integral(boundary_, integrand_boundary, quad_));
       }
-
   }
+
+void MMSQuadODE::updateQ(const double& t) const
+{
+  /* If we're doing another force calculation at the same time, no need to 
+  * repeat the discretization of q. If we're at a new time, project q onto
+  * the discrete space. */
+
+  int maxSize = 3;
+  if (qCache_.find(t) == qCache_.end())
+    {
+      SUNDANCE_ROOT_MSG2(getVerbosity(), "caching Q for time=" << t);
+      Expr q0 = qProj_.project();
+      qCache_[t] = q0;
+      if (qCache_.size() > maxSize)
+	{
+	  auto drop = qCache_.begin();
+	  SUNDANCE_ROOT_MSG2(getVerbosity(), "dropping cachedQ for time="
+			     << drop->first);
+	  qCache_.erase(qCache_.begin());
+	}
+    }
+  SUNDANCE_ROOT_MSG2(getVerbosity(), "using cached Q for time=" << t);
+  updateDiscreteFunction(qCache_[t], qDiscrete_);
+}
 
 Vector<double> MMSQuadODE::evalForceTerm(const double& t) const
   {
     //SUNDANCE_ROOT_MSG3(getVerbosity(), "start eval force");
     t_.setParameterValue(t);
 
+    /* Update the stored discretized q(t) */
+    updateQ(t);
+
     Vector<double> rtn = space().createMember();
     //SUNDANCE_ROOT_MSG3(getVerbosity(), "vec size: " << 8*space().dim());
     for(int r = 0; r < phi_.size(); r++)
       {
 	rtn[r] = forceIP_[r].evaluate();
-      }
+      }    
     
-    //SUNDANCE_ROOT_MSG3(getVerbosity(), "end eval force");
-    //std::cout << "Here is the value of (vf, phi) " << std::endl << rtn << std::endl;
     return rtn;
   }
 
@@ -127,13 +168,13 @@ double MMSQuadODE::A_IP(Expr phi_i, Expr phi_j)
 
     //Expr integrand = -outerProduct(grad,phi_j)*phi_i*uB_ - outerProduct(grad,uB_)*phi_i*phi_j - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
     //Before Change
-    //Expr integrand_interior = -phi_i*((uB_*grad)*phi_j) - phi_i*((phi_j*grad)*uB_) - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
-    //Expr integrand_boundary = nu_*(nHat*((phi_i*grad)*phi_j));
+    Expr integrand_interior = -phi_i*((uB_*grad)*phi_j) - phi_i*((phi_j*grad)*uB_) - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
+    Expr integrand_boundary = nu_*(nHat*((phi_i*grad)*phi_j));
     //integrand_boundary = 0.0;
 
     //After Change
-    Expr integrand_interior = -phi_i*( outerProduct(grad,phi_j)*uB_ ) - phi_i*( outerProduct(grad, uB_)*phi_j) - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
-    Expr integrand_boundary = nu_*(nHat*( outerProduct(grad,phi_j)*phi_i ));
+    //Expr integrand_interior = -phi_i*( outerProduct(grad,phi_j)*uB_ ) - phi_i*( outerProduct(grad, uB_)*phi_j) - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
+    //Expr integrand_boundary = nu_*(nHat*( outerProduct(grad,phi_j)*phi_i ));
     
     FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, integrand_interior, quad_) + Integral(boundary_, integrand_boundary, quad_));
     return (IP.evaluate());

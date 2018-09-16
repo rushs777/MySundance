@@ -1,3 +1,4 @@
+nx=8 nt=8 uErr=0.153333 pErr=5.11378 runtime=2.73296
 nx=16 nt=16 uErr=0.0312546 pErr=1.01444 runtime=6.59595
 nx=32 nt=32 uErr=0.00715562 pErr=0.353427 runtime=36.2412
 nx=64 nt=64 uErr=0.00171713 pErr=0.0974925 runtime=273.418

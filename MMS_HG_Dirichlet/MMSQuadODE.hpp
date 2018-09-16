@@ -54,6 +54,13 @@ private:
   double nu_;
   mutable Expr tNext_;
 
+  /** Avoid expensive calculations of q by discretizing q onto a discrete space, once
+   * per timestep. */
+  mutable map<double, Expr> qCache_;
+  mutable Expr qDiscrete_;
+  L2Projector qProj_;
+  void updateQ(const double& t) const ;
+
 
 
   

@@ -309,7 +309,7 @@ int main(int argc, char *argv[])
       
       Expr ngradpExact = nHat*(grad*pExact);
       cout << "Here is ngradp " << ngradpExact << endl;
-      L2Projector ngradpExact_projector(bdryDS, ngradpExact);
+      L2Projector ngradpExact_projector(bdryDS, ngradpExact); // Code throws seg fault here
       pressureWriter.addField("ngradpExact", new ExprFieldWrapper(ngradpExact_projector.project()));
 
       cout << "hi " << endl;
