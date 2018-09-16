@@ -68,7 +68,10 @@ int main(int argc, char *argv[])
       Sundance::setOption("tol",tol,"The tolerance used in the RIC to select the number of reduced-order basis functions to keep");
 
       int precision = 3;
-      Sundance::setOption("precision",precision,"Number of significant digits to keep in a filename using tol");  
+      Sundance::setOption("precision",precision,"Number of significant digits to keep in a filename using tol");
+
+      double Re = 1.0;
+      Sundance::setOption("Re", Re, "Reynolds number");     
 
       double tFinal = 1.0;
       Sundance::setOption("tFinal",tFinal,"Final time value");
@@ -84,11 +87,12 @@ int main(int argc, char *argv[])
 
       Sundance::init(&argc, &argv);
 
-      // State the location of the directory holds alphaROM
-      string ROM_base_dir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/ROM/uRO/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/";
-
       // State the location of the POD files (phi, b, A, and T)
-      string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/POD/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps) + "/tol";
+      std::ostringstream ReynoldsString;
+      ReynoldsString << std::setprecision(precision) << Re;
+      string POD_DataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/POD/Re"
+	+ ReynoldsString.str() + "/nx" + Teuchos::toString(nx) + "nt" + Teuchos::toString(nSteps)
+	+ "/tol";
       std::ostringstream tolFileValue;
       tolFileValue << std::setprecision(precision) << tol;
       POD_DataDir = POD_DataDir + tolFileValue.str() + "/";
@@ -129,7 +133,9 @@ int main(int argc, char *argv[])
       Expr eastVec = List(cos(eastAngle), sin(eastAngle));
 
       // Specify where to find the sensor data for one choice of parameter values
-      string snapshotDataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/ForwardProblem/R=1forward_problem_TransientChannel_nx" + Teuchos::toString(nx) + "-nt-" + Teuchos::toString(nSteps) + "/";
+      string snapshotDataDir = "/home/sirush/PhDResearch/MMS_Transient_Channel/Results/ForwardProblem/Re"
+	+ ReynoldsString.str() + "forward_problem_TransientChannel_nx"
+	+ Teuchos::toString(nx) + "-nt-" + Teuchos::toString(nSteps) + "/";
       string filenamePrefix = "st-v";
       string snapshotFilenamePrefix = snapshotDataDir + filenamePrefix;
 
@@ -160,7 +166,7 @@ int main(int argc, char *argv[])
       Expr y = new CoordExpr(1,"y");
       Expr t = new Sundance::Parameter(0.0);
       Expr uExact = List(1 - (Pi*(-1 + Power(x,2))*(8*Sin((Pi*t)/2.)*Power(Sin(Pi*x),2)*Sin(4*Pi*y) +45*Sin(Pi*t)*Power(Sin(2*Pi*x),2)*Sin(6*Pi*y)))/200.,(4*Sin((Pi*t)/2.)*Sin(Pi*x)*(Pi*(-1 + Power(x,2))*Cos(Pi*x) + x*Sin(Pi*x))*Power(Sin(2*Pi*y),2) +15*Sin(Pi*t)*Sin(2*Pi*x)*(2*Pi*(-1 + Power(x,2))*Cos(2*Pi*x) + x*Sin(2*Pi*x))*Power(Sin(3*Pi*y),2))/100.);
-      //      double alphaError = KKT_System.errorCheck(alphaOPT,uExact,t);
+
       // Returns [absolute alpha error, relative alpha error,
       //          aggregate velocity abs error, aggregate velocity rel error]
       Array<double> errors = KKT_System.errorCheck(uExact,t);
