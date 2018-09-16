@@ -50,18 +50,21 @@ MMSQuadODE::MMSQuadODE(Teuchos::Array<Expr> phi, Expr uB, Expr q, Expr t, double
 	qToUse = q_;
       }
     
-    for(int r = 0; r < phi_.size(); r++)
+    for(int i = 0; i < phi_.size(); i++)
       {
 	//Expr integrand = -outerProduct(grad,uB_)*phi_[r]*uB_ + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
 	//	Expr integrand = -(uB_*grad)*uB_*phi_[r] + q_*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
-	Expr integrand_interior = -(uB_*grad)*uB_*phi_[r] + qToUse*phi_[r] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[r]));
-	Expr integrand_boundary = nu_*(nHat*( outerProduct(grad,uB_)*phi_[r] ));
-
+	//Before change
+	//Expr integrand_interior = -(uB_*grad)*uB_*phi_[i] + qToUse*phi_[i] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[i]));
+	//Expr integrand_boundary = nu_*(nHat*((phi_[i]*grad)*uB_));
+	//After change
+	Expr integrand_interior = -outerProduct(grad,uB_)*uB_*phi_[i] + qToUse*phi_[i] - nu_*colonProduct(outerProduct(grad,uB_),outerProduct(grad,phi_[i]));
+	//	Expr integrand_boundary = nu_*(nHat*( (phi_[r]*grad)*uB_ ));
+	Expr integrand_boundary = nu_*(nHat*( outerProduct(grad,uB_)*phi[i]));
 	
 	//forceIP_[r] = FunctionalEvaluator(mesh_, Integral(interior_, integrand_interior, quad_));
-	forceIP_[r] = FunctionalEvaluator(mesh_, Integral(interior_, integrand_interior, quad_) + Integral(boundary_, integrand_boundary, quad_));
+	forceIP_[i] = FunctionalEvaluator(mesh_, Integral(interior_, integrand_interior, quad_) + Integral(boundary_, integrand_boundary, quad_));
       }
-
   }
 
 void MMSQuadODE::updateQ(const double& t) const
@@ -167,11 +170,15 @@ double MMSQuadODE::A_IP(Expr phi_i, Expr phi_j)
     Expr nHat = CellNormalExpr(dim, "nHat");
 
     //Expr integrand = -outerProduct(grad,phi_j)*phi_i*uB_ - outerProduct(grad,uB_)*phi_i*phi_j - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
-    Expr integrand_interior = -phi_i*((uB_*grad)*phi_j) - phi_i*((phi_j*grad)*uB_) - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
-    Expr integrand_boundary = nu_*(nHat*( phi_i*outerProduct(grad,phi_j) ));
+    //Before Change
+    //Expr integrand_interior = -phi_i*((uB_*grad)*phi_j) - phi_i*((phi_j*grad)*uB_) - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
+    //Expr integrand_boundary = nu_*(nHat*((phi_i*grad)*phi_j));
+    //integrand_boundary = 0.0;
 
-    //    FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, integrand_interior, quad_));
-						 
+    //After Change
+    Expr integrand_interior = -phi_i*( outerProduct(grad,phi_j)*uB_ ) - phi_i*( outerProduct(grad, uB_)*phi_j) - nu_*colonProduct(outerProduct(grad,phi_i),outerProduct(grad,phi_j));
+    Expr integrand_boundary = nu_*(nHat*( outerProduct(grad,phi_j)*phi_i ));
+    
     FunctionalEvaluator IP = FunctionalEvaluator(mesh_, Integral(interior_, integrand_interior, quad_) + Integral(boundary_, integrand_boundary, quad_));
     return (IP.evaluate());
   }

@@ -54,6 +54,8 @@ int main(int argc, char *argv[])
       int nx = 32;
       Sundance::setOption("nx", nx, "Number of elements along each axis");
 
+      double tol = .999;
+      Sundance::setOption("tol", tol, "Tolerance requirement for the number of basis functions to keep");      
       int nSteps = 32;
       Sundance::setOption("nSteps", nSteps, "Number of time steps");
 
@@ -85,10 +87,10 @@ int main(int argc, char *argv[])
        (Cos(y)*Power(Sin(t),2)*Sin(x))/5. - (4*Cos(2*y)*Sin(t)*Sin(2*t)*Sin(x))/5. + 
        (2*Cos(t)*Cos(2*t)*Cos(y)*Sin(2*x))/3. + 
        (4*Power(Cos(2*t),2)*Cos(2*y)*Sin(2*x))/5. - 
-      (Cos(y)*Sin(t)*Sin(2*t)*Sin(2*x))/3. - 
-      (4*Cos(2*y)*Power(Sin(2*t),2)*Sin(2*x))/5. + 
-      (Cos(t)*Cos(3*t)*Cos(y)*Sin(3*x))/2. + 
-      (6*Cos(2*t)*Cos(3*t)*Cos(2*y)*Sin(3*x))/7. - 
+       (Cos(y)*Sin(t)*Sin(2*t)*Sin(2*x))/3. - 
+       (4*Cos(2*y)*Power(Sin(2*t),2)*Sin(2*x))/5. + 
+       (Cos(t)*Cos(3*t)*Cos(y)*Sin(3*x))/2. + 
+       (6*Cos(2*t)*Cos(3*t)*Cos(2*y)*Sin(3*x))/7. - 
        (Cos(y)*Sin(t)*Sin(3*t)*Sin(3*x))/6. - 
        (4*Cos(2*y)*Sin(2*t)*Sin(3*t)*Sin(3*x))/7.) + 
     (x*Power(-2*Pi + x,2)*((Cos(t)*Cos(x)*Cos(y)*Sin(t))/5. + 
@@ -353,7 +355,7 @@ int main(int argc, char *argv[])
 
 
       // Define our solution
-      Expr uExact = List(1 + x*Power(-2*Pi + x,2)*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
+      Expr uExact =  List(1 + x*Power(-2*Pi + x,2)*((Cos(t)*Cos(y)*Sin(t)*Sin(x))/5. + 
        (2*Cos(2*t)*Cos(2*y)*Sin(t)*Sin(x))/5. + 
        (Cos(t)*Cos(y)*Sin(2*t)*Sin(2*x))/3. + 
        (2*Cos(2*t)*Cos(2*y)*Sin(2*t)*Sin(2*x))/5. + 
@@ -409,7 +411,7 @@ int main(int argc, char *argv[])
 
       // Create a velocityROM object
       velocityROM ROM(filename, NLParamFile, velocityDS, u0, q, t, nSteps, deltat,
-		      .99999, verbosity);
+		      tol, verbosity);
       ROM.initialize();
       ROM.generate_alpha();
       Array<Expr> uRO(ROM.get_uRO() );
@@ -495,7 +497,7 @@ int main(int argc, char *argv[])
 	  l2norm[time] = L2Norm(mesh, interior, uExact - uRO[time], quad);
 	  double uNorm = L2Norm(mesh, interior, uExact, quad);
 	  /* print the relative error */
-	  SUNDANCE_ROOT_MSG2(verbosity, "Error for uRO at time " << time*deltat
+	  SUNDANCE_ROOT_MSG2(verbosity, "Relative Error for uRO at time " << time*deltat
 			     << " = " << l2norm[time]/uNorm);
 	}
       
@@ -503,7 +505,7 @@ int main(int argc, char *argv[])
   SUNDANCE_ROOT_MSG1(verbosity, "Number of velocity modes kept: " + Teuchos::toString(ROM.get_phi().size()));
       Out::root() << "||uExact - uRO||_2  :\t " << l2norm.norm2() << endl;
       Out::root() << "||uExact - uRO||_inf:\t " << l2norm.normInf() << endl;
-      Out::root() << "runtime=" << timer.totalElapsedTime() << endl << endl;
+
      
       // Visualize the results
       SUNDANCE_ROOT_MSG1(verbosity, "Writing results to file");
@@ -524,10 +526,13 @@ int main(int argc, char *argv[])
 	  L2Projector uErrorProjector(velocityDS, uExact - uRO[time]);
 	  Expr absErr = sqrt( (uExact - uRO[time])*(uExact - uRO[time]));
 	  Expr absU = sqrt(uExact * uExact);
+	  Expr absURO = sqrt(uRO[time] * uRO[time]);
 	  L2Projector uMagProj(scalarDS, absU);
+	  L2Projector uROMagProj(scalarDS, absURO);
 	  L2Projector absErrorProj(scalarDS, absErr);
 	  L2Projector relErrorProj(scalarDS, absErr / (absU + 1.0));
 	  writer.addField("uMag", new ExprFieldWrapper(uMagProj.project()[0]) );
+	  writer.addField("uROMag", new ExprFieldWrapper(uROMagProj.project()[0]) );
 	  writer.addField("errAbs", new ExprFieldWrapper(absErrorProj.project()[0]) );
 	  writer.addField("errRel", new ExprFieldWrapper(relErrorProj.project()[0]) );
 	  writer.addField("uExact[0]", new ExprFieldWrapper(projector.project()[0]) );
@@ -539,8 +544,8 @@ int main(int argc, char *argv[])
       	  writer.write();	  
 	}
 
-      
-
+      timer.stop();
+      Out::root() << "runtime=" << timer.totalElapsedTime() << endl << endl;
 	
     }
   catch(std::exception& e)

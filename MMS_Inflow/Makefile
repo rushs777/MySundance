@@ -66,7 +66,7 @@
 # 
 #--------------------------------------------------------------------------
 #
-EXTRA_OBJS = 	../SourceFiles/PlayaSVD.o \
+#EXTRA_OBJS = 	../SourceFiles/PlayaSVD.o \
 		../SourceFiles/denseSerialMatrixIO.o \
 		../SourceFiles/ODERHSBase.o \
 		../SourceFiles/QuadraticODERHSBase.o \
@@ -76,7 +76,7 @@ EXTRA_OBJS = 	../SourceFiles/PlayaSVD.o \
 		../SourceFiles/velocityROM.o \
 		../DenseMatrixMatrixProduct/PlayaDenseMatrixMatrixProduct.o
 
-#EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
+EXTRA_OBJS = 	/home/sirush/PhDResearch/SourceFiles/PlayaSVD.o \
 		/home/sirush/PhDResearch/SourceFiles/denseSerialMatrixIO.o \
 		/home/sirush/PhDResearch/SourceFiles/ODERHSBase.o \
 		/home/sirush/PhDResearch/SourceFiles/QuadraticODERHSBase.o \
@@ -114,17 +114,18 @@ EXTRA_OBJS = 	../SourceFiles/PlayaSVD.o \
 
 # Kevin's system
 #TRILINOS_INSTALL_DIR = ${HOME}/Code/BUILDS/OPT
-VIENTO_INSTALL_DIR = ${HOME}/Projects/CFD/BUILDS/OPT
+#VIENTO_INSTALL_DIR = ${HOME}/Projects/CFD/BUILDS/OPT
+
 # Simon's system
 #TRILINOS_INSTALL_DIR = /usr/local/Trilinos/BUILDS/SERIAL-OPT
-#VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
+VIENTO_INSTALL_DIR = ${HOME}/PhDResearch/BUILDS/Viento
 
 
 #--------------------------------------------------------------------------
 # If needed, set extra include and lib macros
 #--------------------------------------------------------------------------
-#CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles -I/home/sirush/PhDResearch/MMS_Inflow
-CLIENT_EXTRA_INCLUDES = -I../SourceFiles -I../MMS_Inflow -I../DenseMatrixMatrixProduct
+CLIENT_EXTRA_INCLUDES = -I/home/sirush/PhDResearch/SourceFiles -I/home/sirush/PhDResearch/MMS_Inflow
+#CLIENT_EXTRA_INCLUDES = -I../SourceFiles -I../MMS_Inflow -I../DenseMatrixMatrixProduct
 #CLIENT_EXTRA_INCLUDES =
 
 CLIENT_EXTRA_LIBS = 

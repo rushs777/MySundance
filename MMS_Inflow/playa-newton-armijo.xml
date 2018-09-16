@@ -6,6 +6,6 @@ Changed tau from 1.0e-12
     <Parameter name="Tau Relative"      type="double" value="1.0e-8"/>
     <Parameter name="Tau Absolute"      type="double" value="1.0e-8"/>
     <Parameter name="Verbosity"         type="int" value="3"/>
-    <Parameter name="Max Iterations"    type="int" value="20"/>
+    <Parameter name="Max Iterations"    type="int" value="100"/>
   </ParameterList>
 </ParameterList>
